@@ -1,0 +1,171 @@
+/* ==========================================================
+   HUD Styles — Elementos de UI superpuestos al canvas 3D
+   ========================================================== */
+
+.hud__era {
+  position: fixed;
+  top: var(--space-lg);
+  left: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  pointer-events: none;
+  animation: fadeInSlide 0.8s var(--ease-cinematic) forwards;
+  
+  /* Panel oscuro para garantizar contraste de las letras en cualquier fondo */
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(20px);
+  padding: 16px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.hud__era-year {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: #FACC15; /* Un dorado mucho más brillante y claro */
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8), 0 0 15px rgba(250, 204, 21, 0.4);
+  line-height: 1;
+}
+
+.hud__era-title {
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 1.5vw, 0.95rem);
+  font-weight: 600; /* Más grueso para mayor legibilidad */
+  color: #FFFFFF; /* Blanco puro para máximo contraste */
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+}
+
+/* ── Journey Progress (parte inferior centrado) ── */
+.hud__progress {
+  position: fixed;
+  bottom: var(--space-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--space-sm);
+  align-items: center;
+  pointer-events: none;
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(10, 12, 20, 0.6);
+  backdrop-filter: blur(8px);
+  border-radius: 100px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.hud__progress-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition:
+    background var(--duration-mid) var(--ease-cinematic),
+    transform var(--duration-mid) var(--ease-cinematic),
+    box-shadow var(--duration-mid) var(--ease-cinematic);
+}
+
+.hud__progress-dot--active {
+  background: var(--color-accent-gold);
+  transform: scale(1.5);
+  box-shadow: 0 0 8px 2px rgba(201, 168, 76, 0.5);
+}
+
+/* ── Rei Dialog Bubble (esquina inferior izquierda) ── */
+.hud__rei-dialog {
+  position: fixed;
+  bottom: calc(var(--space-xl) + var(--space-lg));
+  left: var(--space-lg);
+  max-width: min(340px, 80vw);
+  animation: bubbleAppear 0.4s var(--ease-cinematic) forwards;
+}
+
+.hud__rei-bubble {
+  background: rgba(17, 24, 39, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  padding: var(--space-md) var(--space-lg);
+  position: relative;
+}
+
+.hud__rei-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 20px;
+  width: 16px;
+  height: 16px;
+  background: rgba(17, 24, 39, 0.92);
+  border-right: 1px solid rgba(201, 168, 76, 0.3);
+  border-bottom: 1px solid rgba(201, 168, 76, 0.3);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+.hud__rei-bubble p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+/* ── Audio Toggle (esquina superior derecha) ── */
+.hud__audio-btn {
+  position: fixed;
+  top: var(--space-lg);
+  right: var(--space-lg);
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition:
+    background var(--duration-fast) ease,
+    border-color var(--duration-fast) ease,
+    transform var(--duration-fast) ease;
+}
+
+.hud__audio-btn:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.5);
+  transform: scale(1.1);
+}
+
+.hud__audio-btn:active {
+  transform: scale(0.95);
+}
+
+/* ── Animaciones ── */
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes bubbleAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

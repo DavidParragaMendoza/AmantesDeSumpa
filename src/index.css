@@ -1,0 +1,108 @@
+/* ==========================================================
+   MUSEO AMANTES DE SUMPA — Global Styles
+   Módulo 1: Design Tokens & Base Reset
+   ========================================================== */
+
+/* --- Variables CSS (Design Tokens) --- */
+:root {
+  /* Paleta inspirada en cerámica precolombina y el Pacífico */
+  --color-bg-deep:       #0a0c14;   /* Noche del desierto costero */
+  --color-bg-surface:    #111827;   /* Superficie oscura */
+  --color-accent-gold:   #c9a84c;   /* Oro de la cultura Valdivia */
+  --color-accent-terra:  #b85c38;   /* Terracota precolombina */
+  --color-accent-ocean:  #2a6b8a;   /* Océano Pacífico */
+  --color-accent-sand:   #e8d5a3;   /* Arena de Santa Elena */
+  --color-text-primary:  #f0e8d8;   /* Texto principal cálido */
+  --color-text-muted:    #8a7a65;   /* Texto secundario */
+  --color-spondylus:     #c84b6b;   /* Rosa-rojo de la concha Spondylus */
+
+  /* Tipografía */
+  --font-display:  'Cinzel', 'Georgia', serif;
+  --font-body:     'Inter', system-ui, sans-serif;
+
+  /* Espaciado base */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  2rem;
+  --space-xl:  4rem;
+
+  /* Transiciones */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast:  200ms;
+  --duration-mid:   500ms;
+  --duration-slow:  1200ms;
+
+  /* Z-Index layers (fuera del 3D) */
+  --z-canvas:  0;
+  --z-hud:     10;
+  --z-overlay: 20;
+  --z-modal:   30;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  /* El scroll nativo de la página controla la narrativa */
+  scroll-behavior: auto; /* GSAP controla el scroll, no CSS */
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  /* El body tendrá una altura grande para que GSAP/ScrollTrigger
+     pueda calcular el progreso del scroll narrativo */
+}
+
+/* --- Canvas Container ---
+   El canvas R3F es fijo en la pantalla. El scroll mueve la narrativa
+   pero la imagen siempre llena el viewport (efecto "scroll cinematográfico"). */
+#canvas-container {
+  position: fixed;
+  inset: 0;            /* top:0, right:0, bottom:0, left:0 */
+  width: 100vw;
+  height: 100vh;
+  z-index: var(--z-canvas);
+}
+
+/* --- HUD (Heads-Up Display) --- */
+/* Elementos de UI superpuestos al canvas 3D */
+#hud-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-hud);
+  pointer-events: none; /* Pasa los clicks al canvas por defecto */
+}
+#hud-layer > * {
+  pointer-events: auto; /* Los hijos sí capturan eventos */
+}
+
+/* --- Scroll Spacer ---
+   Div invisible que da altura a la página para que ScrollTrigger
+   tenga "espacio" que recorrer. La altura se calcula dinámicamente
+   en el componente ScrollNarrative. */
+#scroll-spacer {
+  position: relative;
+  z-index: -1;
+  /* height se pone inline desde React (ej: 800vh para 8 escenas) */
+}
+
+/* --- Utilidades globales --- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
