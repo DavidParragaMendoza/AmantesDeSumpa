@@ -1,6 +1,6 @@
 /**
  * APLICACIÓN PRINCIPAL — App.jsx
- * Módulo 2: Actualizado con Suspense para carga de texturas
+ * Módulo 4: Actualizado con TimeWarpEffect (FBO)
  *
  * JERARQUÍA DE COMPONENTES:
  *
@@ -9,7 +9,9 @@
  *   │   └── <Canvas>                   ← R3F, frameloop="demand", orthographic
  *   │       ├── <OrthoCamera>          ← Setup + animación de cámara
  *   │       ├── <ScrollNarrativeSetup> ← GSAP ScrollTrigger + Dummy Target
- *   │       └── <DioramaScene>         ← Las capas 2.5D (planos PNG)
+ *   │       └── <TimeWarpEffect>       ← FBO capture + warp shader
+ *   │           └── [portal: fboScene]
+ *   │               └── <DioramaScene>  ← Las capas 2.5D (planos PNG)
  *   │
  *   ├── <div #hud-layer>               ← UI superpuesta (HTML puro)
  *   │   └── <HUD>                      ← Era, Progreso, Rei, Audio
@@ -28,6 +30,7 @@ import { OrthoCamera } from './components/OrthoCamera'
 import { ScrollNarrativeSetup } from './components/ScrollNarrativeSetup'
 import { DioramaScene } from './components/DioramaScene'
 import { SceneFallback } from './components/SceneFallback'
+import { TimeWarpEffect } from './components/TimeWarpEffect'
 import { HUD } from './components/HUD'
 
 export default function App() {
@@ -52,8 +55,7 @@ export default function App() {
            *   1. ScrollNarrativeSetup: invalidate() inicial + rAF retardado
            *   2. useInvalidateOnMount: frame post-Suspense en TexturedPlane
            *   3. OrthoCamera: auto-invalidate durante convergencia del lerp
-           * frameloop="always":
-           *   Three.js renderiza 60fps constante.
+           *   4. TimeWarpEffect: auto-invalidate mientras intensity > 0
            *
            * gl.outputColorSpace = THREE.SRGBColorSpace:
            *   Corrige el mapeo de color para que las texturas PNG
@@ -94,24 +96,24 @@ export default function App() {
           <ScrollNarrativeSetup />
 
           {/*
-            ESTRATEGIA DE SUSPENSE EN DOS NIVELES:
+            TIME WARP EFFECT — Envuelve el diorama en el sistema FBO.
 
-            Nivel 1 (este): <Suspense> global dentro del Canvas.
-            → Captura cualquier suspensión que escape de los Suspense
-              internos de DioramaScene (ej. error inesperado).
-            → Muestra SceneFallback mientras carga la escena inicial.
+            Arquitectura de dos pasadas:
+            1. Los hijos (DioramaScene) se renderizan en una escena
+               secundaria (portal) capturada en un WebGLRenderTarget (FBO).
+            2. Un quad fullscreen en la escena principal muestra el FBO
+               a través del shader de deformación (vórtex, aberración,
+               zoom, ruido, flash) controlado por gsapTarget.transition.intensity.
 
-            Nivel 2 (en DioramaScene): un <Suspense> por cada escena cultural.
-            → Si falla una textura de Valdivia, solo esa escena muestra fallback.
-            → Las demás 7 escenas siguen visibles y funcionales.
-
-            NUNCA pongas <Suspense> FUERA del <Canvas>:
-            Los componentes R3F (meshes, geometrías) solo existen dentro
-            del contexto de Canvas. SceneFallback también es un mesh.
+            OrthoCamera y ScrollNarrativeSetup están FUERA del portal:
+            modifican la cámara del Canvas que es compartida por
+            ambas pasadas de renderizado.
           */}
-          <Suspense fallback={<SceneFallback />}>
-            <DioramaScene />
-          </Suspense>
+          <TimeWarpEffect>
+            <Suspense fallback={<SceneFallback />}>
+              <DioramaScene />
+            </Suspense>
+          </TimeWarpEffect>
         </Canvas>
       </div>
 

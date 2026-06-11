@@ -110,15 +110,16 @@ function useWorldWidth() {
 export const ASSET_URLS = {
   // ── Escena 0: El Museo
   rei_gecko:               '/assets/Rei.png',
+  rei_gecko2:              '/assets/Rei2.png',
+  rei_gecko3:              '/assets/Rei3.png',
+  rei_gecko4:              '/assets/Rei4.png',
+  rei_gecko5:              '/assets/Rei5.png',
+  rei_gecko6:              '/assets/Rei6.png',
   museo_fondo:             '/assets/museo.png',
   museo_maquintaDelTiempo: '/assets/maquinaDelTiempo.png',
-  // museo_main:           '/assets/museo-main.png',
-  // museo_fg:             '/assets/museo-fg.png',
 
   // ── Escena 1: Las Vegas
-  // lasvegas_sky:         '/assets/las-vegas-sky.png',
-  // lasvegas_mnt:         '/assets/las-vegas-mountains.png',
-  // lasvegas_main:        '/assets/las-vegas-main.png',
+  lasVegasFondo:             '/assets/Las_Vegas.png',
 
   // ── Escena 2: Valdivia
   // valdivia_sky:         '/assets/valdivia-sky.png',
@@ -170,7 +171,16 @@ function EscenaIntroduccion({ xOffset }) {
   const dialogBoxRef  = useRef(null)
   const dialogue1Ref  = useRef(null)
   const dialogue2Ref  = useRef(null)
-  const spondylusRef  = useRef(null)
+  const dialogue3Ref  = useRef(null)
+  const dialogue4Ref  = useRef(null)
+  const dialogue5Ref  = useRef(null)
+  const dialogue6Ref  = useRef(null)
+  const rei1Ref       = useRef(null)
+  const rei2Ref       = useRef(null)
+  const rei3Ref       = useRef(null)
+  const rei4Ref       = useRef(null)
+  const rei5Ref       = useRef(null)
+  const rei6Ref       = useRef(null)
 
   useFrame(() => {
     // 1. Letrero de Bienvenida (Fade out)
@@ -180,30 +190,37 @@ function EscenaIntroduccion({ xOffset }) {
       signRef.current.style.display   = gsapTarget.intro.signOpacity < 0.01 ? 'none' : 'block'
     }
 
-    // 2. Rei (Aparece y se mueve)
+    // 2. Rei — posición y escala del grupo
     if (reiGroupRef.current) {
       reiGroupRef.current.position.x = xPos + gsapTarget.intro.reiPositionX
       const rs = gsapTarget.intro.reiScale
       reiGroupRef.current.scale.set(rs, rs, rs)
     }
 
+    // Opacidad del globo de diálogo (controlada por CSS inline)
     if (dialogBoxRef.current) {
       dialogBoxRef.current.style.opacity = gsapTarget.intro.reiOpacity
       dialogBoxRef.current.style.display = gsapTarget.intro.reiOpacity < 0.01 ? 'none' : 'block'
     }
 
-    // 3. Cambio de diálogo de Rei
-    if (dialogue1Ref.current && dialogue2Ref.current) {
-      const step = gsapTarget.intro.dialogueStep
-      dialogue1Ref.current.style.display = step < 1.5 ? 'block' : 'none'
-      dialogue2Ref.current.style.display = step >= 1.5 ? 'block' : 'none'
-    }
+    // 3. Cambio de sprite de Rei según dialogueStep
+    const step = gsapTarget.intro.dialogueStep
+    
+    // Visibilidad de los sprites 3D de Rei
+    if (rei1Ref.current) rei1Ref.current.visible = (step >= 0.5 && step < 1.5)
+    if (rei2Ref.current) rei2Ref.current.visible = (step >= 1.5 && step < 2.5)
+    if (rei3Ref.current) rei3Ref.current.visible = (step >= 2.5 && step < 3.5)
+    if (rei4Ref.current) rei4Ref.current.visible = (step >= 3.5 && step < 4.5)
+    if (rei5Ref.current) rei5Ref.current.visible = (step >= 4.5 && step < 5.5)
+    if (rei6Ref.current) rei6Ref.current.visible = (step >= 5.5)
 
-    // 4. Spondylus (Máquina del tiempo)
-    if (spondylusRef.current) {
-      const ss = gsapTarget.intro.spondylusScale
-      spondylusRef.current.scale.set(ss, ss, ss)
-    }
+    // Mostrar/ocultar diálogos HTML según el paso activo
+    if (dialogue1Ref.current) dialogue1Ref.current.style.display = (step >= 0.5 && step < 1.5) ? 'block' : 'none'
+    if (dialogue2Ref.current) dialogue2Ref.current.style.display = (step >= 1.5 && step < 2.5) ? 'block' : 'none'
+    if (dialogue3Ref.current) dialogue3Ref.current.style.display = (step >= 2.5 && step < 3.5) ? 'block' : 'none'
+    if (dialogue4Ref.current) dialogue4Ref.current.style.display = (step >= 3.5 && step < 4.5) ? 'block' : 'none'
+    if (dialogue5Ref.current) dialogue5Ref.current.style.display = (step >= 4.5 && step < 5.5) ? 'block' : 'none'
+    if (dialogue6Ref.current) dialogue6Ref.current.style.display = (step >= 5.5) ? 'block' : 'none'
   })
 
   return (
@@ -254,60 +271,134 @@ function EscenaIntroduccion({ xOffset }) {
           </div>
         </Html>
 
-        {/* ── SPONDYLUS: La máquina del tiempo ── */}
-        <group ref={spondylusRef} position={[xPos, -2, LAYER_Z.FOREGROUND]}>
-          <FlatIllustration
-            url={ASSET_URLS.museo_maquintaDelTiempo}
-            color="#E05B7C"
-            targetHeight={4.8}
-            placeholderAspect={1.1}
-            position={[0, 0, 0]}
-            renderOrder={1}
-          />
-        </group>
-
         {/* ── REI (LA SALAMANQUESA) + Globo de Diálogo (MAIN) ── */}
+        {/* Fase 7: Rei6.png ya contiene a Rei montado sobre la máquina del tiempo. */}
         <group ref={reiGroupRef} position={[xPos, -1.5, LAYER_Z.MAIN]}>
-          <FlatIllustration
-            url={ASSET_URLS.rei_gecko}
-            color="#AA8855"
-            targetHeight={5.5}
-            position={[0, 0, 0]}
-            renderOrder={2}
-          />
+          
+          <group ref={rei1Ref}>
+            <FlatIllustration
+              url={ASSET_URLS.rei_gecko}
+              color="#AA8855"
+              targetHeight={5.5}
+              position={[0, 0, 0]}
+              renderOrder={2}
+            />
+          </group>
+
+          <group ref={rei2Ref}>
+            <FlatIllustration
+              url={ASSET_URLS.rei_gecko2}
+              color="#AA8855"
+              targetHeight={5.5}
+              position={[0, 0, 0]}
+              renderOrder={2}
+            />
+          </group>
+
+          <group ref={rei3Ref}>
+            <FlatIllustration
+              url={ASSET_URLS.rei_gecko3}
+              color="#AA8855"
+              targetHeight={5.5}
+              position={[0, 0, 0]}
+              renderOrder={2}
+            />
+          </group>
+
+          <group ref={rei4Ref}>
+            <FlatIllustration
+              url={ASSET_URLS.rei_gecko4}
+              color="#AA8855"
+              targetHeight={5.5}
+              position={[0, 0, 0]}
+              renderOrder={2}
+            />
+          </group>
+
+          <group ref={rei5Ref}>
+            <FlatIllustration
+              url={ASSET_URLS.rei_gecko5}
+              color="#AA8855"
+              targetHeight={5.5}
+              position={[0, 0, 0]}
+              renderOrder={2}
+            />
+          </group>
+
+          <group ref={rei6Ref}>
+            <FlatIllustration
+              url={ASSET_URLS.rei_gecko6}
+              color="#AA8855"
+              targetHeight={5.5}
+              position={[0, 0, 0]}
+              renderOrder={2}
+            />
+          </group>
+
           <Html position={[0, 3.5, 0]} center zIndexRange={[100, 0]}>
             <div ref={dialogBoxRef} style={{
               opacity: 0,
               display: 'none',
               backgroundColor: '#ffffff',
               color: '#111827',
-              padding: '16px',
+              padding: '18px 20px',
               borderRadius: '16px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
               border: '2px solid #f3f4f6',
-              width: '280px',
+              width: '360px',
               textAlign: 'center',
               fontFamily: 'system-ui, sans-serif',
               position: 'relative'
             }}>
 
-              {/* Diálogo Fase 2 */}
+              {/* Diálogo Fase 2 - Texto 1 */}
               <div ref={dialogue1Ref}>
                 <p style={{ fontWeight: 'bold', fontSize: '18px', marginBottom: '8px', color: '#ea580c', margin: '0 0 8px 0' }}>
                   ¡Hola! Mi nombre es REI...
                 </p>
                 <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.5', margin: 0 }}>
-                  Soy una salamanquesa. Hoy quiero llevarte a un viaje maravilloso.
+                  Soy una salamanquesa, comúnmente conocida como gecko. Tal vez me hayas visto en tu casa o en tu jardín merodeando en los rincones. Soy inofensiva para ti y me alimento de insectos.
                 </p>
               </div>
 
-              {/* Diálogo Fase 3 */}
+              {/* Diálogo Fase 3 - Texto 2 */}
               <div ref={dialogue2Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: '16px', color: '#374151', lineHeight: '1.5', margin: 0, fontWeight: '500' }}>
-                  Vamos, súbete a mi máquina del tiempo...
+                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.5', margin: 0 }}>
+                  El nombre de la especie de la que provengo es muy complejo (<strong style={{ color: '#ea580c' }}>Phyllodactylus reissii</strong>), pero para resumir, <strong style={{ color: '#ea580c' }}>reissii</strong>, en honor a Carl Reiss, un alemán que vive en Ecuador y que investigó sobre mí.
                 </p>
-                <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5', margin: '8px 0 0 0' }}>
-                  (La concha Spondylus)
+              </div>
+
+              {/* Diálogo Fase 4 - Texto 3 */}
+              <div ref={dialogue3Ref} style={{ display: 'none' }}>
+                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.5', margin: 0 }}>
+                  Además, obtendrás información sobre mis ancestros a través de la doctora <strong style={{ color: '#ea580c' }}>Karen Stothert</strong>, quien dejó datos sobre las especies y la fauna encontradas en una de las culturas aborígenes más antiguas y que hallarás al inicio de este cuento.
+                </p>
+              </div>
+
+              {/* Diálogo Fase 5 - Texto 4 */}
+              <div ref={dialogue4Ref} style={{ display: 'none' }}>
+                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.5', margin: 0 }}>
+                  Observa la imagen y sabrás que el modo de vida de hombres y mujeres en una época marcan la diferencia por la diversidad de características que la representan, como: expresión o lenguaje, comida, arte, creencias, costumbres y tradiciones. Esto es lo que conoces como <strong style={{ color: '#ea580c' }}>CULTURA</strong>, expresada en el hacer, pensar y sentir.
+                </p>
+              </div>
+
+              {/* Diálogo Fase 6 - Texto 5 */}
+              <div ref={dialogue5Ref} style={{ display: 'none' }}>
+                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.5', margin: '0 0 8px 0' }}>
+                  ¿Ves que Rei tiene en sus manos globos de diversos colores que representan esta diversidad de actividades y disfruta de ellos?
+                </p>
+                <p style={{ fontSize: '14px', color: '#374151', lineHeight: '1.5', margin: 0, fontWeight: '500' }}>
+                  ¿Sabes? ¡Esto me motiva a viajar en el tiempo y conocer qué hicieron nuestros antepasados! ¿Tú también quieres aprender? ¡Si la tierra hablara, imagínate lo que diría!
+                </p>
+              </div>
+
+              {/* Diálogo Fase 7 - Texto 6 */}
+              <div ref={dialogue6Ref} style={{ display: 'none' }}>
+                <p style={{ fontSize: '15px', color: '#374151', lineHeight: '1.5', margin: '0 0 8px 0', fontWeight: '500' }}>
+                  Hoy quiero llevarte a un viaje maravilloso del cual mis ancestros fueron partícipes. Un viaje por el tiempo y la historia en tu provincia.
+                </p>
+                <p style={{ fontSize: '14px', color: '#ea580c', lineHeight: '1.5', margin: 0, fontWeight: 'bold' }}>
+                  ¡Vamos, súbete a mi máquina del tiempo! La programaremos para que nos lleve del 8.000 a.C. al 4.500 a.C.
                 </p>
               </div>
 
@@ -342,62 +433,18 @@ function EscenaLasVegas({ xOffset }) {
     <Suspense fallback={<SceneFallback />}>
       <group position={[xOffset, 0, 0]}>
 
-        {/* ── SKY: Amanecer rojizo del Pleistoceno tardío ── */}
+        {}
         <FlatIllustration
-          // url={ASSET_URLS.lasvegas_sky}
+          url={ASSET_URLS.lasVegasFondo}
           color="#5C2D1A"
           targetHeight={11}
           placeholderAspect={worldWidth / 11}
           position={[0, 0, LAYER_Z.SKY]}
           renderOrder={0}
         />
+        
 
-        {/* ── MOUNTAINS: Llanura costera árida, colinas bajas ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.lasvegas_mnt}
-          color="#7C4E2A"
-          targetHeight={4}
-          placeholderAspect={worldWidth / 4}
-          position={[0, -3, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
-
-        {/* ── MIDGROUND: Zona de campamento, fogones ── */}
-        <FlatIllustration
-          color="#4A2E0F"
-          targetHeight={2.5}
-          placeholderAspect={worldWidth / 2.5}
-          position={[0, -4, LAYER_Z.MIDGROUND]}
-          renderOrder={2}
-        />
-
-        {/* ── MAIN: Figura humana de Las Vegas, recolectores ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.lasvegas_main}
-          color="#8B6914"
-          targetHeight={4}
-          placeholderAspect={3 / 4}
-          position={[-1, -1, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
-
-        {/* ── Segunda figura — pareja / familia ── */}
-        <FlatIllustration
-          color="#7A5C10"
-          targetHeight={3.5}
-          placeholderAspect={2.5 / 3.5}
-          position={[1.5, -1.2, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
-
-        {/* ── FOREGROUND: Gramíneas y conchas del litoral ── */}
-        <FlatIllustration
-          color="#6B4E1A"
-          targetHeight={1.8}
-          placeholderAspect={worldWidth / 1.8}
-          position={[0, -5, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
+        
 
       </group>
     </Suspense>

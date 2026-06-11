@@ -89,8 +89,20 @@ function AudioToggle() {
 
 // ── Componente Principal HUD ───────────────────────────────────
 export function HUD() {
+  // enTransicion se activa cuando el vórtex alcanza intensity > 0.05.
+  // Al hacer fade-out del HUD, evitamos que los textos HTML queden
+  // estáticos sobre la pantalla deformada por el shader.
+  const enTransicion = useMuseoStore(s => s.enTransicion)
+
   return (
-    <div id="hud-layer" aria-label="Interfaz del viaje">
+    <div
+      id="hud-layer"
+      aria-label="Interfaz del viaje"
+      style={{
+        opacity:    enTransicion ? 0 : 1,
+        transition: 'opacity 0.2s ease-out',  // fade suave, no abrupto
+      }}
+    >
       <EraIndicator />
       <JourneyProgress />
       <ReiDialog />

@@ -71,13 +71,28 @@ export const gsapTarget = {
    * Animación de elementos antes de que la cámara comience a moverse.
    */
   intro: {
-    signOpacity: 1,
-    reiOpacity: 0,
-    reiScale: 0,
-    reiPositionX: 0,
-    spondylusScale: 0,
-    dialogueStep: 0,
-  }
+    signOpacity:  1,   // Letrero de bienvenida [1=visible, 0=oculto]
+    reiOpacity:   0,   // Opacidad del globo de diálogo de Rei
+    reiScale:     0,   // Escala de Rei (0=invisible → 1=tamaño completo)
+    reiPositionX: 0,   // Desplazamiento X adicional de Rei en la escena
+    dialogueStep: 0,   // Paso de diálogo activo: 0=letrero, 1–6=fases Rei
+  },
+
+  /**
+   * TRANSICIÓN DE VIAJE EN EL TIEMPO (TimeWarpEffect)
+   * Controla la intensidad del shader de deformación entre escenas.
+   *
+   * GSAP anima intensity 0 → 1 → 0 durante cada transición de escena:
+   *   0   = passthrough perfecto (sin efecto)
+   *   0.5 = vórtex parcial + aberración visible
+   *   1   = vórtex máximo + flash de energía azul-celeste
+   *
+   * TimeWarpEffect.jsx lee este valor en useFrame() via getState-like
+   * acceso directo al objeto (sin suscripción React → 0 re-renders).
+   */
+  transition: {
+    intensity: 0,   // [0, 1] — intensidad del efecto warp
+  },
 }
 
 // ──────────────────────────────────────────────────────────────
