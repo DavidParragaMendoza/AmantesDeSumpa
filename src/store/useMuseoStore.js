@@ -43,6 +43,16 @@ export const useMuseoStore = create(
 
     // ── ESTADO DE NAVEGACIÓN ──────────────────────────────────
     /**
+     * Modo de visualización actual de la app:
+     * - 'landing': Pantalla inicial con máscara animada y menú
+     * - 'recorrido': Diorama 2.5D interactivo
+     * - 'minijuegos': Galería de juegos interactivos
+     * - 'pintar': Lienzo interactivo de pintura sobre piezas arqueológicas
+     */
+    modo: 'landing',
+    setModo: (nuevoModo) => set({ modo: nuevoModo }),
+
+    /**
      * Índice de la escena actualmente visible.
      * Deriva de scrollProgress en el componente ScrollNarrative.
      * Cambiar esto SÍ provoca re-render (es intencional para la UI).

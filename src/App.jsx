@@ -32,8 +32,30 @@ import { DioramaScene } from './components/DioramaScene'
 import { SceneFallback } from './components/SceneFallback'
 import { TimeWarpEffect } from './components/TimeWarpEffect'
 import { HUD } from './components/HUD'
+import { useMuseoStore } from './store/useMuseoStore'
+import { LandingPage } from './components/LandingPage'
+import { PaintingCanvas } from './components/PaintingCanvas'
+import { MiniGamesSection } from './components/MiniGamesSection'
 
 export default function App() {
+  const modo = useMuseoStore(s => s.modo)
+
+  // ── MODO 1: LANDING PAGE CON MÁSCARA ANIMADA ──
+  if (modo === 'landing') {
+    return <LandingPage />
+  }
+
+  // ── MODO 2: SECCIÓN DE PINTURA CREATIVA ──
+  if (modo === 'pintar') {
+    return <PaintingCanvas />
+  }
+
+  // ── MODO 3: SECCIÓN DE MINIJUEGOS EDUCATIVOS ──
+  if (modo === 'minijuegos') {
+    return <MiniGamesSection />
+  }
+
+  // ── MODO 4: RECORRIDO ANIMADO 2.5D (DIORAMA CANVASES) ──
   return (
     <>
       {/* ══════════════════════════════════════════════════════
@@ -105,7 +127,7 @@ export default function App() {
                a través del shader de deformación (vórtex, aberración,
                zoom, ruido, flash) controlado por gsapTarget.transition.intensity.
 
-            OrthoCamera y ScrollNarrativeSetup están FUERA del portal:
+            OrthoCamera and ScrollNarrativeSetup están FUERA del portal:
             modifican la cámara del Canvas que es compartida por
             ambas pasadas de renderizado.
           */}

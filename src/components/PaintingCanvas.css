@@ -1,0 +1,730 @@
+/* ==========================================================
+   PAINTING CANVAS STYLES — PaintingCanvas.css
+   ========================================================== */
+
+.paint-overlay-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background-color: #0b0d19;
+  display: flex;
+  flex-direction: column;
+  color: var(--color-text-primary, #f0e8d8);
+  font-family: var(--font-body, sans-serif);
+}
+
+/* Header */
+.paint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(17, 24, 39, 0.8);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.paint-title-area h2 {
+  font-family: var(--font-display, 'Cinzel', serif);
+  color: var(--color-accent-gold, #c9a84c);
+  font-size: 1.5rem;
+  letter-spacing: 1px;
+}
+
+.paint-title-area p {
+  font-size: 0.85rem;
+  color: var(--color-text-muted, #8a7a65);
+}
+
+.paint-close-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.paint-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+/* Main Workspace */
+.paint-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  padding: 1.5rem 2rem;
+  gap: 2rem;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+/* Tool Panel Left */
+.paint-tool-panel {
+  width: 280px;
+  background: rgba(17, 24, 39, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+.panel-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-accent-gold, #c9a84c);
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+}
+
+/* Template Selectors */
+.template-grid {
+  display: grid;
+  grid-template-cols: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.template-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.template-card.active,
+.template-card:hover {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: var(--color-accent-gold, #c9a84c);
+  color: white;
+}
+
+.template-thumb {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.35rem;
+  opacity: 0.7;
+}
+
+.template-card.active .template-thumb {
+  opacity: 1;
+}
+
+/* Tool Selectors */
+.tool-grid {
+  display: grid;
+  grid-template-cols: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.tool-btn {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: #cbd5e1;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.tool-btn.active,
+.tool-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+  color: white;
+}
+
+.tool-btn.active {
+  background: rgba(184, 92, 56, 0.15);
+  border-color: var(--color-accent-terra, #b85c38);
+  color: var(--color-accent-terra, #b85c38);
+}
+
+.tool-btn-icon {
+  font-size: 1.25rem;
+}
+
+/* Slider */
+.brush-size-slider {
+  width: 100%;
+  margin-top: 0.5rem;
+  accent-color: var(--color-accent-gold, #c9a84c);
+}
+
+.size-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  color: var(--color-text-muted, #8a7a65);
+}
+
+/* Color Palette */
+.color-grid {
+  display: grid;
+  grid-template-cols: repeat(2, 1fr);
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.color-swatch {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+}
+
+.color-swatch:hover {
+  transform: scale(1.15);
+}
+
+.color-swatch.active {
+  border-color: white;
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Color Panel Right */
+.paint-color-panel {
+  width: 130px;
+  background: rgba(17, 24, 39, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  overflow-y: auto;
+  align-items: center;
+}
+
+/* Canvas Area Center */
+.canvas-holder {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  position: relative;
+  overflow: auto;
+  padding: 3rem;
+}
+
+.canvas-wrapper {
+  position: relative;
+  /* El ancho se calcula a partir del factor de escala zoom */
+  width: calc(800px * var(--scale, 1));
+  max-width: calc(95% * var(--scale, 1));
+  aspect-ratio: 800 / 436;
+  height: auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+  margin: auto;
+  transition: width 0.2s ease, max-width 0.2s ease;
+}
+
+.drawing-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  cursor: crosshair;
+}
+
+.canvas-svg-overlay,
+.canvas-image-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+}
+
+.grayscale-effect {
+  filter: grayscale(100%) contrast(150%) brightness(105%);
+}
+
+/* Actions Panel - Colocados debajo de Grosor, lado a lado */
+.paint-actions-panel {
+  display: grid;
+  grid-template-cols: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.6rem 0.5rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.8rem;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.btn-clear {
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-clear:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-download {
+  background: var(--color-accent-gold, #c9a84c);
+  color: #0b0d19;
+}
+
+.btn-download:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+}
+
+/* Reference Guide Box */
+.reference-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.reference-box:hover {
+  border-color: var(--color-accent-gold, #c9a84c);
+}
+
+.reference-img {
+  max-width: 100%;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 6px;
+  transition: transform 0.3s ease;
+}
+
+.reference-img:hover {
+  transform: scale(1.1);
+}
+
+/* Floating Zoom Panel */
+.zoom-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(17, 24, 39, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.zoom-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.zoom-btn:hover:not(:disabled) {
+  background: var(--color-accent-gold, #c9a84c);
+  color: #0b0d19;
+  transform: scale(1.1);
+}
+
+.zoom-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.zoom-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-accent-gold, #c9a84c);
+  min-width: 45px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 950px) {
+  .paint-workspace {
+    flex-direction: column;
+    overflow-y: auto;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .paint-tool-panel {
+    width: 100%;
+    order: 2;
+  }
+
+  .canvas-holder {
+    height: auto;
+    aspect-ratio: 800 / 436;
+    order: 1;
+    flex-shrink: 0;
+    padding: 1rem;
+  }
+
+  .canvas-wrapper {
+    width: calc(100% * var(--scale, 1));
+    max-width: calc(500px * var(--scale, 1));
+    height: auto;
+    aspect-ratio: 800 / 436;
+  }
+
+  .paint-color-panel {
+    width: 100%;
+    order: 3;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    gap: 1rem;
+    overflow: visible;
+  }
+
+  .paint-color-panel .panel-section-title {
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+
+  .paint-color-panel .color-grid {
+    grid-template-cols: repeat(8, 1fr);
+    gap: 0.5rem;
+    width: auto;
+  }
+
+  .paint-color-panel .color-swatch {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* ==========================================================
+   TEMPLATE SELECTION SCREEN STYLES
+   ========================================================== */
+
+.paint-selection-screen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: radial-gradient(circle at center, #151a30 0%, #080a14 100%);
+  display: flex;
+  flex-direction: column;
+  color: #f0e8d8;
+  font-family: var(--font-body, sans-serif);
+  overflow-y: auto;
+}
+
+.paint-selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.paint-badge {
+  display: inline-block;
+  background: rgba(201, 168, 76, 0.15);
+  color: var(--color-accent-gold, #c9a84c);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 0.5rem;
+  border: 1px solid rgba(201, 168, 76, 0.25);
+}
+
+.paint-selection-title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 2.25rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.paint-selection-subtitle {
+  font-size: 0.95rem;
+  color: #8a7a65;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  max-width: 600px;
+}
+
+.paint-back-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paint-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateX(-3px);
+}
+
+.paint-selection-container {
+  flex: 1;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paint-templates-grid {
+  display: grid;
+  grid-template-cols: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 3rem;
+  width: 100%;
+}
+
+.paint-template-selection-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.paint-template-selection-card:hover {
+  transform: translateY(-8px);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-accent-gold, #c9a84c);
+  box-shadow: 0 20px 40px rgba(201, 168, 76, 0.15);
+}
+
+.paint-template-card-preview {
+  position: relative;
+  height: 220px;
+  background: #ffffff; /* Contrast for black outlines */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.paint-preview-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.paint-template-selection-card:hover .paint-preview-img {
+  transform: scale(1.08);
+}
+
+.paint-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 13, 25, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.paint-template-selection-card:hover .paint-card-overlay {
+  opacity: 1;
+}
+
+.paint-card-action-text {
+  background: var(--color-accent-gold, #c9a84c);
+  color: #0b0d19;
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.4);
+  transform: translateY(10px);
+  transition: transform 0.3s ease;
+}
+
+.paint-template-selection-card:hover .paint-card-action-text {
+  transform: translateY(0);
+}
+
+.paint-template-card-footer {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.paint-template-card-emoji {
+  font-size: 1.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+}
+
+.paint-template-selection-card:hover .paint-template-card-emoji {
+  background: rgba(201, 168, 76, 0.1);
+  border-color: rgba(201, 168, 76, 0.3);
+  transform: rotate(-10deg);
+}
+
+.paint-template-card-text {
+  flex: 1;
+}
+
+.paint-template-card-name {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin: 0 0 0.35rem 0;
+  font-family: var(--font-display, 'Cinzel', serif);
+  transition: color 0.3s ease;
+}
+
+.paint-template-selection-card:hover .paint-template-card-name {
+  color: var(--color-accent-gold, #c9a84c);
+}
+
+.paint-template-card-desc {
+  font-size: 0.85rem;
+  color: #8a7a65;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Header buttons layout */
+.paint-header-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.paint-change-btn {
+  background: rgba(201, 168, 76, 0.15);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--color-accent-gold, #c9a84c);
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.paint-change-btn:hover {
+  background: rgba(201, 168, 76, 0.3);
+  border-color: var(--color-accent-gold, #c9a84c);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* Responsive adjustment for selection screen */
+@media (max-width: 768px) {
+  .paint-selection-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  .paint-back-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .paint-selection-container {
+    padding: 1.5rem;
+  }
+  .paint-templates-grid {
+    grid-template-cols: 1fr;
+    gap: 1.5rem;
+  }
+}

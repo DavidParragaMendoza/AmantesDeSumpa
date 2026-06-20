@@ -76,6 +76,9 @@ export const gsapTarget = {
     reiScale:     0,   // Escala de Rei (0=invisible → 1=tamaño completo)
     reiPositionX: 0,   // Desplazamiento X adicional de Rei en la escena
     dialogueStep: 0,   // Paso de diálogo activo: 0=letrero, 1–6=fases Rei
+    reiLocalX:    0,   // Posición local en X de Rei (para simular caminata al estacionamiento)
+    reiLocalY:    0,   // Posición local en Y de Rei (para simular subida a la máquina)
+    reiIntroScale: 1,  // Escala individual de Rei en la escena de intro
   },
 
   /**
@@ -92,6 +95,18 @@ export const gsapTarget = {
    */
   transition: {
     intensity: 0,   // [0, 1] — intensidad del efecto warp
+  },
+
+  /**
+   * LAS VEGAS NARRATIVE (Escena 1)
+   */
+  lasVegas: {
+    reiOpacity:   0,   // Opacidad del globo de diálogo
+    reiScale:     0,   // Escala de Rei
+    dialogueStep: 0,   // 0=inactivo, 1=Texto 1, 2=Texto 2
+    amantesSumpaX: -1, // Posición X normalizada de la imagen final (-1 a 0)
+    huesoRojosX:   -1, // Posición X normalizada del tercer fondo (-1 a 0)
+    entierroMasivoX: -1, // Posición X normalizada del cuarto fondo (-1 a 0)
   },
 }
 

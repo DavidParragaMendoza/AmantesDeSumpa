@@ -71,9 +71,10 @@ export function useScrollNarrative() {
     if (viewport.width === 0 || viewport.height === 0) return
 
     // ── 1. DURACIONES DE LA LÍNEA DE TIEMPO ───────────────────
-    const introDuration   = 6.5  // Fases 2 a 7 + pausa
-    const cameraDuration  = CAMERA_KEYFRAMES.length - 1  // 7 escenas × 1 unidad
-    const totalDuration   = introDuration + cameraDuration
+    const introDuration    = 8.0  // Fases 2 a 8 + caminata/aparición + pausa
+    const lasVegasDuration = 18.0 // Fases de diálogo en Las Vegas (18 scrolls extra)
+    const cameraDuration   = CAMERA_KEYFRAMES.length - 1  // 7 escenas × 1 unidad
+    const totalDuration    = introDuration + lasVegasDuration + cameraDuration
 
     // ── 2. CONFIGURAR EL SPACER DE SCROLL ─────────────────────
     // VH_POR_ESCENA: cuántos vh de scroll consume cada parada narrativa.
@@ -99,7 +100,10 @@ export function useScrollNarrative() {
       reiOpacity:    0,   // Rei oculto al inicio
       reiScale:      0,   // Rei sin escala al inicio (para pop-in)
       reiPositionX:  0,   // Rei en posición derecha inicial
-      dialogueStep:  0,   // Sin diálogo al inicio (0=letrero, 1-6=fases Rei)
+      dialogueStep:  0,   // Sin diálogo al inicio
+      reiLocalX:     0,
+      reiLocalY:     0,
+      reiIntroScale: 1,
     }
     gsapTarget.camera.x    = 0
     gsapTarget.camera.y    = 0
@@ -108,6 +112,15 @@ export function useScrollNarrative() {
     gsapTarget.scene.escenaIndex = 0
     gsapTarget.scene.blend       = 0
     gsapTarget.transition.intensity = 0  // Efecto warp inactivo al inicio
+    gsapTarget.lasVegas = {
+      reiOpacity:   0,
+      reiScale:     0,
+      dialogueStep: 0,
+      amantesSumpaX: -1,
+      huesoRojosX:   -1,
+      entierroMasivoX: -1,
+      minigameCompleted: false,
+    }
 
     // ── 6. CONSTRUCCIÓN DE LA TIMELINE MAESTRA ─────────────────
     // paused: true → ScrollTrigger controla el progreso manualmente.
@@ -167,11 +180,13 @@ export function useScrollNarrative() {
     })
 
     /**
-     * FASE 6 (Texto 5 — Rei5.png):
-     * Rei5 queda al centro. Diálogo: ¡Esto me motiva a viajar!
+     * FASE 6 (Paso de diálogo 4 a 5):
+     * Rei5 en el centro del museo. Diálogo 5: "¿Ves que Rei tiene en sus manos globos..."
      */
     timelineRef.current.to(gsapTarget.intro, {
       reiPositionX: -worldWidth * 0.2,
+      reiLocalX: 0,
+      reiLocalY: 0,
       dialogueStep: 5,
       duration: 1,
       ease: 'power2.inOut',
@@ -179,17 +194,40 @@ export function useScrollNarrative() {
     })
 
     /**
-     * FASE 7 (Texto 6 — Rei6.png):
-     * Rei6 ya combina a Rei montado sobre la máquina del tiempo en una sola imagen.
-     * Diálogo: ¡Vamos, súbete a mi máquina del tiempo!
+     * FASE 7 (Paso de diálogo 5 a 6):
+     * Rei5 en el centro del museo. Diálogo 6: "Hoy quiero llevarte a un viaje maravilloso..."
      */
     timelineRef.current.to(gsapTarget.intro, {
       reiPositionX: -worldWidth * 0.2,
+      reiLocalX: 0,
+      reiLocalY: 0,
       dialogueStep: 6,
       duration: 1,
-      ease: 'back.out(1.5)',
+      ease: 'power2.inOut',
       onUpdate: () => invalidate(),
     })
+
+    /**
+     * FASE 8 (Caminata al Estacionamiento, diálogo 6 a 7):
+     * La cámara se desplaza al estacionamiento contiguo en X = worldWidth.
+     * Rei se desplaza y al llegar cambia al sprite montado (Rei6.png) al cruzar 6.5.
+     * Diálogo 7: "¡Vamos, súbete a mi máquina del tiempo!..."
+     */
+    timelineRef.current.to(gsapTarget.camera, {
+      x: worldWidth,
+      duration: 1.5,
+      ease: 'power2.inOut',
+      onUpdate: () => invalidate(),
+    })
+    timelineRef.current.to(gsapTarget.intro, {
+      reiPositionX: worldWidth * 0.8,
+      reiLocalX: 0,
+      reiLocalY: 0,
+      dialogueStep: 7,
+      duration: 1.5,
+      ease: 'power2.inOut',
+      onUpdate: () => invalidate(),
+    }, '<')
 
     /**
      * PAUSA NARRATIVA: breve espera antes de comenzar el viaje en el tiempo.
@@ -213,6 +251,19 @@ export function useScrollNarrative() {
           onUpdate: () => invalidate(),
         }
       )
+
+      // Si es la primera transición (viaje de intro a Las Vegas), desvanecemos el diálogo de la intro
+      if (index === 1) {
+        timelineRef.current.to(
+          gsapTarget.intro,
+          {
+            reiOpacity: 0,
+            duration: 0.3,
+            onUpdate: () => invalidate(),
+          },
+          '<'
+        )
+      }
 
       // ── Tween simultáneo del estado de escena (para el HUD y el store) ──
       // '<' significa "en paralelo con el tween anterior"
@@ -255,7 +306,191 @@ export function useScrollNarrative() {
         },
         '<+0.5'  // comienza 0.5 unidades después del inicio del ramp-up
       )
+
+      // ── NARRATIVA LAS VEGAS ──────────────────────────────────────
+      if (index === 1) {
+        // Scroll 1: Aparece Rei en la piedra (sin globo de diálogo)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          reiScale:     1,
+          reiOpacity:   0,
+          dialogueStep: 1,
+          duration:     1,
+          ease:         'power2.out',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 2: Aparece globo "¡Al fin hemos llegado!..."
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          reiOpacity:   1,
+          dialogueStep: 2,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 3: Texto "Mira, ahí están los primeros..."
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 3,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 4: Horticultura (Rei3)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 4,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 5: OGSE-80 (Rei4)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 5,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 6: Cazadora recolectora (Rei3)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 6,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 7: Manglares (Rei)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 7,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 8: 200 osamentas (Rei2)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 8,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 9: Amantes de Sumpa (Desaparece Rei, animación fondo)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep:  9,
+          reiOpacity:    0,
+          reiScale:      0,
+          amantesSumpaX: 0,
+          duration:      1,
+          ease:          'power2.inOut',
+          onUpdate:      () => invalidate(),
+        })
+
+        // Scroll 10: Rei reaparece (Texto 8: ¿Conoces a los Amantes...)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 10,
+          reiOpacity:   1,
+          reiScale:     1,
+          duration:     1,
+          ease:         'power2.out',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 11: Texto 9 (Doble primario...)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 11,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 12: Texto 10 (El hombre con su mano derecha...)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 12,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 13: Huesos Rojos (Desaparece Rei, animación fondo)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep:  13,
+          reiOpacity:    0,
+          reiScale:      0,
+          huesoRojosX:   0,
+          duration:      1,
+          ease:          'power2.inOut',
+          onUpdate:      () => invalidate(),
+        })
+
+        // Scroll 14: Rei reaparece (Texto 11: ENTIERRO SECUNDARIO parte 1)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 14,
+          reiOpacity:   1,
+          reiScale:     1,
+          duration:     1,
+          ease:         'power2.out',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 15: Texto 12 (ENTIERRO SECUNDARIO parte 2)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 15,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 16: Entierro Masivo (Desaparece Rei, animación fondo)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep:    16,
+          reiOpacity:      0,
+          reiScale:        0,
+          entierroMasivoX: 0,
+          duration:        1,
+          ease:            'power2.inOut',
+          onUpdate:        () => invalidate(),
+        })
+
+        // Scroll 17: Rei reaparece (Texto 13: ENTIERRO MÚLTIPLE O MASIVO)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 17,
+          reiOpacity:   1,
+          reiScale:     1,
+          duration:     1,
+          ease:         'power2.out',
+          onUpdate:     () => invalidate(),
+        })
+
+        // Scroll 18: Minijuego Salamanquesas (Texto 14: Ayudame a encontrar...)
+        timelineRef.current.to(gsapTarget.lasVegas, {
+          dialogueStep: 18,
+          duration:     1,
+          ease:         'power2.inOut',
+          onUpdate:     () => invalidate(),
+        })
+      }
     })
+
+    // ── LÓGICA DE BLOQUEO DE SCROLL (MINIJUEGO) ─────────────────
+    // Bloquear exactamente al final del último tween de Las Vegas (cuando la cámara llegó a i=1 y ya pasaron todos sus dialogos extra)
+    const maxProgressLasVegas = (introDuration + 1 + 18) / totalDuration
+
+    const handleScroll = () => {
+      const st = ScrollTrigger.getAll()[0]
+      if (!st) return
+      
+      // Si el minijuego no se ha completado y tratamos de pasar del paso 18
+      if (!gsapTarget.lasVegas.minigameCompleted && st.progress > maxProgressLasVegas) {
+        const maxScroll = st.start + (st.end - st.start) * maxProgressLasVegas
+        if (window.scrollY > maxScroll) {
+          window.scrollTo(0, maxScroll)
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: false })
 
     // ── 7. PUNTOS DE SNAP ───────────────────────────────────────
     const snapPoints = []
@@ -272,11 +507,26 @@ export function useScrollNarrative() {
     snapPoints.push(4 / totalDuration)
     // Punto tras Fase 6 (Texto 5)
     snapPoints.push(5 / totalDuration)
-    // Punto tras Fase 7 + pausa (Texto 6 / Spondylus + Pausa)
+    // Punto tras Fase 7 (Texto 6 en el museo)
+    snapPoints.push(6.0 / totalDuration)
+    // Punto tras Fase 8 (Texto 7 en el estacionamiento)
+    snapPoints.push(7.5 / totalDuration)
+    // Punto tras Pausa antes del viaje
     snapPoints.push(introDuration / totalDuration)
+    
     // Puntos de cada escena cultural
+    let currentDurationAccum = introDuration;
     for (let i = 1; i < CAMERA_KEYFRAMES.length; i++) {
-      snapPoints.push((introDuration + i) / totalDuration)
+      currentDurationAccum += 1; // Viaje de cámara de 1 unidad
+      snapPoints.push(currentDurationAccum / totalDuration)
+      
+      if (i === 1) {
+        // 18 puntos de snap adicionales en Las Vegas
+        for (let j = 1; j <= 18; j++) {
+          currentDurationAccum += 1;
+          snapPoints.push(currentDurationAccum / totalDuration)
+        }
+      }
     }
 
     // ── 8. SCROLL TRIGGER ──────────────────────────────────────
@@ -284,13 +534,13 @@ export function useScrollNarrative() {
       trigger: '#scroll-spacer',
       start:   'top top',
       end:     'bottom bottom',
-      scrub:   1.5,          // Retardo de seguimiento (suavizado)
+      scrub:   0.8,          // Retardo de seguimiento ajustado para ser más responsivo
       animation: timelineRef.current,
       snap: {
         snapTo:   snapPoints,
-        duration: { min: 0.2, max: 0.8 },
-        delay:    0.1,
-        ease:     'power1.inOut',
+        duration: { min: 0.25, max: 0.85 }, // Duración equilibrada para transiciones de snapping
+        delay:    0.3,          // Delay aumentado a 0.3s para evitar interrupción durante el scroll activo
+        ease:     'power2.out', // Desaceleración suave al encajar
       },
       onUpdate: (self) => {
         // CRÍTICO: invalidate() en CADA tick de scroll con frameloop="demand"
@@ -324,6 +574,7 @@ export function useScrollNarrative() {
       cancelAnimationFrame(initialFrameId)
       timelineRef.current?.kill()
       ScrollTrigger.getAll().forEach(st => st.kill())
+      window.removeEventListener('scroll', handleScroll)
       // Resetear el efecto warp y el estado de transición al desmontar
       gsapTarget.transition.intensity = 0
       useMuseoStore.getState().setEnTransicion(false)

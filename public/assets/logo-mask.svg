@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 450" width="1000" height="450">
+  <defs>
+    <style>
+      .title-text {
+        font-family: 'Cinzel', 'Impact', 'Arial Black', sans-serif;
+        font-weight: 900;
+        font-size: 85px;
+        fill: #ffffff;
+        letter-spacing: 4px;
+      }
+      .subtitle-text {
+        font-family: 'Inter', 'Arial Black', sans-serif;
+        font-weight: 900;
+        font-size: 32px;
+        fill: #ffffff;
+        letter-spacing: 18px;
+      }
+    </style>
+  </defs>
+  <text x="50%" y="170" dominant-baseline="middle" text-anchor="middle" class="title-text">
+    AMANTES DE SUMPA
+  </text>
+  <text x="50%" y="280" dominant-baseline="middle" text-anchor="middle" class="subtitle-text">
+    MUSEO DE SITIO
+  </text>
+</svg>
