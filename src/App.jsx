@@ -36,28 +36,46 @@ import { useMuseoStore } from './store/useMuseoStore'
 import { LandingPage } from './components/LandingPage'
 import { PaintingCanvas } from './components/PaintingCanvas'
 import { MiniGamesSection } from './components/MiniGamesSection'
+import { RotatePrompt } from './components/RotatePrompt'
 
 export default function App() {
   const modo = useMuseoStore(s => s.modo)
 
   // ── MODO 1: LANDING PAGE CON MÁSCARA ANIMADA ──
   if (modo === 'landing') {
-    return <LandingPage />
+    return (
+      <>
+        <RotatePrompt />
+        <LandingPage />
+      </>
+    )
   }
 
   // ── MODO 2: SECCIÓN DE PINTURA CREATIVA ──
   if (modo === 'pintar') {
-    return <PaintingCanvas />
+    return (
+      <>
+        <RotatePrompt />
+        <PaintingCanvas />
+      </>
+    )
   }
 
   // ── MODO 3: SECCIÓN DE MINIJUEGOS EDUCATIVOS ──
   if (modo === 'minijuegos') {
-    return <MiniGamesSection />
+    return (
+      <>
+        <RotatePrompt />
+        <MiniGamesSection />
+      </>
+    )
   }
 
   // ── MODO 4: RECORRIDO ANIMADO 2.5D (DIORAMA CANVASES) ──
   return (
     <>
+      <RotatePrompt />
+
       {/* ══════════════════════════════════════════════════════
           CANVAS R3F — Fijo en pantalla, cubre todo el viewport
          ══════════════════════════════════════════════════════ */}

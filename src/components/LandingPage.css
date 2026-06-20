@@ -253,3 +253,66 @@
     font-size: 1.4rem;
   }
 }
+
+/* ── Landscape Móvil ─────────────────────────────────────────
+   En landscape el espacio vertical es muy reducido.
+   Ajustamos el menú para que sea más compacto.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Textos del SVG más pequeños */
+  .svg-title-text {
+    font-size: 60px;
+  }
+  .svg-subtitle-text {
+    font-size: 22px;
+  }
+
+  /* Menú flotante más compacto y posicionado más arriba */
+  .landing-menu-layer {
+    bottom: 5%;
+    padding: 0.85rem 1.25rem;
+    max-width: 90%;
+    border-radius: 14px;
+  }
+
+  /* Botones más delgados para ganar espacio vertical */
+  .landing-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    min-width: 120px;
+  }
+
+  /* Scroll prompt más compacto */
+  .landing-scroll-prompt {
+    padding: 8px 16px !important;
+    gap: 0.4rem;
+    border-radius: 10px !important;
+  }
+
+  .landing-scroll-prompt span {
+    font-size: 0.75rem;
+  }
+
+  .mouse-icon {
+    width: 18px;
+    height: 30px;
+  }
+}
+
+/* Paisajes muy pequeños (teléfonos en landscape con < 400px de alto) */
+@media (max-height: 420px) and (orientation: landscape) {
+  .landing-menu-layer {
+    bottom: 4%;
+    padding: 0.65rem 1rem;
+  }
+
+  .landing-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .btn-icon {
+    font-size: 1rem;
+  }
+}

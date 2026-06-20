@@ -728,3 +728,245 @@
     gap: 1.5rem;
   }
 }
+
+/* ── Landscape Móvil ─────────────────────────────────────────
+   Pantallas giradas (teléfonos en horizontal).
+   Layout: herramientas izquierda | canvas centro | colores derecha
+   Todo comprimido verticalmente para aprovechar el espacio.
+   ──────────────────────────────────────────────────────────── */
+@media (max-width: 900px) and (orientation: landscape) {
+  /* Header compacto */
+  .paint-header {
+    padding: 0.4rem 1rem;
+  }
+
+  .paint-title-area h2 {
+    font-size: 1rem;
+  }
+
+  .paint-title-area p {
+    display: none;
+  }
+
+  .paint-close-btn,
+  .paint-change-btn {
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem;
+  }
+
+  /* Workspace horizontal, restablecer el layout de 3 columnas */
+  .paint-workspace {
+    flex-direction: row;
+    padding: 0.5rem 0.75rem;
+    gap: 0.75rem;
+    overflow: hidden;
+  }
+
+  /* Panel de herramientas izquierda: más estrecho */
+  .paint-tool-panel {
+    width: 170px;
+    padding: 0.75rem;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    order: 1;
+  }
+
+  .panel-section-title {
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Grid de plantillas: 3 columnas en landscape */
+  .template-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  .template-card {
+    padding: 0.25rem;
+    font-size: 0.65rem;
+  }
+
+  .template-thumb {
+    height: 36px;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Herramientas en 4 columnas */
+  .tool-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.4rem;
+  }
+
+  .tool-btn {
+    padding: 0.4rem 0.2rem;
+    font-size: 0.65rem;
+    gap: 0.15rem;
+  }
+
+  .tool-btn-icon {
+    font-size: 1rem;
+  }
+
+  /* Acciones más compactas */
+  .paint-actions-panel {
+    gap: 0.35rem;
+  }
+
+  .action-btn {
+    padding: 0.4rem 0.3rem;
+    font-size: 0.7rem;
+  }
+
+  /* Referencias más pequeñas */
+  .reference-img {
+    height: 70px;
+  }
+
+  /* Canvas central */
+  .canvas-holder {
+    flex: 1;
+    order: 2;
+    height: auto;
+    aspect-ratio: auto;
+    padding: 0.5rem;
+  }
+
+  .canvas-wrapper {
+    width: calc(100% * var(--scale, 1));
+    max-width: calc(100% * var(--scale, 1));
+    height: 100%;
+    aspect-ratio: 800 / 436;
+  }
+
+  /* Panel de colores derecha: compacto vertical */
+  .paint-color-panel {
+    width: 90px;
+    padding: 0.5rem;
+    gap: 0.75rem;
+    flex-shrink: 0;
+    order: 3;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .paint-color-panel .panel-section-title {
+    font-size: 0.65rem;
+    margin-bottom: 0;
+    writing-mode: horizontal-tb;
+    text-align: center;
+  }
+
+  .paint-color-panel .color-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .paint-color-panel .color-swatch {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Zoom controls más pequeños */
+  .zoom-controls {
+    top: 8px;
+    right: 8px;
+    padding: 0.25rem 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .zoom-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 0.65rem;
+  }
+
+  .zoom-text {
+    font-size: 0.7rem;
+    min-width: 32px;
+  }
+}
+
+/* Pantallas muy pequeñas en landscape (< 420px de alto) */
+@media (max-height: 420px) and (orientation: landscape) {
+  .paint-tool-panel {
+    width: 140px;
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+
+  .paint-color-panel {
+    width: 72px;
+    padding: 0.35rem;
+  }
+
+  .paint-color-panel .color-swatch {
+    width: 22px;
+    height: 22px;
+  }
+
+  .tool-btn {
+    padding: 0.3rem 0.1rem;
+    font-size: 0.6rem;
+  }
+
+  .tool-btn-icon {
+    font-size: 0.85rem;
+  }
+
+  .reference-img {
+    height: 50px;
+  }
+}
+
+/* ── Selection Screen: Landscape Móvil ──────────────────── */
+@media (max-width: 900px) and (orientation: landscape) {
+  .paint-selection-header {
+    padding: 0.75rem 1.5rem;
+  }
+
+  .paint-selection-title {
+    font-size: 1.5rem;
+  }
+
+  .paint-selection-subtitle {
+    display: none;
+  }
+
+  .paint-selection-container {
+    padding: 1rem 1.5rem;
+    align-items: flex-start;
+  }
+
+  .paint-templates-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+
+  .paint-template-card-preview {
+    height: 130px;
+    padding: 0.75rem;
+  }
+
+  .paint-template-card-footer {
+    padding: 0.75rem;
+  }
+
+  .paint-template-card-emoji {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+  }
+
+  .paint-template-card-name {
+    font-size: 0.9rem;
+  }
+
+  .paint-template-card-desc {
+    font-size: 0.75rem;
+  }
+}

@@ -1,0 +1,169 @@
+/* ==========================================================
+   ROTATE PROMPT — Pantalla de rotación para móviles
+   Aparece en portrait, desaparece en landscape.
+   ========================================================== */
+
+.rotate-prompt {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0a0c14;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  color: var(--color-text-primary, #f0e8d8);
+  font-family: var(--font-body, 'Inter', sans-serif);
+  /* Sólo visible en portrait + móvil (se controla desde JS también) */
+}
+
+/* Fondo con gradiente sutil */
+.rotate-prompt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 70%, rgba(42, 107, 138, 0.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Ícono del teléfono animado */
+.rotate-prompt__icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rotate-prompt__phone {
+  width: 60px;
+  height: 100px;
+  border: 3px solid var(--color-accent-gold, #c9a84c);
+  border-radius: 12px;
+  position: relative;
+  animation: phoneRotate 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  box-shadow:
+    0 0 20px rgba(201, 168, 76, 0.2),
+    0 0 40px rgba(201, 168, 76, 0.1);
+}
+
+/* Botón home del teléfono */
+.rotate-prompt__phone::before {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 5px;
+  background: rgba(201, 168, 76, 0.5);
+  border-radius: 3px;
+}
+
+/* Pantalla del teléfono */
+.rotate-prompt__phone::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 6px;
+  right: 6px;
+  bottom: 20px;
+  background: rgba(201, 168, 76, 0.08);
+  border-radius: 6px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+/* Flecha de rotación curva */
+.rotate-prompt__arrow {
+  position: absolute;
+  right: -40px;
+  bottom: -10px;
+  width: 40px;
+  height: 40px;
+  color: var(--color-accent-gold, #c9a84c);
+  opacity: 0.7;
+  animation: arrowPulse 2s ease-in-out infinite;
+}
+
+/* Texto principal */
+.rotate-prompt__text {
+  text-align: center;
+  z-index: 1;
+  padding: 0 2rem;
+}
+
+.rotate-prompt__title {
+  font-family: var(--font-display, 'Cinzel', serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-accent-gold, #c9a84c);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(201, 168, 76, 0.3);
+}
+
+.rotate-prompt__subtitle {
+  font-size: 0.875rem;
+  color: rgba(240, 232, 216, 0.6);
+  line-height: 1.5;
+  letter-spacing: 0.5px;
+}
+
+/* Ornamento decorativo */
+.rotate-prompt__ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+.rotate-prompt__line {
+  width: 40px;
+  height: 1px;
+  background: var(--color-accent-gold, #c9a84c);
+}
+
+.rotate-prompt__diamond {
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent-gold, #c9a84c);
+  transform: rotate(45deg);
+}
+
+/* ── Animaciones ─────────────────────────────────────────── */
+
+@keyframes phoneRotate {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 20px rgba(201, 168, 76, 0.2), 0 0 40px rgba(201, 168, 76, 0.1);
+  }
+  35% {
+    transform: rotate(90deg);
+    box-shadow: 0 0 30px rgba(201, 168, 76, 0.4), 0 0 60px rgba(201, 168, 76, 0.2);
+  }
+  65% {
+    transform: rotate(90deg);
+    box-shadow: 0 0 30px rgba(201, 168, 76, 0.4), 0 0 60px rgba(201, 168, 76, 0.2);
+  }
+  100% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 20px rgba(201, 168, 76, 0.2), 0 0 40px rgba(201, 168, 76, 0.1);
+  }
+}
+
+@keyframes arrowPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.1); }
+}
+
+/* ── Sólo visible en portrait en pantallas móviles ─────── */
+/* Se oculta en landscape O en pantallas grandes (tablets/desktop) */
+@media (orientation: landscape), (min-width: 769px) {
+  .rotate-prompt {
+    display: none;
+  }
+}
