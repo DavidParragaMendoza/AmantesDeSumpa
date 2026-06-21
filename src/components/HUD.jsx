@@ -12,6 +12,7 @@
  */
 
 import { useMuseoStore, ESCENAS } from '../store/useMuseoStore'
+import { FullscreenToggle } from './FullscreenToggle'
 import './HUD.css'
 
 // ── Indicador de Era Temporal ─────────────────────────────────
@@ -68,7 +69,6 @@ function ReiDialog() {
     </div>
   )
 }
-
 // ── Toggle de Audio ────────────────────────────────────────────
 function AudioToggle() {
   const audioHabilitado = useMuseoStore(s => s.audioHabilitado)
@@ -106,7 +106,10 @@ export function HUD() {
       <EraIndicator />
       <JourneyProgress />
       <ReiDialog />
-      <AudioToggle />
+      <div className="hud__top-controls">
+        <FullscreenToggle />
+        <AudioToggle />
+      </div>
     </div>
   )
 }

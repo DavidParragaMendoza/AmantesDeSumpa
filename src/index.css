@@ -51,6 +51,8 @@ html {
   /* El scroll nativo de la página controla la narrativa */
   scroll-behavior: auto; /* GSAP controla el scroll, no CSS */
   font-size: 16px;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -60,6 +62,8 @@ body {
   font-weight: 400;
   line-height: 1.6;
   overflow-x: hidden;
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
   /* El body tendrá una altura grande para que GSAP/ScrollTrigger
      pueda calcular el progreso del scroll narrativo */
 }

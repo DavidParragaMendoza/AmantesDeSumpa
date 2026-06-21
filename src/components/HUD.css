@@ -115,11 +115,18 @@
   font-style: italic;
 }
 
-/* ── Audio Toggle (esquina superior derecha) ── */
-.hud__audio-btn {
+/* ── Top Controls Panel (esquina superior derecha) ── */
+.hud__top-controls {
   position: fixed;
   top: var(--space-lg);
   right: var(--space-lg);
+  display: flex;
+  gap: var(--space-sm);
+  z-index: var(--z-hud);
+}
+
+.hud__audio-btn,
+.hud__fullscreen-btn {
   background: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(201, 168, 76, 0.2);
@@ -131,19 +138,22 @@
   justify-content: center;
   cursor: pointer;
   font-size: 1.1rem;
+  color: var(--color-text-primary);
   transition:
     background var(--duration-fast) ease,
     border-color var(--duration-fast) ease,
     transform var(--duration-fast) ease;
 }
 
-.hud__audio-btn:hover {
+.hud__audio-btn:hover,
+.hud__fullscreen-btn:hover {
   background: rgba(201, 168, 76, 0.15);
   border-color: rgba(201, 168, 76, 0.5);
   transform: scale(1.1);
 }
 
-.hud__audio-btn:active {
+.hud__audio-btn:active,
+.hud__fullscreen-btn:active {
   transform: scale(0.95);
 }
 
@@ -189,13 +199,23 @@
     font-size: clamp(0.55rem, 1.2vw, 0.75rem);
   }
 
-  /* Audio Toggle más pequeño */
-  .hud__audio-btn {
+  /* Top Controls Panel más pequeño */
+  .hud__top-controls {
     top: 0.75rem;
     right: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .hud__audio-btn,
+  .hud__fullscreen-btn {
     width: 36px;
     height: 36px;
     font-size: 0.9rem;
+  }
+
+  .hud__fullscreen-btn svg {
+    width: 16px;
+    height: 16px;
   }
 
   /* Progress Bar más cerca del borde inferior */

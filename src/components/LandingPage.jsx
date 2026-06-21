@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useMuseoStore } from '../store/useMuseoStore'
+import { FullscreenToggle } from './FullscreenToggle'
 import './LandingPage.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -102,6 +103,11 @@ export function LandingPage() {
     <div ref={containerRef} className="landing-container">
       {/* Capa de Viewport Fijo */}
       <div className="landing-fixed-viewport">
+        {/* Controles superiores flotantes (Pantalla Completa) */}
+        <div className="landing-top-controls">
+          <FullscreenToggle className="landing-fullscreen-btn" />
+        </div>
+
         {/* Contenedor de la Imagen de Fondo (Detrás del SVG de Cobertura) */}
         <div ref={bgRef} className="landing-bg-image-wrapper">
           <img 

@@ -316,3 +316,57 @@
     font-size: 1rem;
   }
 }
+
+/* Floating controls on landing page (top right) */
+.landing-top-controls {
+  position: absolute;
+  top: var(--space-lg, 2rem);
+  right: var(--space-lg, 2rem);
+  z-index: 120; /* Above background and overlay */
+}
+
+.landing-fullscreen-btn {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--color-text-primary, #f0e8d8);
+  transition:
+    background var(--duration-fast, 200ms) ease,
+    border-color var(--duration-fast, 200ms) ease,
+    transform var(--duration-fast, 200ms) ease;
+}
+
+.landing-fullscreen-btn:hover {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.5);
+  transform: scale(1.1);
+}
+
+.landing-fullscreen-btn:active {
+  transform: scale(0.95);
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .landing-top-controls {
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+  .landing-fullscreen-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .landing-fullscreen-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+

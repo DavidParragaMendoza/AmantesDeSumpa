@@ -1,0 +1,22 @@
+{
+  "name": "Museo Amantes de Sumpa — Viaje en el Tiempo",
+  "short_name": "Amantes de Sumpa",
+  "description": "Un viaje interactivo en el tiempo a través de las culturas precolombinas de Santa Elena, Ecuador.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0a0c14",
+  "theme_color": "#0a0c14",
+  "icons": [
+    {
+      "src": "/assets/logo-mask.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/assets/Rei.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
