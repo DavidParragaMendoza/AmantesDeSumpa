@@ -107,6 +107,11 @@ export const gsapTarget = {
     amantesSumpaX: -1, // Posición X normalizada de la imagen final (-1 a 0)
     huesoRojosX:   -1, // Posición X normalizada del tercer fondo (-1 a 0)
     entierroMasivoX: -1, // Posición X normalizada del cuarto fondo (-1 a 0)
+    fondoTransicionX: -1, // Posición X normalizada del fondo de transición (-1 a 0)
+    reiPositionX: 0, // Posición X absoluta de Rei en la escena de Las Vegas
+    maquinaScale: 0, // Escala de la máquina del tiempo por separado
+    maquinaOpacity: 0, // Opacidad de la máquina del tiempo por separado
+    reiMountedOpacity: 0, // Opacidad de Rei montado en la máquina del tiempo
   },
 }
 

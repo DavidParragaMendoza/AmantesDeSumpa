@@ -109,25 +109,26 @@ function useWorldWidth() {
  */
 export const ASSET_URLS = {
   // ── Escena 0: El Museo
-  rei_gecko:               '/assets/Rei.webp',
-  rei_gecko2:              '/assets/Rei2.webp',
-  rei_gecko3:              '/assets/Rei3.webp',
-  rei_gecko4:              '/assets/Rei4.webp',
-  rei_gecko5:              '/assets/Rei5.webp',
-  rei_gecko6:              '/assets/Rei6.webp',
-  rei_gecko7:              '/assets/Rei7.webp',
-  museo_fondo:             '/assets/museo.webp',
+  rei_gecko: '/assets/Rei.webp',
+  rei_gecko2: '/assets/Rei2.webp',
+  rei_gecko3: '/assets/Rei3.webp',
+  rei_gecko4: '/assets/Rei4.webp',
+  rei_gecko5: '/assets/Rei5.webp',
+  rei_gecko6: '/assets/Rei6.webp',
+  rei_gecko7: '/assets/Rei7.webp',
+  museo_fondo: '/assets/museo.webp',
   museo_maquintaDelTiempo: '/assets/maquinaDelTiempo.webp',
-  estacionamiento:         '/assets/estacionamiento.webp',
+  estacionamiento: '/assets/estacionamiento.webp',
 
   // ── Escena 1: Las Vegas
-  lasVegasFondo:             '/assets/Las_Vegas.webp',
-  amantesSumpaFondo:         '/assets/amantesSumpa.webp',
-  huesoRojosFondo:           '/assets/huesoRojos.webp',
-  entierroMasivoFondo:       '/assets/entierroMasivo.webp',
-  esqueleto1:                '/assets/esqueleto1.webp',
-  esqueleto2:                '/assets/esqueleto2.webp',
-  esqueleto3:                '/assets/esqueleto3.webp',
+  lasVegasFondo: '/assets/Las_Vegas.webp',
+  amantesSumpaFondo: '/assets/amantesSumpa.webp',
+  huesoRojosFondo: '/assets/huesoRojos.webp',
+  entierroMasivoFondo: '/assets/entierroMasivo.webp',
+  lasVegasTransicion: '/assets/fondoTransicion.webp',
+  esqueleto1: '/assets/esqueleto1.webp',
+  esqueleto2: '/assets/esqueleto2.webp',
+  esqueleto3: '/assets/esqueleto3.webp',
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -148,30 +149,30 @@ function EscenaIntroduccion({ xOffset }) {
   // Dividimos por 5 para acercarlos al centro sin salirse del frame.
   const xPos = worldWidth / 5
 
-  const signRef       = useRef(null)
-  const reiGroupRef   = useRef(null)
-  const dialogBoxRef  = useRef(null)
-  const dialogue1Ref  = useRef(null)
-  const dialogue2Ref  = useRef(null)
-  const dialogue3Ref  = useRef(null)
-  const dialogue4Ref  = useRef(null)
-  const dialogue5Ref  = useRef(null)
-  const dialogue6Ref  = useRef(null)
-  const dialogue7Ref  = useRef(null) // Nuevo diálogo para la subida
-  const rei1Ref       = useRef(null)
-  const rei2Ref       = useRef(null)
-  const rei3Ref       = useRef(null)
-  const rei4Ref       = useRef(null)
-  const rei5Ref       = useRef(null)
-  const rei6Ref       = useRef(null)
+  const signRef = useRef(null)
+  const reiGroupRef = useRef(null)
+  const dialogBoxRef = useRef(null)
+  const dialogue1Ref = useRef(null)
+  const dialogue2Ref = useRef(null)
+  const dialogue3Ref = useRef(null)
+  const dialogue4Ref = useRef(null)
+  const dialogue5Ref = useRef(null)
+  const dialogue6Ref = useRef(null)
+  const dialogue7Ref = useRef(null) // Nuevo diálogo para la subida
+  const rei1Ref = useRef(null)
+  const rei2Ref = useRef(null)
+  const rei3Ref = useRef(null)
+  const rei4Ref = useRef(null)
+  const rei5Ref = useRef(null)
+  const rei6Ref = useRef(null)
   const reiIndividualGroupRef = useRef(null) // Para desplazar a Rei localmente
 
   useFrame(() => {
     // 1. Letrero de Bienvenida (Fade out)
     if (signRef.current) {
-      signRef.current.style.opacity   = gsapTarget.intro.signOpacity
+      signRef.current.style.opacity = gsapTarget.intro.signOpacity
       signRef.current.style.transform = `scale(${0.9 + gsapTarget.intro.signOpacity * 0.1})`
-      signRef.current.style.display   = gsapTarget.intro.signOpacity < 0.01 ? 'none' : 'block'
+      signRef.current.style.display = gsapTarget.intro.signOpacity < 0.01 ? 'none' : 'block'
     }
 
     // 2. Rei — posición y escala del grupo
@@ -189,7 +190,7 @@ function EscenaIntroduccion({ xOffset }) {
 
     // 3. Cambio de sprite de Rei según dialogueStep
     const step = gsapTarget.intro.dialogueStep
-    
+
     // Si ya completamos la caminata, hacemos el switch a Rei montado (step >= 6.5)
     const isMounted = step >= 6.5
 
@@ -285,7 +286,7 @@ function EscenaIntroduccion({ xOffset }) {
 
         {/* ── REI (LA SALAMANQUESA) + Globo de Diálogo (MAIN) ── */}
         <group ref={reiGroupRef} position={[xPos, -1.5, LAYER_Z.MAIN]}>
-          
+
           <group ref={reiIndividualGroupRef}>
             <group ref={rei1Ref}>
               <FlatIllustration
@@ -423,20 +424,33 @@ function EscenaIntroduccion({ xOffset }) {
 function EscenaLasVegas({ xOffset }) {
   const worldWidth = useWorldWidth()
 
+  // Helper to set opacity of all meshes inside a group dynamically
+  const setGroupOpacity = (group, opacity) => {
+    if (!group) return
+    group.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.opacity = opacity
+        child.material.transparent = true
+      }
+    })
+  }
+
   const reiGroupRef = useRef(null)
   const dialogBoxRef = useRef(null)
-  
+
   // Refs para los fondos
   const lasVegasFondoRef = useRef(null)
   const amantesSumpaFondoRef = useRef(null)
   const huesoRojosFondoRef = useRef(null)
   const entierroMasivoFondoRef = useRef(null)
-  
+  const fondoTransicionFondoRef = useRef(null)
+
   // Refs para los diferentes sprites de Rei
   const rei1Ref = useRef(null)
   const rei2Ref = useRef(null)
   const rei3Ref = useRef(null)
   const rei4Ref = useRef(null)
+  const rei6Ref = useRef(null)
   const rei7Ref = useRef(null)
 
   // Refs para los textos de diálogo
@@ -454,6 +468,9 @@ function EscenaLasVegas({ xOffset }) {
   const dialogue12Ref = useRef(null)
   const dialogue13Ref = useRef(null)
   const dialogue14Ref = useRef(null)
+  const dialogue15Ref = useRef(null)
+
+  const maquinaDelTiempoRef = useRef(null)
 
   const minigameGroupRef = useRef(null)
   const hudRef = useRef(null)
@@ -500,12 +517,27 @@ function EscenaLasVegas({ xOffset }) {
     // Cambio de diálogo y sprite según dialogueStep
     const step = gsapTarget.lasVegas.dialogueStep
 
+    // Actualizar la posición de Rei en X
+    if (reiGroupRef.current) {
+      if (step >= 18.5) {
+        reiGroupRef.current.position.x = gsapTarget.lasVegas.reiPositionX
+      } else {
+        reiGroupRef.current.position.x = xPosRei
+      }
+    }
+
     // Visibilidad de los sprites de Rei según el scroll:
-    if (rei1Ref.current) rei1Ref.current.visible = (step < 3.5) || (step >= 6.5 && step < 7.5) || (step >= 9.5 && step < 11.5) || (step >= 14.5 && step < 15.5) || (step >= 16.5 && step < 17.5)
+    if (rei1Ref.current) rei1Ref.current.visible = (step < 3.5) || (step >= 6.5 && step < 7.5) || (step >= 9.5 && step < 11.5) || (step >= 14.5 && step < 15.5) || (step >= 16.5 && step < 17.5) || (step >= 18.5 && step < 22.5)
     if (rei2Ref.current) rei2Ref.current.visible = (step >= 7.5 && step < 8.5)
     if (rei3Ref.current) rei3Ref.current.visible = (step >= 3.5 && step < 4.5) || (step >= 5.5 && step < 6.5) || (step >= 11.5 && step < 12.5)
     if (rei4Ref.current) rei4Ref.current.visible = (step >= 4.5 && step < 5.5) || (step >= 13.5 && step < 14.5)
-    if (rei7Ref.current) rei7Ref.current.visible = (step >= 17.5)
+    if (rei7Ref.current) rei7Ref.current.visible = (step >= 17.5 && step < 18.5)
+    if (rei6Ref.current) rei6Ref.current.visible = (step >= 21.5)
+
+    // Aplicar opacidades dinámicas para desvanecimiento suave
+    setGroupOpacity(rei1Ref.current, gsapTarget.lasVegas.reiOpacity)
+    setGroupOpacity(rei7Ref.current, gsapTarget.lasVegas.reiOpacity)
+    setGroupOpacity(rei6Ref.current, gsapTarget.lasVegas.reiMountedOpacity)
 
     // Visibilidad de los textos
     if (dialogue1Ref.current) dialogue1Ref.current.style.display = (step >= 1.5 && step < 2.5) ? 'block' : 'none'
@@ -521,7 +553,8 @@ function EscenaLasVegas({ xOffset }) {
     if (dialogue11Ref.current) dialogue11Ref.current.style.display = (step >= 13.5 && step < 14.5) ? 'block' : 'none'
     if (dialogue12Ref.current) dialogue12Ref.current.style.display = (step >= 14.5 && step < 15.5) ? 'block' : 'none'
     if (dialogue13Ref.current) dialogue13Ref.current.style.display = (step >= 16.5 && step < 17.5) ? 'block' : 'none'
-    if (dialogue14Ref.current) dialogue14Ref.current.style.display = (step >= 17.5) ? 'block' : 'none'
+    if (dialogue14Ref.current) dialogue14Ref.current.style.display = (step >= 17.5 && step < 18.5) ? 'block' : 'none'
+    if (dialogue15Ref.current) dialogue15Ref.current.style.display = (step >= 19.5 && step < 21.5) ? 'block' : 'none'
 
     // Animación de los nuevos fondos - se deslizan desde la izquierda
     if (amantesSumpaFondoRef.current) {
@@ -533,12 +566,21 @@ function EscenaLasVegas({ xOffset }) {
     if (entierroMasivoFondoRef.current) {
       entierroMasivoFondoRef.current.position.x = gsapTarget.lasVegas.entierroMasivoX * worldWidth
     }
+    if (fondoTransicionFondoRef.current) {
+      fondoTransicionFondoRef.current.position.x = gsapTarget.lasVegas.fondoTransicionX * worldWidth
+    }
+    if (maquinaDelTiempoRef.current) {
+      const ms = gsapTarget.lasVegas.maquinaScale
+      maquinaDelTiempoRef.current.scale.set(ms, ms, ms)
+      setGroupOpacity(maquinaDelTiempoRef.current, gsapTarget.lasVegas.maquinaOpacity)
+      maquinaDelTiempoRef.current.visible = (step >= 20.5)
+    }
     if (minigameGroupRef.current) {
       minigameGroupRef.current.position.x = gsapTarget.lasVegas.entierroMasivoX * worldWidth
       minigameGroupRef.current.visible = (step >= 15.5)
     }
     if (hudRef.current) {
-      hudRef.current.style.display = (step >= 17.5) ? 'block' : 'none'
+      hudRef.current.style.display = (step >= 17.5 && step < 18.5) ? 'block' : 'none'
     }
   })
 
@@ -597,18 +639,40 @@ function EscenaLasVegas({ xOffset }) {
           />
         </group>
 
+        <group ref={fondoTransicionFondoRef}>
+          <FlatIllustration
+            url={ASSET_URLS.lasVegasTransicion}
+            color="#5C2D1A"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.4]}
+            renderOrder={0}
+            cropToWidth={worldWidth}
+          />
+          {/* Máquina del tiempo individual visible en Scroll 19 */}
+          <group ref={maquinaDelTiempoRef} visible={false}>
+            <FlatIllustration
+              url={ASSET_URLS.museo_maquintaDelTiempo}
+              color="#ffffff"
+              targetHeight={3.5}
+              position={[0, -2.1, LAYER_Z.MAIN - 0.1]}
+              renderOrder={1}
+            />
+          </group>
+        </group>
+
         {/* ── MINIJUEGO SALAMANQUESAS (Solo visible en Scroll 16+) ── */}
         <group ref={minigameGroupRef} position={[0, 0, LAYER_Z.SKY + 0.35]} visible={false}>
           {[0, 1, 2].map((i) => (
-            <group key={i} 
-                   onClick={(e) => { e.stopPropagation(); handleGeckoClick(i); }} 
-                   onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
-                   onPointerOut={(e) => { e.stopPropagation(); document.body.style.cursor = 'auto'; }}
-                   visible={!foundStatus[i]}>
-              <FlatIllustration 
-                url={i === 0 ? ASSET_URLS.esqueleto1 : i === 1 ? ASSET_URLS.esqueleto2 : ASSET_URLS.esqueleto3} 
-                targetHeight={2} 
-                position={[GECKO_POSITIONS[i][0], GECKO_POSITIONS[i][1], LAYER_Z.MAIN]} 
+            <group key={i}
+              onClick={(e) => { e.stopPropagation(); handleGeckoClick(i); }}
+              onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
+              onPointerOut={(e) => { e.stopPropagation(); document.body.style.cursor = 'auto'; }}
+              visible={!foundStatus[i]}>
+              <FlatIllustration
+                url={i === 0 ? ASSET_URLS.esqueleto1 : i === 1 ? ASSET_URLS.esqueleto2 : ASSET_URLS.esqueleto3}
+                targetHeight={2}
+                position={[GECKO_POSITIONS[i][0], GECKO_POSITIONS[i][1], LAYER_Z.MAIN]}
               />
             </group>
           ))}
@@ -646,7 +710,7 @@ function EscenaLasVegas({ xOffset }) {
 
         {/* ── REI (LA SALAMANQUESA) + Globo de Diálogo (MAIN) ── */}
         <group ref={reiGroupRef} position={[xPosRei, yPosRei, LAYER_Z.MAIN]}>
-          
+
           <group ref={rei1Ref}>
             <FlatIllustration url={ASSET_URLS.rei_gecko} color="#AA8855" targetHeight={4.0} position={[0, 0, 0]} renderOrder={2} />
           </group>
@@ -661,6 +725,9 @@ function EscenaLasVegas({ xOffset }) {
           </group>
           <group ref={rei7Ref} visible={false}>
             <FlatIllustration url={ASSET_URLS.rei_gecko7} color="#AA8855" targetHeight={4.0} position={[0, 0, 0]} renderOrder={2} />
+          </group>
+          <group ref={rei6Ref} visible={false}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko6} color="#AA8855" targetHeight={4.5} position={[0, 0.4, 0]} renderOrder={2} />
           </group>
 
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
@@ -778,11 +845,18 @@ function EscenaLasVegas({ xOffset }) {
                     </p>
                   )}
                   {geckosFound < 3 && (
-                     <p className="scene__dialog-minigame-hint">
-                       Haz clic en los esqueletos escondidos...
-                     </p>
+                    <p className="scene__dialog-minigame-hint">
+                      Haz clic en los esqueletos escondidos...
+                    </p>
                   )}
                 </div>
+              </div>
+
+              {/* Scroll 19 (Texto 15) - Transición */}
+              <div ref={dialogue15Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  ¡Regresamos a la máquina del tiempo! No te preocupes, aún no nos vamos a casa. Esto recién empieza. ¡Si te gustó la cultura Las Vegas, te aseguro que lo que viene te va a encantar! Acompáñame ahora unos <strong className="scene__dialog-highlight">3.500 a.C. a 1.500 a.C.</strong>
+                </p>
               </div>
 
               {/* Triangulito del globo */}
@@ -1238,13 +1312,13 @@ export function DioramaScene() {
         → No necesitamos manejarlo manualmente aquí.
       */}
       <EscenaIntroduccion xOffset={-0 * spacing} />
-      <EscenaLasVegas     xOffset={-1 * spacing} />
-      <EscenaValdivia     xOffset={-2 * spacing} />
-      <EscenaMachalilla   xOffset={-3 * spacing} />
-      <EscenaChorrera     xOffset={-4 * spacing} />
-      <EscenaBahia        xOffset={-5 * spacing} />
-      <EscenaManteno      xOffset={-6 * spacing} />
-      <EscenaContacto     xOffset={-7 * spacing} />
+      <EscenaLasVegas xOffset={-1 * spacing} />
+      <EscenaValdivia xOffset={-2 * spacing} />
+      <EscenaMachalilla xOffset={-3 * spacing} />
+      <EscenaChorrera xOffset={-4 * spacing} />
+      <EscenaBahia xOffset={-5 * spacing} />
+      <EscenaManteno xOffset={-6 * spacing} />
+      <EscenaContacto xOffset={-7 * spacing} />
     </group>
   )
 }
