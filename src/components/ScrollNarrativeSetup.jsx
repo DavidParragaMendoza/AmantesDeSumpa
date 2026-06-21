@@ -32,7 +32,7 @@ import { useThree, useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { gsapTarget, CAMERA_KEYFRAMES } from '../animation/gsapTarget'
-import { useMuseoStore, ESCENAS } from '../store/useMuseoStore'
+import { useMuseoStore } from '../store/useMuseoStore'
 
 // Registrar el plugin una sola vez
 gsap.registerPlugin(ScrollTrigger)

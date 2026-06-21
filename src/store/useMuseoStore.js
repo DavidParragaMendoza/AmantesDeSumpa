@@ -23,14 +23,12 @@ import { subscribeWithSelector } from 'zustand/middleware'
 // Cada escena representa una era cultural de Santa Elena
 // ──────────────────────────────────────────────────────────────
 export const ESCENAS = [
-  { id: 'intro',     era: null,        titulo: 'El Museo',               color: '#0a0c14' },
-  { id: 'las-vegas', era: '8000 a.C.', titulo: 'Cultura Las Vegas',      color: '#1a0a05' },
-  { id: 'valdivia',  era: '3500 a.C.', titulo: 'Cultura Valdivia',       color: '#0a1a0a' },
-  { id: 'machalilla',era: '1500 a.C.', titulo: 'Cultura Machalilla',     color: '#0a0f1a' },
-  { id: 'chorrera',  era: '900 a.C.',  titulo: 'Cultura Chorrera',       color: '#1a0a15' },
-  { id: 'bahia',     era: '500 a.C.',  titulo: 'Cultura Bahía / Guangala',color: '#0a1515' },
-  { id: 'manteno',   era: '800 d.C.',  titulo: 'Cultura Manteño',        color: '#150a00' },
-  { id: 'contacto',  era: '1530 d.C.', titulo: 'La Llegada Española',    color: '#0a0a1a' },
+  { id: 'intro',     era: null,                      titulo: 'El Museo (Intro)',                   color: '#0a0c14' },
+  { id: 'las-vegas', era: '8000 a.C. a 4500 a.C.',   titulo: 'Cultura Las Vegas',                  color: '#1a0a05' },
+  { id: 'valdivia',  era: '3500 a.C. a 1500 a.C.',   titulo: 'Cultura Valdivia',                   color: '#0a1a0a' },
+  { id: 'chorrera',  era: '900 a.C. a 200 a.C.',     titulo: 'Engoroy - Cultura Chorrera',         color: '#1a0a15' },
+  { id: 'guangala',  era: '200 a.C. a 800 d.C.',     titulo: 'Cultura Guangala',                   color: '#0a1515' },
+  { id: 'manteno',   era: '800 d.C. a 1530 d.C.',    titulo: 'Señoríos Manteño-Guancavilcas',      color: '#150a00' },
 ]
 
 // ──────────────────────────────────────────────────────────────

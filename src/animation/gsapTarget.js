@@ -127,14 +127,10 @@ export const CAMERA_KEYFRAMES = [
   { y: 0,    zoom: 1.0,  label: 'las-vegas'  },
   // Escena 2 — 3500 a.C.: Valdivia
   { y: 0,    zoom: 1.1,  label: 'valdivia'   },
-  // Escena 3 — 1500 a.C.: Machalilla
-  { y: 0,    zoom: 1.0,  label: 'machalilla' },
-  // Escena 4 — 900 a.C.: Chorrera
+  // Escena 3 — 900 a.C.: Chorrera (Engoroy - Cultura Chorrera)
   { y: 1,    zoom: 1.15, label: 'chorrera'   },
-  // Escena 5 — 500 a.C.: Bahía / Guangala
-  { y: 0,    zoom: 1.0,  label: 'bahia'      },
-  // Escena 6 — 800 d.C.: Manteño
+  // Escena 4 — 200 a.C.: Guangala (Cultura Guangala)
+  { y: 0,    zoom: 1.0,  label: 'guangala'   },
+  // Escena 5 — 800 d.C.: Manteño (Señoríos Manteño-Guancavilcas)
   { y: -1,   zoom: 1.2,  label: 'manteno'    },
-  // Escena 7 — 1530 d.C.: Contacto
-  { y: 0,    zoom: 1.0,  label: 'contacto'   },
 ]

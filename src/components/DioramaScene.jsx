@@ -48,13 +48,11 @@
  *  La cámara se desplaza horizontalmente con el scroll.
  *
  *  Escena 0 → X =   0   (El Museo — Presente)
- *  Escena 1 → X =  -8   (Las Vegas — 8000 a.C.)
- *  Escena 2 → X = -16   (Valdivia — 3500 a.C.)
- *  Escena 3 → X = -24   (Machalilla — 1500 a.C.)
- *  Escena 4 → X = -32   (Chorrera — 900 a.C.)
- *  Escena 5 → X = -40   (Bahía / Guangala — 500 a.C.)
- *  Escena 6 → X = -48   (Manteño — 800 d.C.)
- *  Escena 7 → X = -56   (Contacto — 1530 d.C.)
+ *  Escena 1 → X =  -8   (Las Vegas — 8000 a.C. a 4500 a.C.)
+ *  Escena 2 → X = -16   (Valdivia — 3500 a.C. a 1500 a.C.)
+ *  Escena 3 → X = -24   (Engoroy - Chorrera — 900 a.C. a 200 a.C.)
+ *  Escena 4 → X = -32   (Guangala — 200 a.C. a 800 d.C.)
+ *  Escena 5 → X = -40   (Manteño-Guancavilcas — 800 d.C. a 1530 d.C.)
  */
 
 import React, { Suspense, useRef, useState, useEffect } from 'react'
@@ -943,74 +941,7 @@ function EscenaValdivia({ xOffset }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTE: EscenaMachalilla (Escena 3 — 1500 a.C.)
-// ─────────────────────────────────────────────────────────────────────
-function EscenaMachalilla({ xOffset }) {
-  const worldWidth = useWorldWidth()
-  return (
-    <Suspense fallback={<SceneFallback />}>
-      <group position={[xOffset, 0, 0]}>
-
-        <FlatIllustration
-          // url={ASSET_URLS.machalilla_sky}
-          color="#1A2B4A"
-          targetHeight={11}
-          placeholderAspect={worldWidth / 11}
-          position={[0, 0, LAYER_Z.SKY]}
-          renderOrder={0}
-        />
-
-        {/* Costa rocosa, primera cultura ceramista del litoral ── */}
-        <FlatIllustration
-          color="#2E3F6B"
-          targetHeight={4}
-          placeholderAspect={worldWidth / 4}
-          position={[0, -2.5, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
-
-        <FlatIllustration
-          color="#4A5E8A"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -4.5, LAYER_Z.MIDGROUND]}
-          renderOrder={2}
-        />
-
-        {/* ── MAIN: Figura Machalilla, cántaro "botijuela" ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.machalilla_main}
-          color="#7A8BB0"
-          targetHeight={3.8}
-          placeholderAspect={2.5 / 3.8}
-          position={[0, -0.5, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
-
-        {/* ── Cántaro de cuello largo ── */}
-        <FlatIllustration
-          color="#6B7A9E"
-          targetHeight={2}
-          placeholderAspect={0.8}
-          position={[2.5, -2, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
-
-        <FlatIllustration
-          color="#1A2B4A"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -5, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
-
-      </group>
-    </Suspense>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTE: EscenaChorrera (Escena 4 — 900 a.C.)
+// SUB-COMPONENTE: EscenaChorrera (Escena 3 — 900 a.C. a 200 a.C.)
 // ─────────────────────────────────────────────────────────────────────
 function EscenaChorrera({ xOffset }) {
   const worldWidth = useWorldWidth()
@@ -1075,15 +1006,15 @@ function EscenaChorrera({ xOffset }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTE: EscenaBahia (Escena 5 — 500 a.C.)
+// SUB-COMPONENTE: EscenaGuangala (Escena 4 — 200 a.C. a 800 d.C.)
 // ─────────────────────────────────────────────────────────────────────
-function EscenaBahia({ xOffset }) {
+function EscenaGuangala({ xOffset }) {
   const worldWidth = useWorldWidth()
   return (
     <Suspense fallback={<SceneFallback />}>
       <group position={[xOffset, 0, 0]}>
 
-        {/* ── Cultura Bahía: navegantes, el Spondylus ── */}
+        {/* ── Cultura Guangala: desarrollo cerámico y metalurgia ── */}
         <FlatIllustration
           color="#0A2A3D"
           targetHeight={11}
@@ -1092,7 +1023,7 @@ function EscenaBahia({ xOffset }) {
           renderOrder={0}
         />
 
-        {/* ── Mar abierto, la "ruta del Spondylus" ── */}
+        {/* ── Valle costero de Guangala ── */}
         <FlatIllustration
           color="#0F3D5C"
           targetHeight={5}
@@ -1109,21 +1040,21 @@ function EscenaBahia({ xOffset }) {
           renderOrder={2}
         />
 
-        {/* ── MAIN: Balsa de navegación + comerciante ── */}
+        {/* ── MAIN: Figuras Guangala y vasijas polícromas ── */}
         <FlatIllustration
           color="#2E7A9E"
-          targetHeight={3}
-          placeholderAspect={5 / 3}
-          position={[0, -1.5, LAYER_Z.MAIN]}
+          targetHeight={3.2}
+          placeholderAspect={2 / 3.2}
+          position={[0, -0.8, LAYER_Z.MAIN]}
           renderOrder={3}
         />
 
-        {/* ── La concha Spondylus (la protagonista) ── */}
+        {/* ── Instrumento musical o silbato Guangala ── */}
         <FlatIllustration
           color="#C84B6B"
-          targetHeight={1.8}
-          placeholderAspect={1.2}
-          position={[2.5, -0.5, LAYER_Z.MAIN]}
+          targetHeight={1.5}
+          placeholderAspect={1}
+          position={[2.5, -2, LAYER_Z.MAIN]}
           renderOrder={3}
         />
 
@@ -1141,7 +1072,7 @@ function EscenaBahia({ xOffset }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTE: EscenaManteno (Escena 6 — 800 d.C.)
+// SUB-COMPONENTE: EscenaManteno (Escena 5 — 800 d.C. a 1530 d.C.)
 // ─────────────────────────────────────────────────────────────────────
 function EscenaManteno({ xOffset }) {
   const worldWidth = useWorldWidth()
@@ -1206,72 +1137,6 @@ function EscenaManteno({ xOffset }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// SUB-COMPONENTE: EscenaContacto (Escena 7 — 1530 d.C.)
-// ─────────────────────────────────────────────────────────────────────
-function EscenaContacto({ xOffset }) {
-  const worldWidth = useWorldWidth()
-  return (
-    <Suspense fallback={<SceneFallback />}>
-      <group position={[xOffset, 0, 0]}>
-
-        {/* ── La llegada española: dos mundos, un horizonte ── */}
-        <FlatIllustration
-          color="#0F1A2A"
-          targetHeight={11}
-          placeholderAspect={worldWidth / 11}
-          position={[0, 0, LAYER_Z.SKY]}
-          renderOrder={0}
-        />
-
-        <FlatIllustration
-          color="#1F2E4A"
-          targetHeight={4}
-          placeholderAspect={worldWidth / 4}
-          position={[0, -2, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
-
-        {/* ── Costa de Santa Elena, la carabela en el mar ── */}
-        <FlatIllustration
-          color="#2A3E5C"
-          targetHeight={3}
-          placeholderAspect={5 / 3}
-          position={[0, -2.5, LAYER_Z.MIDGROUND]}
-          renderOrder={2}
-        />
-
-        {/* ── MAIN: Figura indígena mirando la costa ── */}
-        <FlatIllustration
-          color="#8B6914"
-          targetHeight={4}
-          placeholderAspect={2.5 / 4}
-          position={[-2, -0.5, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
-
-        {/* ── Soldado español / Spondylus último intercambio ── */}
-        <FlatIllustration
-          color="#C84B6B"
-          targetHeight={1.5}
-          placeholderAspect={1}
-          position={[2, -1, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
-
-        <FlatIllustration
-          color="#0A1220"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -5, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
-
-      </group>
-    </Suspense>
-  )
-}
-
-// ─────────────────────────────────────────────────────────────────────
 // COMPONENTE PRINCIPAL: DioramaScene
 // ─────────────────────────────────────────────────────────────────────
 /**
@@ -1314,11 +1179,10 @@ export function DioramaScene() {
       <EscenaIntroduccion xOffset={-0 * spacing} />
       <EscenaLasVegas xOffset={-1 * spacing} />
       <EscenaValdivia xOffset={-2 * spacing} />
-      <EscenaMachalilla xOffset={-3 * spacing} />
-      <EscenaChorrera xOffset={-4 * spacing} />
-      <EscenaBahia xOffset={-5 * spacing} />
-      <EscenaManteno xOffset={-6 * spacing} />
-      <EscenaContacto xOffset={-7 * spacing} />
+      <EscenaChorrera xOffset={-3 * spacing} />
+      <EscenaGuangala xOffset={-4 * spacing} />
+      <EscenaManteno xOffset={-5 * spacing} />
     </group>
   )
 }
+
