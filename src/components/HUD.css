@@ -180,8 +180,88 @@
   }
 }
 
-/* ── Responsive: Landscape Móvil ─────────────────────────── */
-@media (max-width: 900px) and (orientation: landscape) {
+/* ==========================================================
+   Globos de diálogo dentro del canvas 3D (HTML Renderizado)
+   ========================================================== */
+
+.scene__dialog-box {
+  background-color: #ffffff;
+  color: #111827;
+  padding: 14px 18px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border: 2px solid #f3f4f6;
+  width: clamp(200px, 34vw, 360px);
+  text-align: center;
+  font-family: var(--font-body);
+  position: relative;
+}
+
+.scene__dialog-title {
+  font-weight: bold;
+  font-size: clamp(13px, 1.6vw, 18px);
+  color: #ea580c;
+  margin: 0 0 6px 0;
+  line-height: 1.3;
+}
+
+.scene__dialog-text {
+  font-size: clamp(11px, 1.3vw, 14px);
+  color: #374151;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.scene__dialog-text--medium {
+  font-weight: 500;
+}
+
+.scene__dialog-text--bold {
+  font-weight: bold;
+}
+
+.scene__dialog-highlight {
+  color: #ea580c;
+  font-weight: bold;
+}
+
+.scene__dialog-arrow {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff;
+  border-bottom: 2px solid #f3f4f6;
+  border-right: 2px solid #f3f4f6;
+  transform: rotate(45deg) translateX(-50%);
+  bottom: -12px;
+  left: 50%;
+}
+
+.scene__dialog-minigame-container {
+  margin-top: 8px;
+  padding: 6px;
+  background-color: #fff7ed;
+  border-radius: 6px;
+  border: 1px solid #fdba74;
+}
+
+.scene__dialog-minigame-success {
+  margin: 0;
+  font-size: clamp(10px, 1.2vw, 14px);
+  color: #16a34a;
+  text-align: center;
+  font-weight: bold;
+}
+
+.scene__dialog-minigame-hint {
+  margin: 0;
+  font-size: clamp(10px, 1.1vw, 13px);
+  color: #ea580c;
+  text-align: center;
+}
+
+/* ── Responsive General (Landscape & Portrait) ────────────── */
+@media (max-width: 900px) {
   /* Era Indicator más compacto */
   .hud__era {
     top: 0.75rem;
@@ -192,13 +272,34 @@
   }
 
   .hud__era-year {
-    font-size: clamp(1rem, 3vw, 1.5rem);
+    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
   }
 
   .hud__era-title {
-    font-size: clamp(0.55rem, 1.2vw, 0.75rem);
+    font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+    letter-spacing: 0.1em;
   }
 
+  /* Globos de diálogo de Rei: más compactos */
+  .scene__dialog-box {
+    width: clamp(180px, 45vw, 290px);
+    padding: 10px 12px;
+    border-radius: 10px;
+  }
+
+  .scene__dialog-title {
+    font-size: clamp(11px, 1.4vw, 14px);
+    margin-bottom: 4px;
+  }
+
+  .scene__dialog-text {
+    font-size: clamp(9.5px, 1.1vw, 12px);
+    line-height: 1.35;
+  }
+}
+
+/* ── Responsive: Landscape Móvil Específico ──────────────── */
+@media (max-width: 900px) and (orientation: landscape) {
   /* Top Controls Panel más pequeño */
   .hud__top-controls {
     top: 0.75rem;
@@ -230,7 +331,7 @@
     height: 5px;
   }
 
-  /* Dialog de Rei: más compacto y no se superpone con progress */
+  /* Dialog de Rei (HUD): más compacto y no se superpone con progress */
   .hud__rei-dialog {
     bottom: calc(2.5rem + var(--space-sm));
     left: 0.75rem;
@@ -248,22 +349,52 @@
   }
 }
 
-/* Pantallas muy pequeñas en landscape (< 400px de alto) */
-@media (max-height: 400px) and (orientation: landscape) {
+/* ── Pantallas muy pequeñas (Móviles Portrait o Altura Baja) ── */
+@media (max-width: 480px), (max-height: 400px) {
   .hud__era {
+    top: 0.5rem;
+    left: 0.5rem;
     padding: 6px 10px;
     border-radius: 8px;
+    gap: 1px;
+    max-width: 130px;
   }
 
   .hud__era-year {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .hud__era-title {
     font-size: 0.55rem;
+    letter-spacing: 0.05em;
   }
 
+  .scene__dialog-box {
+    width: clamp(150px, 62vw, 220px);
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-width: 1px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .scene__dialog-title {
+    font-size: 10.5px;
+    margin-bottom: 3px;
+  }
+
+  .scene__dialog-text {
+    font-size: 8.5px;
+    line-height: 1.25;
+  }
+
+  .scene__dialog-arrow {
+    width: 12px;
+    height: 12px;
+    bottom: -6px;
+  }
+
+  /* Si está en portrait móvil extremo, ocultar el diálogo del HUD */
   .hud__rei-dialog {
-    display: none; /* Demasiado pequeño para mostrar el dialog */
+    display: none;
   }
 }

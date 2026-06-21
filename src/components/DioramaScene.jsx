@@ -349,88 +349,65 @@ function EscenaIntroduccion({ xOffset }) {
           </group>
 
           <Html position={[0, 3.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} style={{
-              opacity: 0,
-              display: 'none',
-              backgroundColor: '#ffffff',
-              color: '#111827',
-              padding: 'clamp(10px, 1.5vw, 18px) clamp(12px, 1.8vw, 20px)',
-              borderRadius: '14px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-              border: '2px solid #f3f4f6',
-              width: 'clamp(200px, 34vw, 360px)',
-              textAlign: 'center',
-              fontFamily: 'system-ui, sans-serif',
-              position: 'relative'
-            }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
 
               {/* Diálogo Fase 2 - Texto 1 */}
               <div ref={dialogue1Ref}>
-                <p style={{ fontWeight: 'bold', fontSize: 'clamp(13px, 1.6vw, 18px)', marginBottom: '6px', color: '#ea580c', margin: '0 0 6px 0' }}>
+                <p className="scene__dialog-title">
                   ¡Hola! Mi nombre es REI...
                 </p>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   Soy una salamanquesa, comúnmente conocida como gecko. Tal vez me hayas visto en tu casa o en tu jardín merodeando en los rincones. Soy inofensiva para ti y me alimento de insectos.
                 </p>
               </div>
 
               {/* Diálogo Fase 3 - Texto 2 */}
               <div ref={dialogue2Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  El nombre de la especie de la que provengo es muy complejo (<strong style={{ color: '#ea580c' }}>Phyllodactylus reissii</strong>), pero para resumir, <strong style={{ color: '#ea580c' }}>reissii</strong>, en honor a Carl Reiss, un alemán que vive en Ecuador y que investigó sobre mí.
+                <p className="scene__dialog-text">
+                  El nombre de la especie de la que provengo es muy complejo (<strong className="scene__dialog-highlight">Phyllodactylus reissii</strong>), pero para resumir, <strong className="scene__dialog-highlight">reissii</strong>, en honor a Carl Reiss, un alemán que vive en Ecuador y que investigó sobre mí.
                 </p>
               </div>
 
               {/* Diálogo Fase 4 - Texto 3 */}
               <div ref={dialogue3Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Además, obtendrás información sobre mis ancestros a través de la doctora <strong style={{ color: '#ea580c' }}>Karen Stothert</strong>, quien dejó datos sobre las especies y la fauna encontradas en una de las culturas aborígenes más antiguas y que hallarás al inicio de este cuento.
+                <p className="scene__dialog-text">
+                  Además, obtendrás información sobre mis ancestros a través de la doctora <strong className="scene__dialog-highlight">Karen Stothert</strong>, quien dejó datos sobre las especies y la fauna encontradas en una de las culturas aborígenes más antiguas y que hallarás al inicio de este cuento.
                 </p>
               </div>
 
               {/* Diálogo Fase 5 - Texto 4 */}
               <div ref={dialogue4Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Observa la imagen y sabrás que el modo de vida de hombres y mujeres en una época marcan la diferencia por la diversidad de características que la representan, como: expresión o lenguaje, comida, arte, creencias, costumbres y tradiciones. Esto es lo que conoces como <strong style={{ color: '#ea580c' }}>CULTURA</strong>, expresada en el hacer, pensar y sentir.
+                <p className="scene__dialog-text">
+                  Observa la imagen y sabrás que el modo de vida de hombres y mujeres en una época marcan la diferencia por la diversidad de características que la representan, como: expresión o lenguaje, comida, arte, creencias, costumbres y tradiciones. Esto es lo que conoces como <strong className="scene__dialog-highlight">CULTURA</strong>, expresada en el hacer, pensar y sentir.
                 </p>
               </div>
 
               {/* Diálogo Fase 6 - Texto 5 */}
               <div ref={dialogue5Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: '0 0 6px 0' }}>
+                <p className="scene__dialog-text" style={{ margin: '0 0 6px 0' }}>
                   ¿Ves que Rei tiene en sus manos globos de diversos colores que representan esta diversidad de actividades y disfruta de ellos?
                 </p>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0, fontWeight: '500' }}>
+                <p className="scene__dialog-text scene__dialog-text--medium">
                   ¿Sabes? ¡Esto me motiva a viajar en el tiempo y conocer qué hicieron nuestros antepasados! ¿Tú también quieres aprender? ¡Si la tierra hablara, imagínate lo que diría!
                 </p>
               </div>
 
               {/* Diálogo Fase 7 - Texto 6 */}
               <div ref={dialogue6Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(12px, 1.4vw, 15px)', color: '#374151', lineHeight: '1.45', margin: 0, fontWeight: '500' }}>
+                <p className="scene__dialog-text scene__dialog-text--medium" style={{ fontSize: 'clamp(12px, 1.4vw, 15px)' }}>
                   Hoy quiero llevarte a un viaje maravilloso del cual mis ancestros fueron partícipes. Un viaje por el tiempo y la historia en tu provincia.
                 </p>
               </div>
 
               {/* Diálogo Fase 8 - Texto 7 */}
               <div ref={dialogue7Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#ea580c', lineHeight: '1.45', margin: 0, fontWeight: 'bold' }}>
+                <p className="scene__dialog-text scene__dialog-text--bold" style={{ color: '#ea580c' }}>
                   ¡Vamos, súbete a mi máquina del tiempo! La programaremos para que nos lleve del 8.000 a.C. al 4.500 a.C.
                 </p>
               </div>
 
               {/* Triangulito del globo */}
-              <div style={{
-                position: 'absolute',
-                width: '16px',
-                height: '16px',
-                backgroundColor: '#ffffff',
-                borderBottom: '2px solid #f3f4f6',
-                borderRight: '2px solid #f3f4f6',
-                transform: 'rotate(45deg) translateX(-50%)',
-                bottom: '-12px',
-                left: '50%'
-              }}></div>
+              <div className="scene__dialog-arrow"></div>
             </div>
           </Html>
         </group>
@@ -680,134 +657,121 @@ function EscenaLasVegas({ xOffset }) {
           </group>
 
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} style={{
-              opacity: 0,
-              display: 'none',
-              backgroundColor: '#ffffff',
-              color: '#111827',
-              padding: 'clamp(10px, 1.5vw, 18px) clamp(12px, 1.8vw, 20px)',
-              borderRadius: '14px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
-              border: '2px solid #f3f4f6',
-              width: 'clamp(200px, 34vw, 360px)',
-              textAlign: 'center',
-              fontFamily: 'system-ui, sans-serif',
-              position: 'relative'
-            }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
 
               {/* Scroll 2 (Texto 1) */}
               <div ref={dialogue1Ref}>
-                <p style={{ fontWeight: 'bold', fontSize: 'clamp(13px, 1.6vw, 16px)', marginBottom: '6px', color: '#ea580c', margin: '0 0 6px 0' }}>
+                <p className="scene__dialog-title">
                   ¡Al fin hemos llegado!
                 </p>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   Estamos en el punto inicial de esta historia.
                 </p>
               </div>
 
               {/* Scroll 3 (Texto 2) */}
               <div ref={dialogue2Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Mira, ahí están los primeros aborígenes que han decidido asentarse en este lugar. Es el paso de una vida nómada a una vida sedentaria. Es decir, van a hacer sus viviendas aquí. Ellos son quienes forman parte de lo que hoy conoces como <strong style={{ color: '#ea580c' }}>Cultura Las Vegas</strong>.
+                <p className="scene__dialog-text">
+                  Mira, ahí están los primeros aborígenes que han decidido asentarse en este lugar. Es el paso de una vida nómada a una vida sedentaria. Es decir, van a hacer sus viviendas aquí. Ellos son quienes forman parte de lo que hoy conoces como <strong className="scene__dialog-highlight">Cultura Las Vegas</strong>.
                 </p>
               </div>
 
               {/* Scroll 4 (Texto 3) */}
               <div ref={dialogue3Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Son los primeros en desarrollar la <strong style={{ color: '#ea580c' }}>HORTICULTURA</strong> en América, que es el inicio de la agricultura, realizada en pequeños huertos, no en grandes extensiones de tierra. La mujer se dedica a la siembra de las hortalizas y plantas, como: mate, zapallo, maíz, yuca, hierbas medicinales.
+                <p className="scene__dialog-text">
+                  Son los primeros en desarrollar la <strong className="scene__dialog-highlight">HORTICULTURA</strong> en América, que es el inicio de la agricultura, realizada en pequeños huertos, no en grandes extensiones de tierra. La mujer se dedica a la siembra de las hortalizas y plantas, como: mate, zapallo, maíz, yuca, hierbas medicinales.
                 </p>
               </div>
 
               {/* Scroll 5 (Texto 4) */}
               <div ref={dialogue4Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  El sitio arqueológico y patrimonial Las Vegas, denominado <strong style={{ color: '#ea580c' }}>OGSE-80</strong>, está ubicado en el Museo Amantes de Sumpa en una pequeña colina, entre dos quebradas que forman el río Las Vegas.
+                <p className="scene__dialog-text">
+                  El sitio arqueológico y patrimonial Las Vegas, denominado <strong className="scene__dialog-highlight">OGSE-80</strong>, está ubicado en el Museo Amantes de Sumpa en una pequeña colina, entre dos quebradas que forman el río Las Vegas.
                 </p>
               </div>
 
               {/* Scroll 6 (Texto 5) */}
               <div ref={dialogue5Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Su nombre se debe al asentamiento a la orilla del río. Son parte de una sociedad <strong style={{ color: '#ea580c' }}>cazadora recolectora</strong>. Es decir, subsisten apropiándose de lo que la naturaleza les proporciona: cazan animales y recolectan plantas comestibles.
+                <p className="scene__dialog-text">
+                  Su nombre se debe al asentamiento a la orilla del río. Son parte de una sociedad <strong className="scene__dialog-highlight">cazadora recolectora</strong>. Es decir, subsisten apropiándose de lo que la naturaleza les proporciona: cazan animales y recolectan plantas comestibles.
                 </p>
               </div>
 
               {/* Scroll 7 (Texto 6) */}
               <div ref={dialogue6Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   Santa Elena está llena de manglares en donde viven moluscos, cangrejos y peces que les sirven de alimento. Utilizan las conchas prietas no solo para comer sino también para servirse otros alimentos, cual si fuera una cuchara o un plato.
                 </p>
               </div>
 
               {/* Scroll 8 (Texto 7) */}
               <div ref={dialogue7Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Este yacimiento arqueológico tiene <strong style={{ color: '#ea580c' }}>200 osamentas</strong> con formas de enterramientos típicos de la cultura. Vas a ver tres entierros conservados “in situ” (en el sitio), que evidencian sus costumbres funerarias y sus ofrendas.
+                <p className="scene__dialog-text">
+                  Este yacimiento arqueológico tiene <strong className="scene__dialog-highlight">200 osamentas</strong> con formas de enterramientos típicos de la cultura. Vas a ver tres entierros conservados “in situ” (en el sitio), que evidencian sus costumbres funerarias y sus ofrendas.
                 </p>
               </div>
 
               {/* Scroll 10 (Texto 8) - Amantes de Sumpa 1 */}
               <div ref={dialogue8Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  ¿Conoces a los <strong style={{ color: '#ea580c' }}>Amantes de Sumpa</strong>?
+                <p className="scene__dialog-text">
+                  ¿Conoces a los <strong className="scene__dialog-highlight">Amantes de Sumpa</strong>?
                 </p>
               </div>
 
               {/* Scroll 11 (Texto 9) - Amantes de Sumpa 2 */}
               <div ref={dialogue9Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Ellos forman parte del enterramiento denominado <strong style={{ color: '#ea580c' }}>DOBLE PRIMARIO</strong>. Es un entierro directo de un hombre y una mujer, quienes mueren entre los 20 y 25 años de edad y son enterrados cuidadosamente así:
+                <p className="scene__dialog-text">
+                  Ellos forman parte del enterramiento denominado <strong className="scene__dialog-highlight">DOBLE PRIMARIO</strong>. Es un entierro directo de un hombre y una mujer, quienes mueren entre los 20 y 25 años de edad y son enterrados cuidadosamente así:
                 </p>
               </div>
 
               {/* Scroll 12 (Texto 10) - Amantes de Sumpa 3 */}
               <div ref={dialogue10Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   El hombre con su mano derecha sobre la cintura de la mujer y con la pierna derecha encima de sus caderas, ella en posición flexionada (fetal), con el brazo sobre su cabeza. Se colocan seis grandes piedras encima, una vez enterrados.
                 </p>
               </div>
 
               {/* Scroll 14 (Texto 11) - Huesos Rojos Parte 1 */}
               <div ref={dialogue11Ref} style={{ display: 'none' }}>
-                <p style={{ fontWeight: 'bold', fontSize: 'clamp(13px, 1.6vw, 16px)', marginBottom: '6px', color: '#ea580c', margin: '0 0 6px 0' }}>
+                <p className="scene__dialog-title">
                   ENTIERRO SECUNDARIO:
                 </p>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   Existió la costumbre de desenterrar los esqueletos humanos, llamada también exhumación de los cuerpos.
                 </p>
               </div>
 
               {/* Scroll 15 (Texto 12) - Huesos Rojos Parte 2 */}
               <div ref={dialogue12Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
-                  Los huesos sin carne y desarticulados se acomodan en forma de “paquete” y se vuelven a enterrar, se colocan cerca de un familiar muerto y algunos tienen <strong style={{ color: '#ea580c' }}>pigmento de color rojo</strong> como símbolo de protección espiritual.
+                <p className="scene__dialog-text">
+                  Los huesos sin carne y desarticulados se acomodan en forma de “paquete” y se vuelven a enterrar, se colocan cerca de un familiar muerto y algunos tienen <strong className="scene__dialog-highlight">pigmento de color rojo</strong> como símbolo de protección espiritual.
                 </p>
               </div>
 
               {/* Scroll 17 (Texto 13) - Entierro Masivo */}
               <div ref={dialogue13Ref} style={{ display: 'none' }}>
-                <p style={{ fontWeight: 'bold', fontSize: 'clamp(13px, 1.6vw, 16px)', marginBottom: '6px', color: '#ea580c', margin: '0 0 6px 0' }}>
+                <p className="scene__dialog-title">
                   ENTIERRO MÚLTIPLE O MASIVO:
                 </p>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   Es el entierro de un gran número de esqueletos humanos desarticulados en diferentes ubicaciones dentro de un osario o fosa de forma ovalada, donde se acomodan las osamentas.
                 </p>
               </div>
 
               {/* Scroll 18 (Texto 14) - Minijuego */}
               <div ref={dialogue14Ref} style={{ display: 'none' }}>
-                <p style={{ fontSize: 'clamp(11px, 1.3vw, 14px)', color: '#374151', lineHeight: '1.45', margin: 0 }}>
+                <p className="scene__dialog-text">
                   Este es un entierro masivo. Ayúdame a encontrar a mis ancestros. ¡Están escondidas tres salamanquesas, rodéalas en un círculo!
                 </p>
-                <div style={{ marginTop: '8px', padding: '6px', backgroundColor: '#fff7ed', borderRadius: '6px', border: '1px solid #fdba74' }}>
+                <div className="scene__dialog-minigame-container">
                   {geckosFound === 3 && (
-                    <p style={{ margin: '0', fontSize: 'clamp(10px, 1.2vw, 14px)', color: '#16a34a', textAlign: 'center', fontWeight: 'bold' }}>
+                    <p className="scene__dialog-minigame-success">
                       ¡Excelente! Has encontrado a los tres ancestros. Puedes continuar tu viaje.
                     </p>
                   )}
                   {geckosFound < 3 && (
-                     <p style={{ margin: 0, fontSize: 'clamp(10px, 1.1vw, 13px)', color: '#ea580c', textAlign: 'center' }}>
+                     <p className="scene__dialog-minigame-hint">
                        Haz clic en los esqueletos escondidos...
                      </p>
                   )}
@@ -815,17 +779,7 @@ function EscenaLasVegas({ xOffset }) {
               </div>
 
               {/* Triangulito del globo */}
-              <div style={{
-                position: 'absolute',
-                width: '16px',
-                height: '16px',
-                backgroundColor: '#ffffff',
-                borderBottom: '2px solid #f3f4f6',
-                borderRight: '2px solid #f3f4f6',
-                transform: 'rotate(45deg) translateX(-50%)',
-                bottom: '-12px',
-                left: '50%'
-              }}></div>
+              <div className="scene__dialog-arrow"></div>
             </div>
           </Html>
         </group>
