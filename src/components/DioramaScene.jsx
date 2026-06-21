@@ -462,6 +462,13 @@ function EscenaLasVegas({ xOffset }) {
   const [foundStatus, setFoundStatus] = useState([false, false, false])
   const geckosFound = foundStatus.filter(Boolean).length
 
+  // Coordenadas [X, Y] de las 3 salamanquesas escondidas (puedes editarlas aquí para moverlas)
+  const GECKO_POSITIONS = [
+    [-3, -1], // Salamanquesa 0 (izquierda)
+    [0, 0],   // Salamanquesa 1 (centro)
+    [3, -1.4]   // Salamanquesa 2 (derecha)
+  ]
+
   // Sincronizar el estado con gsapTarget para bloquear/liberar scroll
   useEffect(() => {
     if (geckosFound === 3) {
@@ -531,11 +538,11 @@ function EscenaLasVegas({ xOffset }) {
       minigameGroupRef.current.visible = (step >= 15.5)
     }
     if (hudRef.current) {
-      hudRef.current.style.display = (step >= 15.5) ? 'block' : 'none'
+      hudRef.current.style.display = (step >= 17.5) ? 'block' : 'none'
     }
   })
 
-  const xPosRei = -worldWidth * 0.25
+  const xPosRei = -worldWidth * 0.35
   const yPosRei = -2.7
 
   return (
@@ -601,13 +608,13 @@ function EscenaLasVegas({ xOffset }) {
               <FlatIllustration 
                 url={i === 0 ? ASSET_URLS.esqueleto1 : i === 1 ? ASSET_URLS.esqueleto2 : ASSET_URLS.esqueleto3} 
                 targetHeight={2} 
-                position={[(i - 1) * 2, i === 1 ? 1 : -2, LAYER_Z.MAIN]} 
+                position={[GECKO_POSITIONS[i][0], GECKO_POSITIONS[i][1], LAYER_Z.MAIN]} 
               />
             </group>
           ))}
           {/* Anillos visibles una vez encontrados */}
           {[0, 1, 2].map((i) => (
-            <group key={`ring-${i}`} visible={foundStatus[i]} position={[(i - 1) * 2, i === 1 ? 1 : -2, LAYER_Z.MAIN - 0.1]}>
+            <group key={`ring-${i}`} visible={foundStatus[i]} position={[GECKO_POSITIONS[i][0], GECKO_POSITIONS[i][1], LAYER_Z.MAIN - 0.1]}>
               <mesh>
                 <ringGeometry args={[1, 1.2, 32]} />
                 <meshBasicMaterial color="#ea580c" transparent opacity={0.8} />
