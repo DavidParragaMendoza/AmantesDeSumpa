@@ -23,7 +23,7 @@ import { subscribeWithSelector } from 'zustand/middleware'
 // Cada escena representa una era cultural de Santa Elena
 // ──────────────────────────────────────────────────────────────
 export const ESCENAS = [
-  { id: 'intro',     era: null,                      titulo: 'El Museo (Intro)',                   color: '#0a0c14' },
+  { id: 'intro',     era: null,                      titulo: 'El Museo',                   color: '#0a0c14' },
   { id: 'las-vegas', era: '8000 a.C. a 4500 a.C.',   titulo: 'Cultura Las Vegas',                  color: '#1a0a05' },
   { id: 'valdivia',  era: '3500 a.C. a 1500 a.C.',   titulo: 'Cultura Valdivia',                   color: '#0a1a0a' },
   { id: 'chorrera',  era: '900 a.C. a 200 a.C.',     titulo: 'Engoroy - Cultura Chorrera',         color: '#1a0a15' },
