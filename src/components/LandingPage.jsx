@@ -110,76 +110,76 @@ export function LandingPage() {
 
         {/* Contenedor de la Imagen de Fondo (Detrás del SVG de Cobertura) */}
         <div ref={bgRef} className="landing-bg-image-wrapper">
-          <img 
-            src="/assets/museo.webp" 
-            alt="Museo Amantes de Sumpa" 
+          <img
+            src="/assets/museo.webp"
+            alt="Museo Amantes de Sumpa"
             className="landing-bg-image"
           />
         </div>
 
         {/* SVG de Cobertura y Recorte (Enfrente de la Imagen de Fondo) */}
-        <svg 
-          className="landing-cover-svg" 
-          viewBox="0 0 1000 450" 
+        <svg
+          className="landing-cover-svg"
+          viewBox="0 0 1000 450"
           preserveAspectRatio="xMidYMid slice"
         >
           <defs>
             <mask id="logo-cutout-mask">
               {/* Rectángulo blanco: Todo lo que esté en blanco revela el color oscuro de cobertura */}
               <rect width="1000" height="450" fill="white" />
-              
+
               {/* Grupo para el logo (textos) que se escala de forma independiente */}
               <g ref={logoGroupRef}>
                 {/* Textos negros: Cortan agujeros transparentes en la cobertura para ver la imagen de fondo */}
-                <text 
-                  x="50%" 
-                  y="170" 
-                  dominantBaseline="middle" 
-                  textAnchor="middle" 
-                  className="svg-title-text" 
+                <text
+                  x="50%"
+                  y="170"
+                  dominantBaseline="middle"
+                  textAnchor="middle"
+                  className="svg-title-text"
                   fill="black"
                 >
                   AMANTES DE SUMPA
                 </text>
-                <text 
-                  x="50%" 
-                  y="275" 
-                  dominantBaseline="middle" 
-                  textAnchor="middle" 
-                  className="svg-subtitle-text" 
+                <text
+                  x="50%"
+                  y="275"
+                  dominantBaseline="middle"
+                  textAnchor="middle"
+                  className="svg-subtitle-text"
                   fill="black"
                   letterSpacing="18"
                 >
                   MUSEO DE SITIO
                 </text>
               </g>
-              
+
               {/* Círculo negro: Corta un gran agujero en el centro para revelar toda la pantalla al inicio */}
-              <circle 
-                ref={circleRef} 
-                cx="500" 
-                cy="222" 
-                r="800" 
-                fill="black" 
+              <circle
+                ref={circleRef}
+                cx="500"
+                cy="222"
+                r="800"
+                fill="black"
               />
             </mask>
           </defs>
-          
+
           {/* El rectángulo de cobertura que pinta el fondo oscuro */}
-          <rect 
-            width="1000" 
-            height="450" 
-            fill="#0a0c14" 
-            mask="url(#logo-cutout-mask)" 
+          <rect
+            width="1000"
+            height="450"
+            fill="#0a0c14"
+            mask="url(#logo-cutout-mask)"
           />
         </svg>
 
         {/* Capa del Menú Flotante */}
         <div ref={menuRef} className="landing-menu-layer">
-         
-          
+
+
           <div className="landing-buttons-container">
-            <button 
+            <button
               className="landing-btn btn-recorrido"
               onClick={handleStartRecorrido}
               title="Iniciar recorrido temporal interactivo 2.5D"
@@ -187,7 +187,7 @@ export function LandingPage() {
               <span className="btn-icon">⏳</span>
               <span className="btn-text">Recorrido</span>
             </button>
-            <button 
+            <button
               className="landing-btn btn-minijuegos"
               onClick={() => setModo('minijuegos')}
               title="Ir a la sección de minijuegos educativos"
@@ -195,7 +195,7 @@ export function LandingPage() {
               <span className="btn-icon">🧩</span>
               <span className="btn-text">Minijuegos</span>
             </button>
-            <button 
+            <button
               className="landing-btn btn-pintar"
               onClick={() => setModo('pintar')}
               title="Abrir taller creativo de pintura arqueológica"

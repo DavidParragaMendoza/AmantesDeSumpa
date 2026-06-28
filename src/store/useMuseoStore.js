@@ -48,7 +48,16 @@ export const useMuseoStore = create(
      * - 'pintar': Lienzo interactivo de pintura sobre piezas arqueológicas
      */
     modo: 'landing',
-    setModo: (nuevoModo) => set({ modo: nuevoModo }),
+    setModo: (nuevoModo) => {
+      const updates = { modo: nuevoModo }
+      if (nuevoModo !== 'recorrido') {
+        updates.dioramaListo = false
+      }
+      set(updates)
+    },
+
+    dioramaListo: false,
+    setDioramaListo: (listo) => set({ dioramaListo: listo }),
 
     /**
      * Índice de la escena actualmente visible.

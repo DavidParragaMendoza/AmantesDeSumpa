@@ -61,6 +61,7 @@ import { useTexture, Html } from '@react-three/drei'
 import { FlatIllustration } from './FlatIllustration'
 import { SceneFallback } from './SceneFallback'
 import { gsapTarget } from '../animation/gsapTarget'
+import { useMuseoStore } from '../store/useMuseoStore'
 
 // ─────────────────────────────────────────────────────────────────────
 // CONSTANTES DE POSICIONAMIENTO
@@ -127,14 +128,64 @@ export const ASSET_URLS = {
   esqueleto1: '/assets/esqueleto1.webp',
   esqueleto2: '/assets/esqueleto2.webp',
   esqueleto3: '/assets/esqueleto3.webp',
+
+  // ── Escena 2: Valdivia
+  valdiviaFondo: '/assets/FondoValdivida1.webp',
+  valdiviaFondo2: '/assets/FondoValdivida2.webp',
+  rei_gecko8: '/assets/Rei8.webp',
+
+  // ── Escena 3: Chorrera
+  chorreraFondo: '/assets/culturaChorrera.webp',
 }
 
 // ─────────────────────────────────────────────────────────────────────
-// PRELOAD DE TEXTURAS
+// PRELOAD DE TEXTURAS DE FORMA GRADUAL POR ESCENA
 // ─────────────────────────────────────────────────────────────────────
-const allUrls = Object.values(ASSET_URLS).filter(Boolean)
-if (allUrls.length > 0) {
-  useTexture.preload(allUrls)
+export const URLS_ESCENA_INTRO = [
+  ASSET_URLS.rei_gecko,
+  ASSET_URLS.rei_gecko2,
+  ASSET_URLS.rei_gecko3,
+  ASSET_URLS.rei_gecko4,
+  ASSET_URLS.rei_gecko5,
+  ASSET_URLS.rei_gecko6,
+  ASSET_URLS.rei_gecko7,
+  ASSET_URLS.museo_fondo,
+  ASSET_URLS.museo_maquintaDelTiempo,
+  ASSET_URLS.estacionamiento,
+].filter(Boolean)
+
+export const URLS_ESCENA_LAS_VEGAS = [
+  ASSET_URLS.lasVegasFondo,
+  ASSET_URLS.amantesSumpaFondo,
+  ASSET_URLS.huesoRojosFondo,
+  ASSET_URLS.entierroMasivoFondo,
+  ASSET_URLS.lasVegasTransicion,
+  ASSET_URLS.esqueleto1,
+  ASSET_URLS.esqueleto2,
+  ASSET_URLS.esqueleto3,
+].filter(Boolean)
+
+export const URLS_ESCENA_VALDIVIA = [
+  ASSET_URLS.valdiviaFondo,
+  ASSET_URLS.valdiviaFondo2,
+  ASSET_URLS.rei_gecko8,
+].filter(Boolean)
+
+export const URLS_ESCENA_CHORRERA = [
+  ASSET_URLS.chorreraFondo,
+].filter(Boolean)
+
+// Ahora que todos los assets son WebP (~3MB total), precargamos TODAS las escenas
+// inmediatamente a nivel de módulo para eliminación total de pantalla negra.
+// Antes con PNGs (~17MB) esto era imposible; ahora es trivial.
+const ALL_TEXTURE_URLS = [
+  ...URLS_ESCENA_INTRO,
+  ...URLS_ESCENA_LAS_VEGAS,
+  ...URLS_ESCENA_VALDIVIA,
+  ...URLS_ESCENA_CHORRERA,
+]
+if (ALL_TEXTURE_URLS.length > 0) {
+  useTexture.preload(ALL_TEXTURE_URLS)
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -873,67 +924,291 @@ function EscenaLasVegas({ xOffset }) {
 // ─────────────────────────────────────────────────────────────────────
 function EscenaValdivia({ xOffset }) {
   const worldWidth = useWorldWidth()
+
+  // ─────────────────────────────────────────────────────────────────────
+  // VARIABLES DE CONFIGURACIÓN DE REI (MODIFÍCALAS AQUÍ PARA AJUSTAR)
+  // ─────────────────────────────────────────────────────────────────────
+  const reiScale = 0.35   // Escala/Tamaño de Rei (ej: 0.45 = 45% de la pantalla)
+  const reiX = -5.5       // Posición horizontal (negativo = izquierda, positivo = derecha)
+  const reiY = -2.5       // Posición vertical (negativo = abajo, positivo = arriba)
+
+  const rei4X = worldWidth * 0.25   // Posición horizontal de Rei 4 (a la derecha)
+  const rei4Y = -2.7       // Posición vertical de Rei 4
+
+  const reiValdiviaRef = useRef(null)
+  const rei4ValdiviaRef = useRef(null)
+
+  // Diálogos de la primera sección
+  const dialogBoxRef = useRef(null)
+  const dialogue1Ref = useRef(null)
+  const dialogue2Ref = useRef(null)
+  const dialogue3Ref = useRef(null)
+  const dialogue4Ref = useRef(null)
+
+  // Diálogos de la segunda sección (sobre el segundo fondo)
+  const dialogBoxRightRef = useRef(null)
+  const dialogueRight1Ref = useRef(null)
+  const dialogueRight2Ref = useRef(null)
+
+  const fondoValdivia1Ref = useRef(null)
+  const fondoValdivia2Ref = useRef(null)
+
+  // Refs de la máquina del tiempo de Valdivia (réplica)
+  const fondoTransicionFondoRef = useRef(null)
+  const maquinaDelTiempoRef = useRef(null)
+  const reiMaquinaGroupRef = useRef(null)
+  const dialogBoxMaquinaRef = useRef(null)
+  const dialogueMaquinaRef = useRef(null)
+  const reiMaquina1Ref = useRef(null)
+  const reiMaquina6Ref = useRef(null)
+
+  const setGroupOpacity = (group, opacity) => {
+    if (!group) return
+    group.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.opacity = opacity
+        child.material.transparent = true
+      }
+    })
+  }
+
+  useFrame(() => {
+    // Opacidad de la capa superpuesta de Rei (Rei8.png)
+    setGroupOpacity(reiValdiviaRef.current, gsapTarget.valdivia.reiOpacity)
+
+    // Posición del fondo deslizable y opacidad de Rei4
+    if (fondoValdivia2Ref.current) {
+      fondoValdivia2Ref.current.position.x = gsapTarget.valdivia.fondo2X * worldWidth
+    }
+    setGroupOpacity(rei4ValdiviaRef.current, gsapTarget.valdivia.rei4Opacity)
+
+    const step = gsapTarget.valdivia.dialogueStep
+
+    // Visibilidad del primer globo de diálogo (se muestra desde step 2 a step 5.99)
+    if (dialogBoxRef.current) {
+      const showDialog = step >= 2.0 && step < 6.0 && gsapTarget.valdivia.reiOpacity >= 0.01
+      dialogBoxRef.current.style.opacity = gsapTarget.valdivia.reiOpacity
+      dialogBoxRef.current.style.display = showDialog ? 'block' : 'none'
+    }
+
+    // Visibilidad de los textos correspondientes a cada scroll en la primera sección
+    if (dialogue1Ref.current) dialogue1Ref.current.style.display = (step >= 2.0 && step < 3.0) ? 'block' : 'none'
+    if (dialogue2Ref.current) dialogue2Ref.current.style.display = (step >= 3.0 && step < 4.0) ? 'block' : 'none'
+    if (dialogue3Ref.current) dialogue3Ref.current.style.display = (step >= 4.0 && step < 5.0) ? 'block' : 'none'
+    if (dialogue4Ref.current) dialogue4Ref.current.style.display = (step >= 5.0 && step < 6.0) ? 'block' : 'none'
+
+    // Visibilidad del globo de diálogo a la derecha (se muestra en step 7 y 8)
+    if (dialogBoxRightRef.current) {
+      const showDialogRight = step >= 7.0 && step < 9.0 && gsapTarget.valdivia.rei4Opacity >= 0.01
+      dialogBoxRightRef.current.style.opacity = gsapTarget.valdivia.rei4Opacity
+      dialogBoxRightRef.current.style.display = showDialogRight ? 'block' : 'none'
+    }
+    if (dialogueRight1Ref.current) dialogueRight1Ref.current.style.display = (step >= 7.0 && step < 8.0) ? 'block' : 'none'
+    if (dialogueRight2Ref.current) dialogueRight2Ref.current.style.display = (step >= 8.0 && step < 9.0) ? 'block' : 'none'
+
+    // Desplazamiento del fondo de transición
+    if (fondoTransicionFondoRef.current) {
+      fondoTransicionFondoRef.current.position.x = gsapTarget.valdivia.fondoTransicionX * worldWidth
+    }
+
+    // Máquina del tiempo
+    if (maquinaDelTiempoRef.current) {
+      const ms = gsapTarget.valdivia.maquinaScale
+      maquinaDelTiempoRef.current.scale.set(ms, ms, ms)
+      setGroupOpacity(maquinaDelTiempoRef.current, gsapTarget.valdivia.maquinaOpacity)
+      maquinaDelTiempoRef.current.visible = (step >= 10.5)
+    }
+
+    // Rei en la máquina
+    if (reiMaquinaGroupRef.current) {
+      if (step >= 9.5) {
+        reiMaquinaGroupRef.current.position.x = gsapTarget.valdivia.reiPositionX
+      } else {
+        reiMaquinaGroupRef.current.position.x = -worldWidth * 0.35 // Posición inicial izquierda
+      }
+      const rs = gsapTarget.valdivia.reiScale
+      reiMaquinaGroupRef.current.scale.set(rs, rs, rs)
+    }
+
+    // Visibilidad de los sprites de Rei en la máquina
+    if (reiMaquina1Ref.current) reiMaquina1Ref.current.visible = (step < 11.5)
+    if (reiMaquina6Ref.current) reiMaquina6Ref.current.visible = (step >= 11.5)
+
+    // Opacidades de Rei en la máquina
+    setGroupOpacity(reiMaquina1Ref.current, gsapTarget.valdivia.reiMaquinaOpacity)
+    setGroupOpacity(reiMaquina6Ref.current, gsapTarget.valdivia.reiMountedOpacity)
+
+    // Globo de diálogo de la máquina
+    if (dialogBoxMaquinaRef.current) {
+      dialogBoxMaquinaRef.current.style.opacity = gsapTarget.valdivia.reiMaquinaOpacity
+      const showDialogMaquina = step >= 10.0 && step < 11.5 && gsapTarget.valdivia.reiMaquinaOpacity >= 0.01
+      dialogBoxMaquinaRef.current.style.display = showDialogMaquina ? 'block' : 'none'
+    }
+  })
+
   return (
     <Suspense fallback={<SceneFallback />}>
       <group position={[xOffset, 0, 0]}>
 
-        {/* ── SKY: Cielo tropical exuberante ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.valdivia_sky}
-          color="#1A3D2D"
-          targetHeight={11}
-          placeholderAspect={worldWidth / 11}
-          position={[0, 0, LAYER_Z.SKY]}
-          renderOrder={0}
-        />
+        {/* ── SKY: FondoValdivida1.png como fondo completo de la escena ── */}
+        <group ref={fondoValdivia1Ref}>
+          <FlatIllustration
+            url={ASSET_URLS.valdiviaFondo}
+            color="#1A3D2D"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY]}
+            renderOrder={0}
+            cropToWidth={worldWidth}
+          />
+        </group>
 
-        {/* ── MOUNTAINS: Vegetación costera densa ── */}
-        <FlatIllustration
-          color="#2A5C3A"
-          targetHeight={5}
-          placeholderAspect={worldWidth / 5}
-          position={[0, -2, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
+        {/* ── SKY: FondoValdivida2.png como fondo alternativo de la escena ── */}
+        <group ref={fondoValdivia2Ref}>
+          <FlatIllustration
+            url={ASSET_URLS.valdiviaFondo2}
+            color="#1A3D2D"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.1]}
+            renderOrder={1}
+            cropToWidth={worldWidth}
+          />
+        </group>
 
-        {/* ── VEGETATION: Capa media de selva y maizales ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.valdivia_veg}
-          color="#336B45"
-          targetHeight={3}
-          placeholderAspect={worldWidth / 3}
-          position={[0, -3.5, LAYER_Z.VEGETATION]}
-          renderOrder={2}
-        />
+        {/* ── TRANSICIÓN AL FINAL DE VALDIVIA (Copia de Las Vegas) ── */}
+        <group ref={fondoTransicionFondoRef}>
+          <FlatIllustration
+            url={ASSET_URLS.lasVegasTransicion}
+            color="#5C2D1A"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.2]} // Un nivel arriba del fondo alternativo
+            renderOrder={1}
+            cropToWidth={worldWidth}
+          />
+          {/* Máquina del tiempo individual visible en Scroll 11 */}
+          <group ref={maquinaDelTiempoRef} visible={false}>
+            <FlatIllustration
+              url={ASSET_URLS.museo_maquintaDelTiempo}
+              color="#ffffff"
+              targetHeight={3.5}
+              position={[0, -2.1, LAYER_Z.MAIN - 0.1]}
+              renderOrder={1}
+            />
+          </group>
+        </group>
 
-        {/* ── MAIN: La Venus de Valdivia, cerámica, aldea ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.valdivia_main}
-          color="#C9841C"
-          targetHeight={3.5}
-          placeholderAspect={2.5 / 3.5}
-          position={[-0.5, -0.8, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        {/* ── REI (En la rama del árbol) ── */}
+        <group
+          ref={reiValdiviaRef}
+          scale={[reiScale, reiScale, 1]}
+          position={[reiX, reiY, 0]}
+        >
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko8}
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.MAIN]}
+            renderOrder={2}
+            cropToWidth={worldWidth}
+          />
+        </group>
 
-        {/* ── Vasija cerámica Valdivia ── */}
-        <FlatIllustration
-          color="#B87333"
-          targetHeight={1.5}
-          placeholderAspect={1}
-          position={[2, -2.5, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        {/* ── REI 4 (Parado / activo - Reducido a 4.0 de altura y movilizado a la derecha) ── */}
+        <group
+          ref={rei4ValdiviaRef}
+          position={[rei4X, rei4Y, LAYER_Z.MAIN]}
+        >
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko4}
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/* ── FOREGROUND: Plantas tropicales primer plano ── */}
-        <FlatIllustration
-          // url={ASSET_URLS.valdivia_fg}
-          color="#1F4D2C"
-          targetHeight={2.5}
-          placeholderAspect={worldWidth / 2.5}
-          position={[0, -4.8, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
+        {/* Globo de Diálogo de la primera parte flotando sobre Rei (izquierda) */}
+        <Html position={[reiX + 0.2, reiY + 2.3, LAYER_Z.MAIN]} center zIndexRange={[100, 0]}>
+          <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+
+            {/* Scroll 2 (Texto 1) */}
+            <div ref={dialogue1Ref}>
+              <p className="scene__dialog-title">
+                Cultura Valdivia
+              </p>
+              <p className="scene__dialog-text">
+                La cultura Valdivia marca el comienzo de la cultura aldeana, es una sociedad agrícola alfarera. ¿Sabías que ellos dan inicio a la elaboración de tejidos y de cerámica que hoy puedes observar en vasijas de barro y diversas figuras?
+              </p>
+            </div>
+
+            {/* Scroll 3 (Texto 2) */}
+            <div ref={dialogue2Ref} style={{ display: 'none' }}>
+              <p className="scene__dialog-text">
+                La cultura Valdivia desarrolla técnicas para mejorar sus condiciones de vida: el cultivo de nuevas especies de plantas y manejo de las aguas. Da inicio a la navegación y pesca, así como al intercambio de productos con otras regiones.
+              </p>
+            </div>
+
+            {/* Scroll 4 (Texto 3) */}
+            <div ref={dialogue3Ref} style={{ display: 'none' }}>
+              <p className="scene__dialog-text">
+                Sus integrantes viven en aldeas permanentes, donde edifican plazas y montículos que evidencian una conformación aldeana con centro ceremonial (estructuras de enterramientos y otras para reuniones).
+              </p>
+            </div>
+
+            {/* Scroll 5 (Texto 4) */}
+            <div ref={dialogue4Ref} style={{ display: 'none' }}>
+              <p className="scene__dialog-text">
+                Como ejemplo tenemos el asentamiento en el sitio Real Alto, en la parroquia Chanduy.
+              </p>
+            </div>
+
+            <div className="scene__dialog-arrow"></div>
+          </div>
+        </Html>
+
+        {/* Globo de Diálogo de la segunda parte flotando sobre Rei 4 (derecha) */}
+        <Html position={[rei4X, rei4Y + 2.5, LAYER_Z.MAIN]} center zIndexRange={[100, 0]}>
+          <div ref={dialogBoxRightRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+
+            {/* Scroll 7 (Texto 1 del Fondo 2) */}
+            <div ref={dialogueRight1Ref}>
+              <p className="scene__dialog-text">
+                Los Valdivia también tallan en piedra y formas similares las hacen en barro cocido (cerámica).
+              </p>
+            </div>
+
+            {/* Scroll 8 (Texto 2 del Fondo 2) */}
+            <div ref={dialogueRight2Ref} style={{ display: 'none' }}>
+              <p className="scene__dialog-text">
+                Su cerámica se caracteriza por la elaboración de figuras con formas femeninas, de ahí la famosa figurina de Valdivia, que es un ícono de la fertilidad y prosperidad, usada como ofrenda votiva (promesa) o como un instrumento chamanístico.
+              </p>
+            </div>
+
+            <div className="scene__dialog-arrow"></div>
+          </div>
+        </Html>
+
+        {/* REI + DIÁLOGO para la máquina del tiempo en Valdivia */}
+        <group ref={reiMaquinaGroupRef} position={[-worldWidth * 0.35, -2.7, LAYER_Z.MAIN]}>
+          <group ref={reiMaquina1Ref}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko} color="#AA8855" targetHeight={4.0} position={[0, 0, 0]} renderOrder={2} />
+          </group>
+          <group ref={reiMaquina6Ref} visible={false}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko6} color="#AA8855" targetHeight={4.5} position={[0, 0.4, 0]} renderOrder={2} />
+          </group>
+
+          <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+              <div ref={dialogueMaquinaRef}>
+                <p className="scene__dialog-text">
+                  Ahora vamos a trasladarnos 900 a.C. a 200 a.C.
+                </p>
+              </div>
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
 
       </group>
     </Suspense>
@@ -951,13 +1226,17 @@ function EscenaChorrera({ xOffset }) {
 
         {/* ── Amanecer dorado, cerámica silbante ── */}
         <FlatIllustration
+          url={ASSET_URLS.chorreraFondo}
           color="#2D1A00"
           targetHeight={11}
           placeholderAspect={worldWidth / 11}
           position={[0, 0, LAYER_Z.SKY]}
           renderOrder={0}
+          cropToWidth={worldWidth}
         />
 
+        {/* Los fondos gris/color (greybox) se comentan ahora que tenemos un fondo real */}
+        {/* 
         <FlatIllustration
           color="#4A2E05"
           targetHeight={4}
@@ -973,6 +1252,7 @@ function EscenaChorrera({ xOffset }) {
           position={[0, -4.5, LAYER_Z.MIDGROUND]}
           renderOrder={2}
         />
+        */}
 
         {/* ── MAIN: La cerámica silbante de Chorrera ── */}
         <FlatIllustration
@@ -992,6 +1272,7 @@ function EscenaChorrera({ xOffset }) {
           renderOrder={3}
         />
 
+        {/*
         <FlatIllustration
           color="#3D2200"
           targetHeight={2}
@@ -999,6 +1280,7 @@ function EscenaChorrera({ xOffset }) {
           position={[0, -5, LAYER_Z.FOREGROUND]}
           renderOrder={4}
         />
+        */}
 
       </group>
     </Suspense>
@@ -1137,6 +1419,26 @@ function EscenaManteno({ xOffset }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────
+// SUB-COMPONENTE: SceneReadyNotifier
+// Detecta cuándo se han renderizado los primeros fotogramas y levanta el velo.
+// ─────────────────────────────────────────────────────────────────────
+function SceneReadyNotifier() {
+  const setDioramaListo = useMuseoStore(s => s.setDioramaListo)
+  const frameCount = useRef(0)
+
+  useFrame(() => {
+    if (frameCount.current < 2) {
+      frameCount.current++
+      if (frameCount.current === 2) {
+        setDioramaListo(true)
+      }
+    }
+  })
+
+  return null
+}
+
+// ─────────────────────────────────────────────────────────────────────
 // COMPONENTE PRINCIPAL: DioramaScene
 // ─────────────────────────────────────────────────────────────────────
 /**
@@ -1152,6 +1454,9 @@ export function DioramaScene() {
 
   // Usamos la MISMA fórmula que en ScrollNarrativeSetup para garantizar consistencia absoluta
   const spacing = (size.width / size.height) * FRUSTUM_HEIGHT
+
+  // Ya no se necesita precarga diferida: ALL_TEXTURE_URLS preload a nivel de módulo
+  // cubre todas las escenas porque los WebP son suficientemente livianos (~3MB total).
 
   useFrame(() => {
     if (!groupRef.current) return
@@ -1170,18 +1475,31 @@ export function DioramaScene() {
   return (
     <group ref={groupRef}>
       {/*
-        NOTA SOBRE <Suspense> Y frameloop="demand":
-        Cuando una textura carga y Suspense re-monta un componente,
-        R3F con frameloop="demand" necesita un invalidate() para pintar el frame.
-        useTexture de Drei llama a invalidate() automáticamente al resolver.
-        → No necesitamos manejarlo manualmente aquí.
+        Dividimos cada era/escena en su propio límite de Suspense.
+        Esto permite que la EscenaIntroduccion (El Museo) se pinte inmediatamente
+        en cuanto terminen de cargarse sus propios recursos, sin tener que esperar
+        a que se completen las descargas de las escenas posteriores (que ocurren
+        de fondo de forma asíncrona).
       */}
-      <EscenaIntroduccion xOffset={-0 * spacing} />
-      <EscenaLasVegas xOffset={-1 * spacing} />
-      <EscenaValdivia xOffset={-2 * spacing} />
-      <EscenaChorrera xOffset={-3 * spacing} />
-      <EscenaGuangala xOffset={-4 * spacing} />
-      <EscenaManteno xOffset={-5 * spacing} />
+      <Suspense fallback={null}>
+        <EscenaIntroduccion xOffset={-0 * spacing} />
+        <SceneReadyNotifier />
+      </Suspense>
+      <Suspense fallback={null}>
+        <EscenaLasVegas xOffset={-1 * spacing} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <EscenaValdivia xOffset={-2 * spacing} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <EscenaChorrera xOffset={-3 * spacing} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <EscenaGuangala xOffset={-4 * spacing} />
+      </Suspense>
+      <Suspense fallback={null}>
+        <EscenaManteno xOffset={-5 * spacing} />
+      </Suspense>
     </group>
   )
 }

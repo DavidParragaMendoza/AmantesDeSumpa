@@ -1,0 +1,209 @@
+.diorama-loader {
+  position: fixed;
+  inset: 0;
+  background-color: #0a0c14; /* var(--color-bg-deep) */
+  z-index: 9999; /* Asegura estar arriba de todo, incluido el HUD */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #f0e8d8; /* var(--color-text-primary) */
+  font-family: 'Inter', system-ui, sans-serif;
+  opacity: 1;
+  transition: opacity 0.7s cubic-bezier(0.25, 1, 0.5, 1), transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
+}
+
+.diorama-loader--fading {
+  opacity: 0;
+  transform: scale(1.05);
+  pointer-events: none;
+}
+
+.diorama-loader__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+  z-index: 2;
+}
+
+/* Portal de anillos animados */
+.diorama-loader__portal-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.diorama-loader__portal-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.ring-outer {
+  width: 120px;
+  height: 120px;
+  border-top-color: #c9a84c; /* var(--color-accent-gold) */
+  border-bottom-color: rgba(201, 168, 76, 0.2);
+  animation: rotateClockwise 3s linear infinite;
+}
+
+.ring-middle {
+  width: 90px;
+  height: 90px;
+  border-left-color: #b85c38; /* var(--color-accent-terra) */
+  border-right-color: rgba(184, 92, 56, 0.2);
+  animation: rotateCounterClockwise 2s linear infinite;
+}
+
+.ring-inner {
+  width: 60px;
+  height: 60px;
+  border-top-color: #e8d5a3; /* var(--color-accent-sand) */
+  border-left-color: rgba(232, 213, 163, 0.2);
+  animation: rotateClockwise 1.2s linear infinite;
+}
+
+.diorama-loader__portal-core {
+  font-size: 2rem;
+  animation: pulseCore 2s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tipografía */
+.diorama-loader__title {
+  font-family: 'Cinzel', 'Georgia', serif; /* var(--font-display) */
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 700;
+  color: #c9a84c;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 15px rgba(201, 168, 76, 0.3);
+}
+
+.diorama-loader__subtitle {
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  color: #8a7a65; /* var(--color-text-muted) */
+  margin-bottom: 3rem;
+  font-weight: 300;
+  letter-spacing: 0.05em;
+}
+
+/* Carta de datos curiosos con Glassmorphism */
+.diorama-loader__card {
+  background: rgba(17, 24, 39, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  margin-bottom: 3.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.diorama-loader__card-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #b85c38;
+  letter-spacing: 0.2em;
+  margin-bottom: 0.75rem;
+}
+
+.diorama-loader__card-text-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.diorama-loader__card-text {
+  font-size: clamp(0.9rem, 1.8vw, 1rem);
+  line-height: 1.6;
+  color: #f0e8d8;
+  animation: slideFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Contenedor de barra de progreso */
+.diorama-loader__progress-container {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.diorama-loader__progress-bar-wrapper {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.diorama-loader__progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #b85c38 0%, #c9a84c 50%, #e8d5a3 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(201, 168, 76, 0.5);
+  transition: width 0.1s ease-out;
+}
+
+.diorama-loader__percentage {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #c9a84c;
+  letter-spacing: 0.05em;
+}
+
+/* Animaciones */
+@keyframes rotateClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rotateCounterClockwise {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+@keyframes pulseCore {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.8;
+    filter: drop-shadow(0 0 2px rgba(201, 168, 76, 0.3));
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(201, 168, 76, 0.7));
+  }
+}
+
+@keyframes slideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

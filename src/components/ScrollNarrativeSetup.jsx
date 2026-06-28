@@ -73,8 +73,9 @@ export function useScrollNarrative() {
     // ── 1. DURACIONES DE LA LÍNEA DE TIEMPO ───────────────────
     const introDuration = 8.0  // Fases de diálogo en el Museo
     const lasVegasDuration = 22.0 // Fases de diálogo en Las Vegas (22 scrolls extra, incluyendo transición)
+    const valdiviaDuration = 12.0 // Fases de diálogo en Valdivia (12 scrolls extra)
     const cameraDuration = CAMERA_KEYFRAMES.length - 1  // 7 escenas × 1 unidad
-    const totalDuration = introDuration + lasVegasDuration + cameraDuration
+    const totalDuration = introDuration + lasVegasDuration + valdiviaDuration + cameraDuration
 
     // ── 2. CONFIGURAR EL SPACER DE SCROLL ─────────────────────
     // VH_POR_ESCENA: cuántos vh de scroll consume cada parada narrativa.
@@ -126,6 +127,19 @@ export function useScrollNarrative() {
       maquinaOpacity: 0,
       reiMountedOpacity: 0,
       minigameCompleted: false,
+    }
+    gsapTarget.valdivia = {
+      reiOpacity: 0,
+      reiScale: 1,
+      dialogueStep: 0,
+      fondo2X: -1,
+      rei4Opacity: 0,
+      fondoTransicionX: -1,
+      maquinaScale: 0,
+      maquinaOpacity: 0,
+      reiMaquinaOpacity: 0,
+      reiMountedOpacity: 0,
+      reiPositionX: xPosRei,
     }
 
     // ── 6. CONSTRUCCIÓN DE LA TIMELINE MAESTRA ─────────────────
@@ -538,6 +552,164 @@ export function useScrollNarrative() {
           onUpdate: () => invalidate(),
         })
       }
+
+      if (index === 2) {
+        // Al viajar a Valdivia, desvanecemos a Rei montado de Las Vegas
+        timelineRef.current.to(
+          gsapTarget.lasVegas,
+          {
+            reiMountedOpacity: 0,
+            duration: 0.5,
+            onUpdate: () => invalidate(),
+          },
+          '<'
+        )
+
+        // Scroll 1: Aparece Rei en la rama (suave fade-in)
+        timelineRef.current.to(gsapTarget.valdivia, {
+          reiOpacity: 1,
+          dialogueStep: 1,
+          duration: 1,
+          ease: 'power2.out',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 2: Primer diálogo de Valdivia
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 2,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 3: Segundo diálogo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 3,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 4: Tercer diálogo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 4,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 5: Cuarto diálogo (Real Alto / Chanduy)
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 5,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 6: Transición a FondoValdivida2.png (deslizamiento como en Las Vegas)
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 6,
+          fondo2X: 0,
+          reiOpacity: 0,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 7: Aparece Rei4.webp con el primer diálogo del segundo fondo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 7,
+          rei4Opacity: 1,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 8: Segundo diálogo del segundo fondo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 8,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 9: Se desliza el fondo de transición, ocultando a Rei4
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 9,
+          fondoTransicionX: 0,
+          rei4Opacity: 0,
+          reiOpacity: 0,
+          reiMaquinaOpacity: 0,
+          maquinaScale: 0,
+          maquinaOpacity: 0,
+          reiMountedOpacity: 0,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 10: Aparece Rei parado junto a la máquina con el diálogo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 10,
+          reiPositionX: -worldWidth * 0.2,
+          reiOpacity: 0,
+          reiMaquinaOpacity: 1,
+          reiScale: 1,
+          maquinaScale: 0,
+          maquinaOpacity: 0,
+          reiMountedOpacity: 0,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 11: Aparece la máquina del tiempo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 11,
+          reiPositionX: -worldWidth * 0.2,
+          reiOpacity: 0,
+          reiMaquinaOpacity: 1,
+          reiScale: 1,
+          maquinaScale: 1,
+          maquinaOpacity: 1,
+          reiMountedOpacity: 0,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+
+        // Scroll 12: Rei se sube a la máquina del tiempo
+        timelineRef.current.to(gsapTarget.valdivia, {
+          dialogueStep: 12,
+          reiPositionX: 0,
+          reiOpacity: 0,
+          reiMaquinaOpacity: 0,
+          maquinaOpacity: 0,
+          reiMountedOpacity: 1,
+          duration: 1,
+          ease: 'power2.inOut',
+          onUpdate: () => invalidate(),
+        })
+      }
+
+      if (index === 3) {
+        // Al viajar de Valdivia a Chorrera, desvanecemos todo lo de Valdivia (incluyendo máquina y montado)
+        timelineRef.current.to(
+          gsapTarget.valdivia,
+          {
+            reiOpacity: 0,
+            rei4Opacity: 0,
+            fondo2X: -1,
+            fondoTransicionX: -1,
+            reiMaquinaOpacity: 0,
+            reiMountedOpacity: 0,
+            maquinaOpacity: 0,
+            duration: 0.5,
+            onUpdate: () => invalidate(),
+          },
+          '<'
+        )
+      }
     })
 
     // ── LÓGICA DE BLOQUEO DE SCROLL (MINIJUEGO) ─────────────────
@@ -594,6 +766,14 @@ export function useScrollNarrative() {
           snapPoints.push(currentDurationAccum / totalDuration)
         }
       }
+
+      if (i === 2) {
+        // 12 puntos de snap adicionales en Valdivia
+        for (let j = 1; j <= 12; j++) {
+          currentDurationAccum += 1;
+          snapPoints.push(currentDurationAccum / totalDuration)
+        }
+      }
     }
 
     // ── 8. SCROLL TRIGGER ──────────────────────────────────────
@@ -601,12 +781,12 @@ export function useScrollNarrative() {
       trigger: '#scroll-spacer',
       start: 'top top',
       end: 'bottom bottom',
-      scrub: 0.8,          // Retardo de seguimiento ajustado para ser más responsivo
+      scrub: 0.4,          // Retardo de seguimiento reducido para que se sienta mucho más rápido y responsivo
       animation: timelineRef.current,
       snap: {
         snapTo: snapPoints,
-        duration: { min: 0.25, max: 0.85 }, // Duración equilibrada para transiciones de snapping
-        delay: 0.3,          // Delay aumentado a 0.3s para evitar interrupción durante el scroll activo
+        duration: { min: 0.15, max: 0.55 }, // Transiciones de snapping más rápidas para evitar lentitud
+        delay: 0.3,          // Evita interrupción durante el scroll activo
         ease: 'power2.out', // Desaceleración suave al encajar
       },
       onUpdate: (self) => {

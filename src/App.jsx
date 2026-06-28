@@ -23,51 +23,65 @@
  *                                             ↘ Zustand Store → React UI
  */
 
-import { Suspense } from 'react'
+import { Suspense, lazy, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import * as THREE from 'three'
 import { OrthoCamera } from './components/OrthoCamera'
 import { ScrollNarrativeSetup } from './components/ScrollNarrativeSetup'
-import { DioramaScene } from './components/DioramaScene'
 import { SceneFallback } from './components/SceneFallback'
 import { TimeWarpEffect } from './components/TimeWarpEffect'
 import { HUD } from './components/HUD'
 import { useMuseoStore } from './store/useMuseoStore'
-import { LandingPage } from './components/LandingPage'
-import { PaintingCanvas } from './components/PaintingCanvas'
-import { MiniGamesSection } from './components/MiniGamesSection'
 import { RotatePrompt } from './components/RotatePrompt'
+import { DioramaLoadingScreen } from './components/DioramaLoadingScreen'
+
+// Carga perezosa (lazy load) de componentes de pantalla completa y de la escena WebGL pesada
+const LandingPage = lazy(() => import('./components/LandingPage').then(m => ({ default: m.LandingPage })))
+const PaintingCanvas = lazy(() => import('./components/PaintingCanvas').then(m => ({ default: m.PaintingCanvas })))
+const MiniGamesSection = lazy(() => import('./components/MiniGamesSection').then(m => ({ default: m.MiniGamesSection })))
+const DioramaScene = lazy(() => import('./components/DioramaScene').then(m => ({ default: m.DioramaScene })))
 
 export default function App() {
   const modo = useMuseoStore(s => s.modo)
+  const dioramaListo = useMuseoStore(s => s.dioramaListo)
+
+  // Precargar el recorrido 3D y sus imágenes iniciales en segundo plano
+  // mientras el usuario está en el menú principal.
+  useEffect(() => {
+    if (modo === 'landing') {
+      // Esto descarga el JS de DioramaScene y además dispara el
+      // useTexture.preload() que está a nivel de módulo en ese archivo.
+      import('./components/DioramaScene')
+    }
+  }, [modo])
 
   // ── MODO 1: LANDING PAGE CON MÁSCARA ANIMADA ──
   if (modo === 'landing') {
     return (
-      <>
+      <Suspense fallback={null}>
         <RotatePrompt />
         <LandingPage />
-      </>
+      </Suspense>
     )
   }
 
   // ── MODO 2: SECCIÓN DE PINTURA CREATIVA ──
   if (modo === 'pintar') {
     return (
-      <>
+      <Suspense fallback={null}>
         <RotatePrompt />
         <PaintingCanvas />
-      </>
+      </Suspense>
     )
   }
 
   // ── MODO 3: SECCIÓN DE MINIJUEGOS EDUCATIVOS ──
   if (modo === 'minijuegos') {
     return (
-      <>
+      <Suspense fallback={null}>
         <RotatePrompt />
         <MiniGamesSection />
-      </>
+      </Suspense>
     )
   }
 
@@ -76,10 +90,19 @@ export default function App() {
     <>
       <RotatePrompt />
 
+      {/* Pantalla de carga para ocultar el lienzo negro de compilación WebGL */}
+      <DioramaLoadingScreen dioramaListo={dioramaListo} />
+
       {/* ══════════════════════════════════════════════════════
           CANVAS R3F — Fijo en pantalla, cubre todo el viewport
          ══════════════════════════════════════════════════════ */}
-      <div id="canvas-container">
+      <div 
+        id="canvas-container"
+        style={{
+          opacity: dioramaListo ? 1 : 0,
+          transition: 'opacity 0.8s ease-in-out',
+        }}
+      >
         <Canvas
           /**
            * CONFIGURACIÓN DE RENDIMIENTO CRÍTICA:
@@ -113,12 +136,12 @@ export default function App() {
           camera={{
             // Cámara ortográfica manual (OrthoCamera.jsx la reconfigura)
             // Estos valores son temporales hasta el primer render
-            left:   -8,
-            right:   8,
-            top:     5,
+            left: -8,
+            right: 8,
+            top: 5,
             bottom: -5,
-            near:  -50,
-            far:    50,
+            near: -50,
+            far: 50,
             position: [0, 0, 10],
           }}
           // El canvas no captura events del scroll (el body los maneja)

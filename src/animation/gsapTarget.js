@@ -113,6 +113,23 @@ export const gsapTarget = {
     maquinaOpacity: 0, // Opacidad de la máquina del tiempo por separado
     reiMountedOpacity: 0, // Opacidad de Rei montado en la máquina del tiempo
   },
+
+  /**
+   * VALDIVIA NARRATIVE (Escena 2)
+   */
+  valdivia: {
+    reiOpacity:        0,   // Opacidad del gecko de Valdivia (Rei8.png) y de su globo
+    reiScale:          1,   // Escala base
+    dialogueStep:      0,   // Paso de diálogo activo
+    fondo2X:           -1,  // Posición X normalizada de FondoValdivida2.png (-1 a 0)
+    rei4Opacity:       0,   // Opacidad de Rei4.webp
+    fondoTransicionX:  -1,  // Posición X normalizada del fondo de transición
+    maquinaScale:      0,   // Escala de la máquina del tiempo
+    maquinaOpacity:    0,   // Opacidad de la máquina del tiempo
+    reiMountedOpacity: 0,   // Opacidad de Rei montado en la máquina
+    reiPositionX:      0,   // Posición X absoluta de Rei al montarse
+    reiMaquinaOpacity: 0,   // Opacidad del Rei parado junto a la máquina (Rei.webp)
+  },
 }
 
 // ──────────────────────────────────────────────────────────────

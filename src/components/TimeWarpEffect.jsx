@@ -140,8 +140,8 @@ const FRAG = /* glsl */`
     // ══ EFECTO 6: DESTELLO ENERGÉTICO (pico azul-celeste) ══════════
     // Flash de "umbral temporal": el color azul sugiere electricidad
     // y energía cinética al cruzar entre eras.
-    float flashAmount = smoothstep(0.55, 1.0, uIntensity) * 0.28;
-    vec3  flashColor  = vec3(0.50, 0.82, 1.0);  // azul-celeste temporal
+    float flashAmount = smoothstep(0.55, 1.0, uIntensity) * 0.98;
+    vec3  flashColor  = vec3(0.60, 0.88, 1.0);  // azul-celeste temporal brillante
     color = mix(color, flashColor, flashAmount);
 
     // ══ EFECTO 7: GRAIN TEMPORAL ══════════════════════════════════

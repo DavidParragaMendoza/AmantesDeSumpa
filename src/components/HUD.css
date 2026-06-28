@@ -126,7 +126,8 @@
 }
 
 .hud__audio-btn,
-.hud__fullscreen-btn {
+.hud__fullscreen-btn,
+.hud__back-btn {
   background: rgba(17, 24, 39, 0.7);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(201, 168, 76, 0.2);
@@ -146,14 +147,16 @@
 }
 
 .hud__audio-btn:hover,
-.hud__fullscreen-btn:hover {
+.hud__fullscreen-btn:hover,
+.hud__back-btn:hover {
   background: rgba(201, 168, 76, 0.15);
   border-color: rgba(201, 168, 76, 0.5);
   transform: scale(1.1);
 }
 
 .hud__audio-btn:active,
-.hud__fullscreen-btn:active {
+.hud__fullscreen-btn:active,
+.hud__back-btn:active {
   transform: scale(0.95);
 }
 
@@ -310,7 +313,8 @@
   }
 
   .hud__audio-btn,
-  .hud__fullscreen-btn {
+  .hud__fullscreen-btn,
+  .hud__back-btn {
     width: 36px;
     height: 36px;
     font-size: 0.9rem;

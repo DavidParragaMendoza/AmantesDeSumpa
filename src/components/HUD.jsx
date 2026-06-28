@@ -87,6 +87,26 @@ function AudioToggle() {
   )
 }
 
+// ── Botón de Volver al Menú ────────────────────────────────────
+function BackToMenu() {
+  const setModo = useMuseoStore(s => s.setModo)
+
+  return (
+    <button
+      id="hud-back-btn"
+      className="hud__back-btn"
+      onClick={() => setModo('landing')}
+      aria-label="Volver al menú principal"
+      title="Volver al menú"
+    >
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
+        <line x1="19" y1="12" x2="5" y2="12" />
+        <polyline points="12 19 5 12 12 5" />
+      </svg>
+    </button>
+  )
+}
+
 // ── Componente Principal HUD ───────────────────────────────────
 export function HUD() {
   // enTransicion se activa cuando el vórtex alcanza intensity > 0.05.
@@ -107,6 +127,7 @@ export function HUD() {
       <JourneyProgress />
       <ReiDialog />
       <div className="hud__top-controls">
+        <BackToMenu />
         <FullscreenToggle />
         <AudioToggle />
       </div>
