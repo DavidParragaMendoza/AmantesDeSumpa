@@ -135,7 +135,16 @@ export const ASSET_URLS = {
   rei_gecko8: '/assets/Rei8.webp',
 
   // ── Escena 3: Chorrera
-  chorreraFondo: '/assets/culturaChorrera.webp',
+  chorreraFondo: '/assets/chorreraNuevoFondo.webp',
+
+  // ── Escena 4: Guangala
+  guangalaFondo: '/assets/FondoGuangala.webp',
+  guangalaTransicion: '/assets/fondoTransicion.webp',
+
+  // ── Escena 5: Manteño-Guancavilcas
+  mantenoFondo: '/assets/fondoSeñoríosManteño-Guancavilcas.webp',
+  mantenoFondo2: '/assets/FondosSeñoríosManteño.webp',
+  mantenoTransicion: '/assets/fondoTransicion.webp',
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -175,6 +184,17 @@ export const URLS_ESCENA_CHORRERA = [
   ASSET_URLS.chorreraFondo,
 ].filter(Boolean)
 
+export const URLS_ESCENA_GUANGALA = [
+  ASSET_URLS.guangalaFondo,
+  ASSET_URLS.guangalaTransicion,
+].filter(Boolean)
+
+export const URLS_ESCENA_MANTENO = [
+  ASSET_URLS.mantenoFondo,
+  ASSET_URLS.mantenoFondo2,
+  ASSET_URLS.mantenoTransicion,
+].filter(Boolean)
+
 // Ahora que todos los assets son WebP (~3MB total), precargamos TODAS las escenas
 // inmediatamente a nivel de módulo para eliminación total de pantalla negra.
 // Antes con PNGs (~17MB) esto era imposible; ahora es trivial.
@@ -183,6 +203,8 @@ const ALL_TEXTURE_URLS = [
   ...URLS_ESCENA_LAS_VEGAS,
   ...URLS_ESCENA_VALDIVIA,
   ...URLS_ESCENA_CHORRERA,
+  ...URLS_ESCENA_GUANGALA,
+  ...URLS_ESCENA_MANTENO,
 ]
 if (ALL_TEXTURE_URLS.length > 0) {
   useTexture.preload(ALL_TEXTURE_URLS)
@@ -1220,6 +1242,121 @@ function EscenaValdivia({ xOffset }) {
 // ─────────────────────────────────────────────────────────────────────
 function EscenaChorrera({ xOffset }) {
   const worldWidth = useWorldWidth()
+
+  // Refs para cada grupo de Rei en el acantilado
+  const rei1GroupRef = useRef(null)
+  const rei3GroupRef = useRef(null)
+  const rei7GroupRef = useRef(null)
+  const rei2GroupRef = useRef(null)
+
+  // Diálogos principales en el acantilado (a la derecha)
+  const dialogBoxRef = useRef(null)
+  const dialogue1Ref = useRef(null)
+  const dialogue2Ref = useRef(null)
+  const dialogue3Ref = useRef(null)
+  const dialogue4Ref = useRef(null)
+  const dialogue6Ref = useRef(null)
+  const dialogue8Ref = useRef(null)
+  const dialogue10Ref = useRef(null)
+  const dialogue12Ref = useRef(null)
+
+  // Elementos para el final de Chorrera (máquina del tiempo y transición)
+  const fondoTransicionFondoRef = useRef(null)
+  const maquinaDelTiempoRef = useRef(null)
+  const reiMaquinaGroupRef = useRef(null)
+  const dialogBoxMaquinaRef = useRef(null)
+  const dialogueMaquina15Ref = useRef(null)
+  const dialogueMaquina16Ref = useRef(null)
+  const reiMaquina1Ref = useRef(null)
+  const reiMaquina6Ref = useRef(null)
+
+  const setGroupOpacity = (group, opacity) => {
+    if (!group) return
+    group.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.opacity = opacity
+        child.material.transparent = true
+      }
+    })
+  }
+
+  useFrame(() => {
+    const baseOpacity = gsapTarget.chorrera.reiOpacity
+    // Aplicar las opacidades de cada Rei correspondiente
+    setGroupOpacity(rei1GroupRef.current, gsapTarget.chorrera.rei1Opacity * baseOpacity)
+    setGroupOpacity(rei3GroupRef.current, gsapTarget.chorrera.rei3Opacity * baseOpacity)
+    setGroupOpacity(rei7GroupRef.current, gsapTarget.chorrera.rei7Opacity * baseOpacity)
+    setGroupOpacity(rei2GroupRef.current, gsapTarget.chorrera.rei2Opacity * baseOpacity)
+
+    const step = gsapTarget.chorrera.dialogueStep
+
+    // Opacidad y visibilidad del diálogo principal
+    if (dialogBoxRef.current) {
+      const showDialog = (
+        (step >= 1.0 && step < 5.0) ||
+        (step >= 6.0 && step < 7.0) ||
+        (step >= 8.0 && step < 9.0) ||
+        (step >= 10.0 && step < 11.0) ||
+        (step >= 12.0 && step < 13.0)
+      ) && baseOpacity >= 0.01
+
+      dialogBoxRef.current.style.opacity = baseOpacity
+      dialogBoxRef.current.style.display = showDialog ? 'block' : 'none'
+    }
+
+    if (dialogue1Ref.current) dialogue1Ref.current.style.display = (step >= 1.0 && step < 2.0) ? 'block' : 'none'
+    if (dialogue2Ref.current) dialogue2Ref.current.style.display = (step >= 2.0 && step < 3.0) ? 'block' : 'none'
+    if (dialogue3Ref.current) dialogue3Ref.current.style.display = (step >= 3.0 && step < 4.0) ? 'block' : 'none'
+    if (dialogue4Ref.current) dialogue4Ref.current.style.display = (step >= 4.0 && step < 5.0) ? 'block' : 'none'
+    if (dialogue6Ref.current) dialogue6Ref.current.style.display = (step >= 6.0 && step < 7.0) ? 'block' : 'none'
+    if (dialogue8Ref.current) dialogue8Ref.current.style.display = (step >= 8.0 && step < 9.0) ? 'block' : 'none'
+    if (dialogue10Ref.current) dialogue10Ref.current.style.display = (step >= 10.0 && step < 11.0) ? 'block' : 'none'
+    if (dialogue12Ref.current) dialogue12Ref.current.style.display = (step >= 12.0 && step < 13.0) ? 'block' : 'none'
+
+    // Desplazamiento del fondo de transición
+    if (fondoTransicionFondoRef.current) {
+      fondoTransicionFondoRef.current.position.x = gsapTarget.chorrera.fondoTransicionX * worldWidth
+    }
+
+    // Máquina del tiempo
+    if (maquinaDelTiempoRef.current) {
+      const ms = gsapTarget.chorrera.maquinaScale
+      maquinaDelTiempoRef.current.scale.set(ms, ms, ms)
+      setGroupOpacity(maquinaDelTiempoRef.current, gsapTarget.chorrera.maquinaOpacity)
+      maquinaDelTiempoRef.current.visible = (step >= 14.5)
+    }
+
+    // Rei en la máquina ( standing / walking / mounted )
+    if (reiMaquinaGroupRef.current) {
+      if (step >= 13.5) {
+        reiMaquinaGroupRef.current.position.x = gsapTarget.chorrera.reiPositionX
+      } else {
+        reiMaquinaGroupRef.current.position.x = -worldWidth * 0.35
+      }
+      const rs = gsapTarget.chorrera.reiScale
+      reiMaquinaGroupRef.current.scale.set(rs, rs, rs)
+    }
+
+    // Visibilidad de los sprites de Rei en la máquina
+    if (reiMaquina1Ref.current) reiMaquina1Ref.current.visible = (step < 15.5)
+    if (reiMaquina6Ref.current) reiMaquina6Ref.current.visible = (step >= 15.5)
+
+    // Opacidades de Rei en la máquina
+    setGroupOpacity(reiMaquina1Ref.current, gsapTarget.chorrera.reiMaquinaOpacity)
+    setGroupOpacity(reiMaquina6Ref.current, gsapTarget.chorrera.reiMountedOpacity)
+
+    // Globo de diálogo de la máquina
+    if (dialogBoxMaquinaRef.current) {
+      const showDialogMaquina = step >= 14.0 && step < 17.0
+      dialogBoxMaquinaRef.current.style.display = showDialogMaquina ? 'block' : 'none'
+
+      const dialogOpacity = Math.max(gsapTarget.chorrera.reiMaquinaOpacity, gsapTarget.chorrera.reiMountedOpacity)
+      dialogBoxMaquinaRef.current.style.opacity = dialogOpacity
+    }
+    if (dialogueMaquina15Ref.current) dialogueMaquina15Ref.current.style.display = (step >= 14.0 && step < 15.5) ? 'block' : 'none'
+    if (dialogueMaquina16Ref.current) dialogueMaquina16Ref.current.style.display = (step >= 15.5 && step < 17.0) ? 'block' : 'none'
+  })
+
   return (
     <Suspense fallback={<SceneFallback />}>
       <group position={[xOffset, 0, 0]}>
@@ -1227,7 +1364,6 @@ function EscenaChorrera({ xOffset }) {
         {/* ── Amanecer dorado, cerámica silbante ── */}
         <FlatIllustration
           url={ASSET_URLS.chorreraFondo}
-          color="#2D1A00"
           targetHeight={11}
           placeholderAspect={worldWidth / 11}
           position={[0, 0, LAYER_Z.SKY]}
@@ -1235,52 +1371,162 @@ function EscenaChorrera({ xOffset }) {
           cropToWidth={worldWidth}
         />
 
-        {/* Los fondos gris/color (greybox) se comentan ahora que tenemos un fondo real */}
-        {/* 
-        <FlatIllustration
-          color="#4A2E05"
-          targetHeight={4}
-          placeholderAspect={worldWidth / 4}
-          position={[0, -2.5, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
+        {/* ── TRANSICIÓN AL FINAL DE CHORRERA (Fondo transicion.webp) ── */}
+        <group ref={fondoTransicionFondoRef}>
+          <FlatIllustration
+            url={ASSET_URLS.lasVegasTransicion}
+            color="#5C2D1A"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.2]}
+            renderOrder={1}
+            cropToWidth={worldWidth}
+          />
+          {/* Máquina del tiempo replica */}
+          <group ref={maquinaDelTiempoRef} visible={false}>
+            <FlatIllustration
+              url={ASSET_URLS.museo_maquintaDelTiempo}
+              targetHeight={3.5}
+              position={[0, -1, LAYER_Z.MAIN - 0.1]}
+              renderOrder={1}
+            />
+          </group>
+        </group>
 
-        <FlatIllustration
-          color="#7A5020"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -4.5, LAYER_Z.MIDGROUND]}
-          renderOrder={2}
-        />
-        */}
+        {/* ── REI (En el acantilado/derecha) ── */}
+        {/* Usamos grupos separados para cada textura de Rei para poder animar sus opacidades de forma individual */}
+        <group ref={rei1GroupRef} position={[-worldWidth * -0.30, -1.3, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko}
+            color="#AA8855"
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/* ── MAIN: La cerámica silbante de Chorrera ── */}
-        <FlatIllustration
-          color="#C97A2A"
-          targetHeight={3.5}
-          placeholderAspect={2.5 / 3.5}
-          position={[0, -0.8, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        <group ref={rei3GroupRef} position={[-worldWidth * -0.30, -1.3, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko3}
+            color="#AA8855"
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/* ── Figura antropomorfa-zoomorfa silbante ── */}
-        <FlatIllustration
-          color="#E8A040"
-          targetHeight={2.2}
-          placeholderAspect={1.2}
-          position={[2.2, -2, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        <group ref={rei7GroupRef} position={[-worldWidth * -0.30, -1.3, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko7}
+            color="#AA8855"
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/*
-        <FlatIllustration
-          color="#3D2200"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -5, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
-        */}
+        <group ref={rei2GroupRef} position={[-worldWidth * -0.30, -1.3, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko2}
+            color="#AA8855"
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
+
+        {/* Globo de Diálogo flotando sobre los Reis (derecha) */}
+        <group position={[-worldWidth * -0.30, -1.3, LAYER_Z.MAIN]}>
+          <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+
+              {/* Scroll 1 */}
+              <div ref={dialogue1Ref}>
+                <p className="scene__dialog-title">Cultura Chorrera (Fase Engoroy)</p>
+                <p className="scene__dialog-text">
+                  Engoroy se le denomina a una fase de la cultura del período Chorrera.
+                </p>
+              </div>
+
+              {/* Scroll 2 */}
+              <div ref={dialogue2Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  porque fabrica sus vasijas ceremoniales de manera diferente a las de Manabí y la cuenca del Guayas, mantiene su propia cultura.
+                </p>
+              </div>
+
+              {/* Scroll 3 */}
+              <div ref={dialogue3Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Las evidencias arqueológicas demuestran que sus integrantes son buenos pescadores, agricultores con tecnologías eficaces, artesanos excelentes y realizan el intercambio de materiales preciosos como la obsidiana y la concha marina spondylus.
+                </p>
+              </div>
+
+              {/* Scroll 4 */}
+              <div ref={dialogue4Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  En su cerámica representan a seres humanos, animales and plantas, con fines ceremoniales.
+                </p>
+              </div>
+
+              {/* Scroll 6 */}
+              <div ref={dialogue6Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Es en La Libertad donde la comunidad de Engoroy se asienta principalmente sobre el acantilado, cerca de La Caleta.
+                </p>
+              </div>
+
+              {/* Scroll 8 */}
+              <div ref={dialogue8Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  ¿Sabías que ellos construyeron una gran albarrada llamada Achallán, considerada el monumento arqueológico más grande de la Península?
+                </p>
+              </div>
+
+              {/* Scroll 10 */}
+              <div ref={dialogue10Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Una albarrada es una gran estructura de muros de tierra con un amplio pozo de contención, o también llamada hondonada, donde almacenan agua en los tiempos de estación seca (en verano).
+                </p>
+              </div>
+
+              {/* Scroll 12 */}
+              <div ref={dialogue12Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Los cultivos de su alrededor alimentan el subsuelo y enriquecen los pozos de agua, permitiendo la permeabilidad de la lluvia durante la estación del invierno.
+                </p>
+              </div>
+
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
+
+        {/* REI + DIÁLOGO para la máquina del tiempo al final de Chorrera */}
+        <group ref={reiMaquinaGroupRef} position={[-worldWidth * 0.25, -1.3, LAYER_Z.MAIN]}>
+          <group ref={reiMaquina1Ref}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko} color="#AA8855" targetHeight={4.0} position={[0, 0, 0]} renderOrder={2} />
+          </group>
+          <group ref={reiMaquina6Ref} visible={false}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko6} color="#AA8855" targetHeight={4.5} position={[0, 0.4, 0]} renderOrder={2} />
+          </group>
+
+          <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+              <div ref={dialogueMaquina15Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Hasta aquí hemos recorrido las sociedades cazadoras recolectoras, Período Precerámico, y las sociedades agricultoras alfareras, denominado Período Formativo.
+                </p>
+              </div>
+              <div ref={dialogueMaquina16Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Ahora te invito a recorrer a nuevas sociedades, mucho más complejas y más organizadas social, política y económicamente.
+                </p>
+              </div>
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
 
       </group>
     </Suspense>
@@ -1292,61 +1538,237 @@ function EscenaChorrera({ xOffset }) {
 // ─────────────────────────────────────────────────────────────────────
 function EscenaGuangala({ xOffset }) {
   const worldWidth = useWorldWidth()
+
+  // Refs para cada grupo de Rei (izquierda)
+  const rei1GroupRef = useRef(null)
+  const rei2GroupRef = useRef(null)
+
+  // Diálogos principales (a la izquierda)
+  const dialogBoxRef = useRef(null)
+  const dialogue2Ref = useRef(null)
+  const dialogue3Ref = useRef(null)
+  const dialogue5Ref = useRef(null)
+  const dialogue6Ref = useRef(null)
+  const dialogue7Ref = useRef(null)
+
+  // Elementos para el final de Guangala (máquina del tiempo y transición)
+  const fondoTransicionFondoRef = useRef(null)
+  const maquinaDelTiempoRef = useRef(null)
+  const reiMaquinaGroupRef = useRef(null)
+  const dialogBoxMaquinaRef = useRef(null)
+  const dialogueMaquina9Ref = useRef(null)
+  const dialogueMaquina10Ref = useRef(null)
+  const reiMaquina1Ref = useRef(null)
+  const reiMaquina6Ref = useRef(null)
+
+  const setGroupOpacity = (group, opacity) => {
+    if (!group) return
+    group.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.opacity = opacity
+        child.material.transparent = true
+      }
+    })
+  }
+
+  useFrame(() => {
+    const baseOpacity = gsapTarget.guangala.reiOpacity
+    // Aplicar las opacidades de cada Rei correspondiente (ambos a la izquierda)
+    setGroupOpacity(rei1GroupRef.current, gsapTarget.guangala.rei1Opacity * baseOpacity)
+    setGroupOpacity(rei2GroupRef.current, gsapTarget.guangala.rei2Opacity * baseOpacity)
+
+    const step = gsapTarget.guangala.dialogueStep
+
+    // Opacidad y visibilidad del diálogo principal
+    if (dialogBoxRef.current) {
+      const showDialog = (
+        (step >= 2.0 && step < 4.0) ||
+        (step >= 5.0 && step < 8.0)
+      ) && baseOpacity >= 0.01
+
+      dialogBoxRef.current.style.opacity = baseOpacity
+      dialogBoxRef.current.style.display = showDialog ? 'block' : 'none'
+    }
+
+    if (dialogue2Ref.current) dialogue2Ref.current.style.display = (step >= 2.0 && step < 3.0) ? 'block' : 'none'
+    if (dialogue3Ref.current) dialogue3Ref.current.style.display = (step >= 3.0 && step < 4.0) ? 'block' : 'none'
+    if (dialogue5Ref.current) dialogue5Ref.current.style.display = (step >= 5.0 && step < 6.0) ? 'block' : 'none'
+    if (dialogue6Ref.current) dialogue6Ref.current.style.display = (step >= 6.0 && step < 7.0) ? 'block' : 'none'
+    if (dialogue7Ref.current) dialogue7Ref.current.style.display = (step >= 7.0 && step < 8.0) ? 'block' : 'none'
+
+    // Desplazamiento del fondo de transición
+    if (fondoTransicionFondoRef.current) {
+      fondoTransicionFondoRef.current.position.x = gsapTarget.guangala.fondoTransicionX * worldWidth
+    }
+
+    // Máquina del tiempo
+    if (maquinaDelTiempoRef.current) {
+      const ms = gsapTarget.guangala.maquinaScale
+      maquinaDelTiempoRef.current.scale.set(ms, ms, ms)
+      setGroupOpacity(maquinaDelTiempoRef.current, gsapTarget.guangala.maquinaOpacity)
+      maquinaDelTiempoRef.current.visible = (step >= 9.5)
+    }
+
+    // Rei en la máquina ( standing / walking / mounted )
+    if (reiMaquinaGroupRef.current) {
+      if (step >= 8.5) {
+        reiMaquinaGroupRef.current.position.x = gsapTarget.guangala.reiPositionX
+      } else {
+        reiMaquinaGroupRef.current.position.x = -worldWidth * 0.35
+      }
+      const rs = gsapTarget.guangala.reiScale
+      reiMaquinaGroupRef.current.scale.set(rs, rs, rs)
+    }
+
+    // Visibilidad de los sprites de Rei en la máquina
+    if (reiMaquina1Ref.current) reiMaquina1Ref.current.visible = (step < 10.5)
+    if (reiMaquina6Ref.current) reiMaquina6Ref.current.visible = (step >= 10.5)
+
+    // Opacidades de Rei en la máquina
+    setGroupOpacity(reiMaquina1Ref.current, gsapTarget.guangala.reiMaquinaOpacity)
+    setGroupOpacity(reiMaquina6Ref.current, gsapTarget.guangala.reiMountedOpacity)
+
+    // Globo de diálogo de la máquina
+    if (dialogBoxMaquinaRef.current) {
+      const showDialogMaquina = step >= 9.0 && step < 11.0
+      dialogBoxMaquinaRef.current.style.display = showDialogMaquina ? 'block' : 'none'
+
+      const dialogOpacity = Math.max(gsapTarget.guangala.reiMaquinaOpacity, gsapTarget.guangala.reiMountedOpacity)
+      dialogBoxMaquinaRef.current.style.opacity = dialogOpacity
+    }
+    if (dialogueMaquina9Ref.current) dialogueMaquina9Ref.current.style.display = (step >= 9.0 && step < 10.0) ? 'block' : 'none'
+    if (dialogueMaquina10Ref.current) dialogueMaquina10Ref.current.style.display = (step >= 10.0 && step < 11.0) ? 'block' : 'none'
+  })
+
   return (
     <Suspense fallback={<SceneFallback />}>
       <group position={[xOffset, 0, 0]}>
 
-        {/* ── Cultura Guangala: desarrollo cerámico y metalurgia ── */}
+        {/* ── Cultura Guangala Fondo ── */}
         <FlatIllustration
-          color="#0A2A3D"
+          url={ASSET_URLS.guangalaFondo}
           targetHeight={11}
           placeholderAspect={worldWidth / 11}
           position={[0, 0, LAYER_Z.SKY]}
           renderOrder={0}
+          cropToWidth={worldWidth}
         />
 
-        {/* ── Valle costero de Guangala ── */}
-        <FlatIllustration
-          color="#0F3D5C"
-          targetHeight={5}
-          placeholderAspect={worldWidth / 5}
-          position={[0, -1.5, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
+        {/* ── TRANSICIÓN AL FINAL DE GUANGALA (Fondo transicion.webp) ── */}
+        <group ref={fondoTransicionFondoRef}>
+          <FlatIllustration
+            url={ASSET_URLS.guangalaTransicion}
+            color="#5C2D1A"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.2]}
+            renderOrder={1}
+            cropToWidth={worldWidth}
+          />
+          {/* Máquina del tiempo replica */}
+          <group ref={maquinaDelTiempoRef} visible={false}>
+            <FlatIllustration
+              url={ASSET_URLS.museo_maquintaDelTiempo}
+              targetHeight={3.5}
+              position={[0, -2, LAYER_Z.MAIN - 0.1]}
+              renderOrder={1}
+            />
+          </group>
+        </group>
 
-        <FlatIllustration
-          color="#1A5A7A"
-          targetHeight={2.5}
-          placeholderAspect={worldWidth / 2.5}
-          position={[0, -4, LAYER_Z.MIDGROUND]}
-          renderOrder={2}
-        />
+        {/* ── REI (En el acantilado/izquierda) ── */}
+        {/* Usamos grupos separados para cada textura de Rei para poder animar sus opacidades de forma individual */}
+        <group ref={rei2GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko2}
+           
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/* ── MAIN: Figuras Guangala y vasijas polícromas ── */}
-        <FlatIllustration
-          color="#2E7A9E"
-          targetHeight={3.2}
-          placeholderAspect={2 / 3.2}
-          position={[0, -0.8, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        <group ref={rei1GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko}
+            color="#AA8855"
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/* ── Instrumento musical o silbato Guangala ── */}
-        <FlatIllustration
-          color="#C84B6B"
-          targetHeight={1.5}
-          placeholderAspect={1}
-          position={[2.5, -2, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        {/* Globo de Diálogo flotando sobre los Reis (izquierda) */}
+        <group position={[-worldWidth * 0.30, -2.5, LAYER_Z.MAIN]}>
+          <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
 
-        <FlatIllustration
-          color="#0A1F2D"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -5, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
+              {/* Scroll 2 */}
+              <div ref={dialogue2Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-title">Cultura Guangala</p>
+                <p className="scene__dialog-text">
+                  En esta cultura llamada Guangala
+                </p>
+              </div>
+
+              {/* Scroll 3 */}
+              <div ref={dialogue3Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  surgen los centros poblados y áreas periféricas, es una sociedad cacical inicial en la que el personaje principal es el cacique chamán con poder y capacidad de convocatoria para realizar obras y organizar la producción, que marcan la existencia de jefes, sacerdotes, especialistas.
+                </p>
+              </div>
+
+              {/* Scroll 5 */}
+              <div ref={dialogue5Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Desarrollan una actividad agrícola a gran escala, surge el trabajo en metales y la fabricación de cerámica con riqueza simbólica.
+                </p>
+              </div>
+
+              {/* Scroll 6 */}
+              <div ref={dialogue6Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Se intensifica el comercio entre la Costa, la Sierra y la Amazonía.
+                </p>
+              </div>
+
+              {/* Scroll 7 */}
+              <div ref={dialogue7Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Los centros ceremoniales son el escenario de sus rituales, donde el felino, la serpiente, el águila y el caimán son las deidades más veneradas
+                </p>
+              </div>
+
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
+
+        {/* REI + DIÁLOGO para la máquina del tiempo al final de Guangala */}
+        <group ref={reiMaquinaGroupRef} position={[-worldWidth * 0.25, -1.3, LAYER_Z.MAIN]}>
+          <group ref={reiMaquina1Ref}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko} color="#AA8855" targetHeight={4.0} position={[0, 0, 0]} renderOrder={2} />
+          </group>
+          <group ref={reiMaquina6Ref} visible={false}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko6} color="#AA8855" targetHeight={4.5} position={[0, 0.4, 0]} renderOrder={2} />
+          </group>
+
+          <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+              <div ref={dialogueMaquina9Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Hemos recorrido la cultura Guangala con sus asombrosos desarrollos en cerámica y metalurgia.
+                </p>
+              </div>
+              <div ref={dialogueMaquina10Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  ¡Ahora prepárate para viajar a la época de los señoríos Manteño-Guancavilcas!
+                </p>
+              </div>
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
 
       </group>
     </Suspense>
@@ -1356,62 +1778,346 @@ function EscenaGuangala({ xOffset }) {
 // ─────────────────────────────────────────────────────────────────────
 // SUB-COMPONENTE: EscenaManteno (Escena 5 — 800 d.C. a 1530 d.C.)
 // ─────────────────────────────────────────────────────────────────────
+// SUB-COMPONENTE: EscenaManteno (Escena 5 — 800 d.C. a 1530 d.C.)
+// ─────────────────────────────────────────────────────────────────────
 function EscenaManteno({ xOffset }) {
   const worldWidth = useWorldWidth()
+
+  // Refs para cada grupo de Rei (izquierda)
+  const rei1GroupRef = useRef(null) // Rei.webp
+  const rei2GroupRef = useRef(null) // Rei2.webp
+  const rei4GroupRef = useRef(null) // Rei4.webp
+
+  // Diálogos principales (a la izquierda)
+  const dialogBoxRef = useRef(null)
+  const dialogue2Ref = useRef(null)
+  const dialogue3Ref = useRef(null)
+  const dialogue5Ref = useRef(null)
+  const dialogue6Ref = useRef(null)
+  const dialogue7Ref = useRef(null)
+  const dialogue8Ref = useRef(null)
+  const dialogue9Ref = useRef(null)
+  const dialogue12Ref = useRef(null)
+  const dialogue13Ref = useRef(null)
+  const dialogue14Ref = useRef(null)
+  const dialogue15Ref = useRef(null)
+  const dialogue16Ref = useRef(null)
+
+  // Elementos para el final de Manteño (máquina del tiempo y transición)
+  const fondo2Ref = useRef(null)
+  const fondoTransicionFondoRef = useRef(null)
+  const maquinaDelTiempoRef = useRef(null)
+  const reiMaquinaGroupRef = useRef(null)
+  const dialogBoxMaquinaRef = useRef(null)
+  const dialogueMaquina17Ref = useRef(null)
+  const dialogueMaquina19Ref = useRef(null)
+  const reiMaquina5Ref = useRef(null) // Rei5.webp
+  const reiMaquinaMountedRef = useRef(null) // Rei6.webp (montado)
+  const dialogBoxMaquinaMountedRef = useRef(null) // Globo dialog montado
+
+  const setGroupOpacity = (group, opacity) => {
+    if (!group) return
+    group.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.material.opacity = opacity
+        child.material.transparent = true
+      }
+    })
+  }
+
+  useFrame(() => {
+    const baseOpacity = gsapTarget.manteno.reiOpacity
+
+    // Aplicar las opacidades de cada Rei correspondiente
+    setGroupOpacity(rei2GroupRef.current, gsapTarget.manteno.rei2Opacity * baseOpacity)
+    setGroupOpacity(rei4GroupRef.current, gsapTarget.manteno.rei4Opacity * baseOpacity)
+    setGroupOpacity(rei1GroupRef.current, gsapTarget.manteno.rei1Opacity * baseOpacity)
+
+    // Posición del fondo deslizable 2
+    if (fondo2Ref.current) {
+      fondo2Ref.current.position.x = gsapTarget.manteno.fondo2X * worldWidth
+    }
+
+    // Posición del fondo de transición
+    if (fondoTransicionFondoRef.current) {
+      fondoTransicionFondoRef.current.position.x = gsapTarget.manteno.fondoTransicionX * worldWidth
+    }
+
+    const step = gsapTarget.manteno.dialogueStep
+
+    // Opacidad y visibilidad del diálogo principal
+    if (dialogBoxRef.current) {
+      const showDialog = (
+        (step >= 2.0 && step < 4.0) ||
+        (step >= 5.0 && step < 10.0) ||
+        (step >= 12.0 && step < 17.0)
+      ) && baseOpacity >= 0.01
+
+      dialogBoxRef.current.style.opacity = baseOpacity
+      dialogBoxRef.current.style.display = showDialog ? 'block' : 'none'
+    }
+
+    if (dialogue2Ref.current) dialogue2Ref.current.style.display = (step >= 2.0 && step < 3.0) ? 'block' : 'none'
+    if (dialogue3Ref.current) dialogue3Ref.current.style.display = (step >= 3.0 && step < 4.0) ? 'block' : 'none'
+    if (dialogue5Ref.current) dialogue5Ref.current.style.display = (step >= 5.0 && step < 6.0) ? 'block' : 'none'
+    if (dialogue6Ref.current) dialogue6Ref.current.style.display = (step >= 6.0 && step < 7.0) ? 'block' : 'none'
+    if (dialogue7Ref.current) dialogue7Ref.current.style.display = (step >= 7.0 && step < 8.0) ? 'block' : 'none'
+    if (dialogue8Ref.current) dialogue8Ref.current.style.display = (step >= 8.0 && step < 9.0) ? 'block' : 'none'
+    if (dialogue9Ref.current) dialogue9Ref.current.style.display = (step >= 9.0 && step < 10.0) ? 'block' : 'none'
+    if (dialogue12Ref.current) dialogue12Ref.current.style.display = (step >= 12.0 && step < 13.0) ? 'block' : 'none'
+    if (dialogue13Ref.current) dialogue13Ref.current.style.display = (step >= 13.0 && step < 14.0) ? 'block' : 'none'
+    if (dialogue14Ref.current) dialogue14Ref.current.style.display = (step >= 14.0 && step < 15.0) ? 'block' : 'none'
+    if (dialogue15Ref.current) dialogue15Ref.current.style.display = (step >= 15.0 && step < 16.0) ? 'block' : 'none'
+    if (dialogue16Ref.current) dialogue16Ref.current.style.display = (step >= 16.0 && step < 17.0) ? 'block' : 'none'
+
+    // Máquina del tiempo
+    if (maquinaDelTiempoRef.current) {
+      const ms = gsapTarget.manteno.maquinaScale
+      maquinaDelTiempoRef.current.scale.set(ms, ms, ms)
+      setGroupOpacity(maquinaDelTiempoRef.current, gsapTarget.manteno.maquinaOpacity)
+      maquinaDelTiempoRef.current.visible = (step >= 17.5)
+    }
+
+    // Rei en la máquina (standing / mounted)
+    if (reiMaquinaGroupRef.current) {
+      if (step >= 17.5) {
+        reiMaquinaGroupRef.current.position.x = gsapTarget.manteno.reiPositionX
+      } else {
+        reiMaquinaGroupRef.current.position.x = -worldWidth * 0.35
+      }
+      const rs = gsapTarget.manteno.reiScale
+      reiMaquinaGroupRef.current.scale.set(rs, rs, rs)
+    }
+
+    // Visibilidad de los sprites de Rei en la máquina
+    if (reiMaquina5Ref.current) reiMaquina5Ref.current.visible = (step < 18.5)
+    if (reiMaquinaMountedRef.current) reiMaquinaMountedRef.current.visible = (step >= 18.5)
+
+    // Opacidades de Rei en la máquina
+    setGroupOpacity(reiMaquina5Ref.current, gsapTarget.manteno.reiMaquinaOpacity)
+    setGroupOpacity(reiMaquinaMountedRef.current, gsapTarget.manteno.reiMountedOpacity)
+
+    // Globo de diálogo de la máquina (parado - X = 7)
+    if (dialogBoxMaquinaRef.current) {
+      const showDialogMaquina = (step >= 17.0 && step < 18.5)
+      dialogBoxMaquinaRef.current.style.display = showDialogMaquina ? 'block' : 'none'
+      dialogBoxMaquinaRef.current.style.opacity = gsapTarget.manteno.reiMaquinaOpacity
+    }
+    if (dialogueMaquina17Ref.current) dialogueMaquina17Ref.current.style.display = (step >= 17.0 && step < 18.5) ? 'block' : 'none'
+
+    // Globo de diálogo de la máquina (montado - X = 0)
+    if (dialogBoxMaquinaMountedRef.current) {
+      const showDialogMounted = (step >= 18.5 && step <= 20.5)
+      dialogBoxMaquinaMountedRef.current.style.display = showDialogMounted ? 'block' : 'none'
+      dialogBoxMaquinaMountedRef.current.style.opacity = gsapTarget.manteno.reiMountedOpacity
+    }
+    if (dialogueMaquina19Ref.current) dialogueMaquina19Ref.current.style.display = (step >= 18.5 && step <= 20.5) ? 'block' : 'none'
+  })
+
   return (
     <Suspense fallback={<SceneFallback />}>
       <group position={[xOffset, 0, 0]}>
 
-        {/* ── Cultura Manteño: sillas en U, orfebrería ── */}
+        {/* ── Cultura Manteño Fondo ── */}
         <FlatIllustration
-          color="#1A0A00"
+          url={ASSET_URLS.mantenoFondo}
           targetHeight={11}
           placeholderAspect={worldWidth / 11}
           position={[0, 0, LAYER_Z.SKY]}
           renderOrder={0}
+          cropToWidth={worldWidth}
         />
 
-        <FlatIllustration
-          color="#3D1F00"
-          targetHeight={4}
-          placeholderAspect={worldWidth / 4}
-          position={[0, -2.5, LAYER_Z.MOUNTAINS]}
-          renderOrder={1}
-        />
+        {/* ── Cultura Manteño Fondo 2 (Deslizable) ── */}
+        <group ref={fondo2Ref}>
+          <FlatIllustration
+            url={ASSET_URLS.mantenoFondo2}
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.1]}
+            renderOrder={1}
+            cropToWidth={worldWidth}
+          />
+        </group>
 
-        <FlatIllustration
-          color="#5C3010"
-          targetHeight={2.5}
-          placeholderAspect={worldWidth / 2.5}
-          position={[0, -4, LAYER_Z.MIDGROUND]}
-          renderOrder={2}
-        />
+        {/* ── TRANSICIÓN AL FINAL DE MANTEÑO (Fondo transicion.webp) ── */}
+        <group ref={fondoTransicionFondoRef}>
+          <FlatIllustration
+            url={ASSET_URLS.mantenoTransicion}
+            color="#5C2D1A"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.2]}
+            renderOrder={2}
+            cropToWidth={worldWidth}
+          />
+          {/* Máquina del tiempo replica */}
+          <group ref={maquinaDelTiempoRef} visible={false}>
+            <FlatIllustration
+              url={ASSET_URLS.museo_maquintaDelTiempo}
+              targetHeight={3.5}
+              position={[0, -2, LAYER_Z.MAIN - 0.1]}
+              renderOrder={1}
+            />
+          </group>
+        </group>
 
-        {/* ── MAIN: La silla-U manteña, señor principal ── */}
-        <FlatIllustration
-          color="#C9A84C"
-          targetHeight={4}
-          placeholderAspect={3 / 4}
-          position={[-1, -0.5, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        {/* ── REI (A la izquierda) ── */}
+        <group ref={rei2GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko2}
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        {/* ── Orfebrería: pectoral dorado ── */}
-        <FlatIllustration
-          color="#E8C060"
-          targetHeight={1.5}
-          placeholderAspect={1.8}
-          position={[2.5, -1.5, LAYER_Z.MAIN]}
-          renderOrder={3}
-        />
+        <group ref={rei4GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko4}
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
 
-        <FlatIllustration
-          color="#2D1500"
-          targetHeight={2}
-          placeholderAspect={worldWidth / 2}
-          position={[0, -5, LAYER_Z.FOREGROUND]}
-          renderOrder={4}
-        />
+        <group ref={rei1GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
+          <FlatIllustration
+            url={ASSET_URLS.rei_gecko}
+            targetHeight={4.0}
+            position={[0, 0, 0]}
+            renderOrder={2}
+          />
+        </group>
+
+        {/* Globo de Diálogo flotando sobre los Reis (izquierda) */}
+        <group position={[-worldWidth * 0.30, -2.5, LAYER_Z.MAIN]}>
+          <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+
+              {/* Scroll 2 */}
+              <div ref={dialogue2Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-title">Señoríos Manteño-Guancavilcas</p>
+                <p className="scene__dialog-text">
+                  Los Manteño Guancavilcas
+                </p>
+              </div>
+
+              {/* Scroll 3 */}
+              <div ref={dialogue3Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  construyen grandes centros urbanos, separados del sector agrícola.
+                </p>
+              </div>
+
+              {/* Scroll 5 */}
+              <div ref={dialogue5Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Manejan una economía mixta, lo que significa que la proximidad al mar les permite pescar y en las tierras más altas, cazar y cultivar, construyendo terrazas en las laderas de los cerros.
+                </p>
+              </div>
+
+              {/* Scroll 6 */}
+              <div ref={dialogue6Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Continúa la división urbano-rural, en la cual las ciudades están organizadas por gremios (tejedores, escultores, ceramistas). Los navegantes mercaderes constituyen una clase social privilegiada.
+                </p>
+              </div>
+
+              {/* Scroll 7 */}
+              <div ref={dialogue7Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Esta sociedad también desarrolla la agricultura por cultivo de terrazas, facilitando los cultivos para todo el año, aprovechando el agua del verano costeño.
+                </p>
+              </div>
+
+              {/* Scroll 8 */}
+              <div ref={dialogue8Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Perfeccionan el sistema de navegación marítima con grandes balsas usadas para el intercambio y comercio entre lo que hoy es Chile, al sur, y el Golfo de California, al norte, pues el nivel de especialistas en este ámbito consolida una red de intercambio a larga distancia, a través de la Liga de Mercaderes.
+                </p>
+              </div>
+
+              {/* Scroll 9 */}
+              <div ref={dialogue9Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  El principal artículo de intercambio es la concha spondylus, muy codiciada en todas partes.
+                </p>
+              </div>
+
+              {/* Scroll 12 */}
+              <div ref={dialogue12Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Realizan escultura en piedra y madera.
+                </p>
+              </div>
+
+              {/* Scroll 13 */}
+              <div ref={dialogue13Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Su escultura en piedra más destacada: sus asientos en forma de U, que son emblemas de poder de los individuos que los utilizan.
+                </p>
+              </div>
+
+              {/* Scroll 14 */}
+              <div ref={dialogue14Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  En madera realizan los postes tallados de Guasango, en los que aparecen figuras humanas y animales en forma de lagartos.
+                </p>
+              </div>
+
+              {/* Scroll 15 */}
+              <div ref={dialogue15Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Como ejemplo tenemos dos de los postes representativos encontrados en el Cerro Los Santos, en las estribaciones de la cordillera Chongón Colonche.
+                </p>
+              </div>
+
+              {/* Scroll 16 */}
+              <div ref={dialogue16Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  Uno es el poste menor que está en el Museo Amantes de Sumpa, que mide 2,93 m y tiene tres figuras antropomorfas, y el Guasango Mayor, que se encuentra en Guayaquil, en el Museo Municipal, que mide aproximadamente 8,50 m.
+                </p>
+              </div>
+
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
+
+        {/* REI + DIÁLOGO para la máquina del tiempo al final de Manteño */}
+        <group ref={reiMaquinaGroupRef} position={[-worldWidth * 0, 0, LAYER_Z.MAIN]}>
+          <group ref={reiMaquina5Ref}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko5} targetHeight={4.0} position={[7, -2, 0]} renderOrder={2} />
+          </group>
+          <group ref={reiMaquinaMountedRef} visible={false}>
+            <FlatIllustration url={ASSET_URLS.rei_gecko6} targetHeight={4.5} position={[0, -2, 0]} renderOrder={2} />
+          </group>
+
+          {/* Globo para Rei parado (X = 7) */}
+          <Html position={[7, 0.8, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+              <div ref={dialogueMaquina17Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  ¡Y esto ha sido todo por nuestro viaje! Muchísimas gracias por acompañarme.
+                </p>
+              </div>
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+
+          {/* Globo para Rei montado (X = 0) */}
+          <Html position={[0, 0.8, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxMaquinaMountedRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+              <div ref={dialogueMaquina19Ref} style={{ display: 'none' }}>
+                <p className="scene__dialog-text">
+                  ¡Vamos de regreso a casa!
+                </p>
+              </div>
+              <div className="scene__dialog-arrow"></div>
+            </div>
+          </Html>
+        </group>
 
       </group>
     </Suspense>

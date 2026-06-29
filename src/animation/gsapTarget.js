@@ -71,13 +71,13 @@ export const gsapTarget = {
    * Animación de elementos antes de que la cámara comience a moverse.
    */
   intro: {
-    signOpacity:  1,   // Letrero de bienvenida [1=visible, 0=oculto]
-    reiOpacity:   0,   // Opacidad del globo de diálogo de Rei
-    reiScale:     0,   // Escala de Rei (0=invisible → 1=tamaño completo)
+    signOpacity: 1,   // Letrero de bienvenida [1=visible, 0=oculto]
+    reiOpacity: 0,   // Opacidad del globo de diálogo de Rei
+    reiScale: 0,   // Escala de Rei (0=invisible → 1=tamaño completo)
     reiPositionX: 0,   // Desplazamiento X adicional de Rei en la escena
     dialogueStep: 0,   // Paso de diálogo activo: 0=letrero, 1–6=fases Rei
-    reiLocalX:    0,   // Posición local en X de Rei (para simular caminata al estacionamiento)
-    reiLocalY:    0,   // Posición local en Y de Rei (para simular subida a la máquina)
+    reiLocalX: 0,   // Posición local en X de Rei (para simular caminata al estacionamiento)
+    reiLocalY: 0,   // Posición local en Y de Rei (para simular subida a la máquina)
     reiIntroScale: 1,  // Escala individual de Rei en la escena de intro
   },
 
@@ -101,11 +101,11 @@ export const gsapTarget = {
    * LAS VEGAS NARRATIVE (Escena 1)
    */
   lasVegas: {
-    reiOpacity:   0,   // Opacidad del globo de diálogo
-    reiScale:     0,   // Escala de Rei
+    reiOpacity: 0,   // Opacidad del globo de diálogo
+    reiScale: 0,   // Escala de Rei
     dialogueStep: 0,   // 0=inactivo, 1=Texto 1, 2=Texto 2
     amantesSumpaX: -1, // Posición X normalizada de la imagen final (-1 a 0)
-    huesoRojosX:   -1, // Posición X normalizada del tercer fondo (-1 a 0)
+    huesoRojosX: -1, // Posición X normalizada del tercer fondo (-1 a 0)
     entierroMasivoX: -1, // Posición X normalizada del cuarto fondo (-1 a 0)
     fondoTransicionX: -1, // Posición X normalizada del fondo de transición (-1 a 0)
     reiPositionX: 0, // Posición X absoluta de Rei en la escena de Las Vegas
@@ -118,17 +118,73 @@ export const gsapTarget = {
    * VALDIVIA NARRATIVE (Escena 2)
    */
   valdivia: {
-    reiOpacity:        0,   // Opacidad del gecko de Valdivia (Rei8.png) y de su globo
-    reiScale:          1,   // Escala base
-    dialogueStep:      0,   // Paso de diálogo activo
-    fondo2X:           -1,  // Posición X normalizada de FondoValdivida2.png (-1 a 0)
-    rei4Opacity:       0,   // Opacidad de Rei4.webp
-    fondoTransicionX:  -1,  // Posición X normalizada del fondo de transición
-    maquinaScale:      0,   // Escala de la máquina del tiempo
-    maquinaOpacity:    0,   // Opacidad de la máquina del tiempo
+    reiOpacity: 0,   // Opacidad del gecko de Valdivia (Rei8.png) y de su globo
+    reiScale: 1,   // Escala base
+    dialogueStep: 0,   // Paso de diálogo activo
+    fondo2X: -1,  // Posición X normalizada de FondoValdivida2.png (-1 a 0)
+    rei4Opacity: 0,   // Opacidad de Rei4.webp
+    fondoTransicionX: -1,  // Posición X normalizada del fondo de transición
+    maquinaScale: 0,   // Escala de la máquina del tiempo
+    maquinaOpacity: 0,   // Opacidad de la máquina del tiempo
     reiMountedOpacity: 0,   // Opacidad de Rei montado en la máquina
-    reiPositionX:      0,   // Posición X absoluta de Rei al montarse
+    reiPositionX: 0,   // Posición X absoluta de Rei al montarse
     reiMaquinaOpacity: 0,   // Opacidad del Rei parado junto a la máquina (Rei.webp)
+  },
+
+  /**
+   * CHORRERA NARRATIVE (Escena 3)
+   */
+  chorrera: {
+    reiOpacity: 0,   // Opacidad del gecko de Chorrera y su globo
+    reiScale: 1,   // Escala base
+    dialogueStep: 0,   // Paso de diálogo activo
+    rei1Opacity: 0,   // Opacidad de Rei (Rei.webp)
+    rei3Opacity: 0,   // Opacidad de Rei3.webp
+    rei7Opacity: 0,   // Opacidad de Rei7.webp
+    rei2Opacity: 0,   // Opacidad de Rei2.webp
+    fondoTransicionX: -1,  // Posición X del fondo de transición
+    maquinaScale: 0,   // Escala de la máquina del tiempo
+    maquinaOpacity: 0,   // Opacidad de la máquina del tiempo
+    reiMountedOpacity: 0,   // Opacidad de Rei montado
+    reiPositionX: 0,   // Posición X de Rei al subir a la máquina
+    reiMaquinaOpacity: 0,   // Opacidad de Rei parado junto a la máquina
+  },
+
+  /**
+   * GUANGALA NARRATIVE (Escena 4)
+   */
+  guangala: {
+    reiOpacity: 0,   // Opacidad del gecko de Guangala y su globo
+    reiScale: 1,   // Escala base
+    dialogueStep: 0,   // Paso de diálogo activo
+    rei1Opacity: 0,   // Opacidad de Rei (Rei.webp)
+    rei2Opacity: 0,   // Opacidad de Rei2.webp
+    fondoTransicionX: -1,  // Posición X del fondo de transición
+    maquinaScale: 0,   // Escala de la máquina del tiempo
+    maquinaOpacity: 0,   // Opacidad de la máquina del tiempo
+    reiMountedOpacity: 0,   // Opacidad de Rei montado
+    reiPositionX: 0,   // Posición X de Rei al subir a la máquina
+    reiMaquinaOpacity: 0,   // Opacidad de Rei parado junto a la máquina
+  },
+
+  /**
+   * MANTEÑO NARRATIVE (Escena 5)
+   */
+  manteno: {
+    reiOpacity: 0,   // Opacidad del gecko de Manteño y su globo
+    reiScale: 1,   // Escala base
+    dialogueStep: 0,   // Paso de diálogo activo
+    rei1Opacity: 0,   // Opacidad de Rei (Rei.webp)
+    rei2Opacity: 0,   // Opacidad de Rei2.webp
+    rei4Opacity: 0,   // Opacidad de Rei4.webp
+    rei5Opacity: 0,   // Opacidad de Rei5.webp
+    fondo2X: -1,      // Posición X del segundo fondo (deslizable)
+    fondoTransicionX: -1,  // Posición X del fondo de transición
+    maquinaScale: 0,   // Escala de la máquina del tiempo
+    maquinaOpacity: 0,   // Opacidad de la máquina del tiempo
+    reiMountedOpacity: 0,   // Opacidad de Rei montado
+    reiPositionX: 0,   // Posición X de Rei al subir a la máquina
+    reiMaquinaOpacity: 0,   // Opacidad de Rei parado junto a la máquina
   },
 }
 
@@ -139,15 +195,15 @@ export const gsapTarget = {
 // ──────────────────────────────────────────────────────────────
 export const CAMERA_KEYFRAMES = [
   // Escena 0 — Intro: El Museo
-  { y: 0,    zoom: 1.0,  label: 'intro'      },
+  { y: 0, zoom: 1.0, label: 'intro' },
   // Escena 1 — 8000 a.C.: Las Vegas
-  { y: 0,    zoom: 1.0,  label: 'las-vegas'  },
+  { y: 0, zoom: 1.0, label: 'las-vegas' },
   // Escena 2 — 3500 a.C.: Valdivia
-  { y: 0,    zoom: 1.1,  label: 'valdivia'   },
+  { y: 0, zoom: 1.1, label: 'valdivia' },
   // Escena 3 — 900 a.C.: Chorrera (Engoroy - Cultura Chorrera)
-  { y: 1,    zoom: 1.15, label: 'chorrera'   },
+  { y: 1, zoom: 1.15, label: 'chorrera' },
   // Escena 4 — 200 a.C.: Guangala (Cultura Guangala)
-  { y: 0,    zoom: 1.0,  label: 'guangala'   },
+  { y: 0, zoom: 1.0, label: 'guangala' },
   // Escena 5 — 800 d.C.: Manteño (Señoríos Manteño-Guancavilcas)
-  { y: -1,   zoom: 1.2,  label: 'manteno'    },
+  { y: -1, zoom: 1.2, label: 'manteno' },
 ]

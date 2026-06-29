@@ -872,3 +872,145 @@
   }
 }
 
+/* ==========================================================
+   BÚSQUEDA DE OSAMENTAS (SKELETONS SEARCH) STYLES
+   ========================================================== */
+
+.esqueletos-board-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: rgba(10, 12, 22, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.esqueletos-search-area {
+  position: relative;
+  max-width: 900px;
+  width: 100%;
+  aspect-ratio: 920 / 575; /* Coincide con la proporción aproximada del entierro masivo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.esqueletos-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid rgba(201, 168, 76, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+/* Hotspots interactivos de esqueletos */
+.esqueleto-hotspot {
+  position: absolute;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Posiciones porcentuales */
+.esqueleto-1 {
+  left: 25%;
+  top: 60%;
+  width: 11%;
+}
+
+.esqueleto-2 {
+  left: 50%;
+  top: 40%;
+  width: 11%;
+}
+
+.esqueleto-3 {
+  left: 76%;
+  top: 64%;
+  width: 11%;
+}
+
+/* Estilo de la imagen del esqueleto */
+.esqueleto-img {
+  width: 100%;
+  height: auto;
+  opacity: 0.12; /* Camuflado en la tierra */
+  filter: brightness(0.85) contrast(0.9);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* Efecto hover si no ha sido encontrado */
+.esqueleto-hotspot:not(.found):hover .esqueleto-img {
+  opacity: 0.45;
+  filter: brightness(1.2) drop-shadow(0 0 8px rgba(234, 88, 12, 0.6));
+  transform: scale(1.05);
+}
+
+/* Cuando ya ha sido encontrado */
+.esqueleto-hotspot.found {
+  cursor: default;
+  z-index: 12;
+}
+
+.esqueleto-hotspot.found .esqueleto-img {
+  opacity: 1;
+  filter: brightness(1.3) drop-shadow(0 0 12px rgba(234, 88, 12, 0.8));
+  transform: scale(1.02);
+}
+
+/* Anillo de marcado naranja animado */
+.esqueleto-ring {
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  border: 4px solid #ea580c;
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(234, 88, 12, 0.6), inset 0 0 15px rgba(234, 88, 12, 0.6);
+  pointer-events: none;
+  animation: esqueleto-pulse-ring 2s infinite ease-in-out;
+}
+
+@keyframes esqueleto-pulse-ring {
+  0% {
+    transform: scale(0.96);
+    opacity: 0.7;
+    border-color: #ea580c;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+    border-color: #f97316;
+  }
+  100% {
+    transform: scale(0.96);
+    opacity: 0.7;
+    border-color: #ea580c;
+  }
+}
+
+/* Responsividad para pantallas medianas/pequeñas */
+@media (max-width: 1024px) {
+  .esqueletos-search-area {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .esqueletos-board-container {
+    padding: 0.5rem;
+  }
+}
+
+

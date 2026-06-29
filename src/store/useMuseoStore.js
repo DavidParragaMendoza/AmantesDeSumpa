@@ -52,6 +52,7 @@ export const useMuseoStore = create(
       const updates = { modo: nuevoModo }
       if (nuevoModo !== 'recorrido') {
         updates.dioramaListo = false
+        window.scrollTo(0, 0)
       }
       set(updates)
     },

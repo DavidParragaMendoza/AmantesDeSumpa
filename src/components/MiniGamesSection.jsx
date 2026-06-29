@@ -24,6 +24,14 @@ const GAMES = [
     playable: true
   },
   {
+    id: 'esqueletos',
+    name: 'Búsqueda de Osamentas',
+    icon: '💀',
+    image: '/assets/entierroMasivo.webp',
+    description: 'Ayuda a Rei a encontrar las tres osamentas ancestrales de la cultura Las Vegas escondidas en el entierro masivo.',
+    playable: true
+  },
+  {
     id: 'rompecabezas',
     name: 'Rompecabezas Ancestral',
     icon: '🧩',
@@ -53,6 +61,11 @@ export function MiniGamesSection() {
   const [isLocked, setIsLocked] = useState(false)
   const [showWinPopup, setShowWinPopup] = useState(false)
 
+  // Estado para el minijuego de las Osamentas (esqueletos)
+  const [esqueletosEncontrados, setEsqueletosEncontrados] = useState([false, false, false])
+  const [intentosEsqueletos, setIntentosEsqueletos] = useState(0)
+  const [showEsqueletosWin, setShowEsqueletosWin] = useState(false)
+
   // Inicializar y barajar el tablero
   const initializeGame = () => {
     // Duplicar las plantillas para crear parejas
@@ -77,10 +90,19 @@ export function MiniGamesSection() {
     setShowWinPopup(false)
   }
 
-  // Barajar cuando se inicia el juego de memoria
+  // Inicializar el minijuego de las Osamentas
+  const initializeEsqueletos = () => {
+    setEsqueletosEncontrados([false, false, false])
+    setIntentosEsqueletos(0)
+    setShowEsqueletosWin(false)
+  }
+
+  // Barajar/Inicializar cuando cambia el juego activo
   useEffect(() => {
     if (activeGame === 'memoria') {
       initializeGame()
+    } else if (activeGame === 'esqueletos') {
+      initializeEsqueletos()
     }
   }, [activeGame])
 
@@ -187,6 +209,169 @@ export function MiniGamesSection() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (activeGame === 'esqueletos') {
+    const esqueletosFoundCount = esqueletosEncontrados.filter(Boolean).length
+
+    const handleEsqueletoClick = (index) => {
+      if (!esqueletosEncontrados[index]) {
+        const next = [...esqueletosEncontrados]
+        next[index] = true
+        setEsqueletosEncontrados(next)
+        if (next.every(Boolean)) {
+          setShowEsqueletosWin(true)
+        }
+      }
+    }
+
+    return (
+      <div className="games-overlay-container">
+        {/* Header */}
+        <header className="games-header">
+          <div className="games-title-area">
+            <h2>Búsqueda de Osamentas</h2>
+            <p>Encuentra los tres ancestros de Rei escondidos en el entierro masivo</p>
+          </div>
+          <div className="games-header-actions">
+            <button className="games-change-btn" onClick={() => setActiveGame(null)}>
+              🎮 Cambiar Juego
+            </button>
+            <button className="games-close-btn" onClick={() => setModo('landing')}>
+              Volver al Menú
+            </button>
+          </div>
+        </header>
+
+        {/* Workspace */}
+        <div className="games-workspace">
+          {/* Sidebar Estadísticas */}
+          <aside className="games-sidebar">
+            <div className="games-stats-area">
+              <div className="games-stat-card">
+                <span className="games-stat-label">Clics Totales</span>
+                <span className="games-stat-value">{intentosEsqueletos}</span>
+              </div>
+              
+              <div className="games-stat-card" style={{ marginTop: '1rem' }}>
+                <span className="games-stat-label">Encontrados</span>
+                <span className="games-stat-value">{esqueletosFoundCount} / 3</span>
+              </div>
+            </div>
+
+            <div className="games-instructions">
+              <h4>¿Cómo jugar?</h4>
+              <p>Ayuda a Rei la Salamanquesa a encontrar los restos óseos de sus ancestros:</p>
+              <ul>
+                <li>Observa detenidamente la fosa del entierro masivo.</li>
+                <li>Busca las siluetas de las 3 osamentas de salamanquesas escondidas en la tierra.</li>
+                <li>Haz clic sobre cada una para revelarla y rodearla con un círculo.</li>
+              </ul>
+            </div>
+
+            <button className="games-reset-btn" onClick={initializeEsqueletos}>
+              🔄 Reiniciar Juego
+            </button>
+          </aside>
+
+          {/* Tablero de Búsqueda */}
+          <main className="esqueletos-board-container">
+            <div className="esqueletos-search-area" onClick={() => setIntentosEsqueletos(prev => prev + 1)}>
+              <img 
+                src="/assets/entierroMasivo.webp" 
+                alt="Fosa de Entierro Masivo" 
+                className="esqueletos-bg-image"
+                draggable="false"
+              />
+              
+              {/* Esqueleto 1 */}
+              <div 
+                className={`esqueleto-hotspot esqueleto-1 ${esqueletosEncontrados[0] ? 'found' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleEsqueletoClick(0)
+                }}
+              >
+                <img 
+                  src="/assets/esqueleto1.webp" 
+                  alt="Osamenta Ancestral 1" 
+                  className="esqueleto-img"
+                  draggable="false"
+                />
+                {esqueletosEncontrados[0] && <div className="esqueleto-ring"></div>}
+              </div>
+
+              {/* Esqueleto 2 */}
+              <div 
+                className={`esqueleto-hotspot esqueleto-2 ${esqueletosEncontrados[1] ? 'found' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleEsqueletoClick(1)
+                }}
+              >
+                <img 
+                  src="/assets/esqueleto2.webp" 
+                  alt="Osamenta Ancestral 2" 
+                  className="esqueleto-img"
+                  draggable="false"
+                />
+                {esqueletosEncontrados[1] && <div className="esqueleto-ring"></div>}
+              </div>
+
+              {/* Esqueleto 3 */}
+              <div 
+                className={`esqueleto-hotspot esqueleto-3 ${esqueletosEncontrados[2] ? 'found' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleEsqueletoClick(2)
+                }}
+              >
+                <img 
+                  src="/assets/esqueleto3.webp" 
+                  alt="Osamenta Ancestral 3" 
+                  className="esqueleto-img"
+                  draggable="false"
+                />
+                {esqueletosEncontrados[2] && <div className="esqueleto-ring"></div>}
+              </div>
+            </div>
+
+            {/* Modal de Felicitación al ganar */}
+            {showEsqueletosWin && (
+              <div className="win-popup-overlay">
+                <div className="win-popup">
+                  <div className="win-icon">💀✨</div>
+                  <h3>¡Excelente Vista!</h3>
+                  <p>Has encontrado todas las osamentas ancestrales de la cultura Las Vegas.</p>
+                  
+                  <div className="win-stats">
+                    <div className="win-stat-item">
+                      <span className="games-stat-label">Clics Totales</span>
+                      <span className="win-stat-num">{intentosEsqueletos}</span>
+                    </div>
+                    <div className="win-stat-item">
+                      <span className="games-stat-label">Precisión</span>
+                      <span className="win-stat-num">
+                        {intentosEsqueletos > 0 ? Math.round((3 / intentosEsqueletos) * 100) : 100}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="win-actions">
+                    <button className="win-btn btn-win-replay" onClick={initializeEsqueletos}>
+                      Jugar de Nuevo
+                    </button>
+                    <button className="win-btn btn-win-menu" onClick={() => setActiveGame(null)}>
+                      Cambiar de Juego
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
         </div>
       </div>
     )
