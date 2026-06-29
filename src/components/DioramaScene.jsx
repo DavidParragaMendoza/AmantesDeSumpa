@@ -538,39 +538,10 @@ function EscenaLasVegas({ xOffset }) {
   const dialogue11Ref = useRef(null)
   const dialogue12Ref = useRef(null)
   const dialogue13Ref = useRef(null)
-  const dialogue14Ref = useRef(null)
   const dialogue15Ref = useRef(null)
 
   const maquinaDelTiempoRef = useRef(null)
 
-  const minigameGroupRef = useRef(null)
-  const hudRef = useRef(null)
-
-  // ESTADO DEL MINIJUEGO
-  const [foundStatus, setFoundStatus] = useState([false, false, false])
-  const geckosFound = foundStatus.filter(Boolean).length
-
-  // Coordenadas [X, Y] de las 3 salamanquesas escondidas (puedes editarlas aquí para moverlas)
-  const GECKO_POSITIONS = [
-    [-3, -1], // Salamanquesa 0 (izquierda)
-    [0, 0],   // Salamanquesa 1 (centro)
-    [3, -1.4]   // Salamanquesa 2 (derecha)
-  ]
-
-  // Sincronizar el estado con gsapTarget para bloquear/liberar scroll
-  useEffect(() => {
-    if (geckosFound === 3) {
-      gsapTarget.lasVegas.minigameCompleted = true
-    }
-  }, [geckosFound])
-
-  const handleGeckoClick = (index) => {
-    if (!foundStatus[index]) {
-      const newStatus = [...foundStatus]
-      newStatus[index] = true
-      setFoundStatus(newStatus)
-    }
-  }
 
   useFrame(() => {
     // Rei — escala del grupo
@@ -624,8 +595,7 @@ function EscenaLasVegas({ xOffset }) {
     if (dialogue11Ref.current) dialogue11Ref.current.style.display = (step >= 13.5 && step < 14.5) ? 'block' : 'none'
     if (dialogue12Ref.current) dialogue12Ref.current.style.display = (step >= 14.5 && step < 15.5) ? 'block' : 'none'
     if (dialogue13Ref.current) dialogue13Ref.current.style.display = (step >= 16.5 && step < 17.5) ? 'block' : 'none'
-    if (dialogue14Ref.current) dialogue14Ref.current.style.display = (step >= 17.5 && step < 18.5) ? 'block' : 'none'
-    if (dialogue15Ref.current) dialogue15Ref.current.style.display = (step >= 19.5 && step < 21.5) ? 'block' : 'none'
+    if (dialogue15Ref.current) dialogue15Ref.current.style.display = (step >= 18.5 && step < 20.5) ? 'block' : 'none'
 
     // Animación de los nuevos fondos - se deslizan desde la izquierda
     if (amantesSumpaFondoRef.current) {
@@ -644,14 +614,7 @@ function EscenaLasVegas({ xOffset }) {
       const ms = gsapTarget.lasVegas.maquinaScale
       maquinaDelTiempoRef.current.scale.set(ms, ms, ms)
       setGroupOpacity(maquinaDelTiempoRef.current, gsapTarget.lasVegas.maquinaOpacity)
-      maquinaDelTiempoRef.current.visible = (step >= 20.5)
-    }
-    if (minigameGroupRef.current) {
-      minigameGroupRef.current.position.x = gsapTarget.lasVegas.entierroMasivoX * worldWidth
-      minigameGroupRef.current.visible = (step >= 15.5)
-    }
-    if (hudRef.current) {
-      hudRef.current.style.display = (step >= 17.5 && step < 18.5) ? 'block' : 'none'
+      maquinaDelTiempoRef.current.visible = (step >= 19.5)
     }
   })
 
@@ -732,52 +695,6 @@ function EscenaLasVegas({ xOffset }) {
           </group>
         </group>
 
-        {/* ── MINIJUEGO SALAMANQUESAS (Solo visible en Scroll 16+) ── */}
-        <group ref={minigameGroupRef} position={[0, 0, LAYER_Z.SKY + 0.35]} visible={false}>
-          {[0, 1, 2].map((i) => (
-            <group key={i}
-              onClick={(e) => { e.stopPropagation(); handleGeckoClick(i); }}
-              onPointerOver={(e) => { e.stopPropagation(); document.body.style.cursor = 'pointer'; }}
-              onPointerOut={(e) => { e.stopPropagation(); document.body.style.cursor = 'auto'; }}
-              visible={!foundStatus[i]}>
-              <FlatIllustration
-                url={i === 0 ? ASSET_URLS.esqueleto1 : i === 1 ? ASSET_URLS.esqueleto2 : ASSET_URLS.esqueleto3}
-                targetHeight={2}
-                position={[GECKO_POSITIONS[i][0], GECKO_POSITIONS[i][1], LAYER_Z.MAIN]}
-              />
-            </group>
-          ))}
-          {/* Anillos visibles una vez encontrados */}
-          {[0, 1, 2].map((i) => (
-            <group key={`ring-${i}`} visible={foundStatus[i]} position={[GECKO_POSITIONS[i][0], GECKO_POSITIONS[i][1], LAYER_Z.MAIN - 0.1]}>
-              <mesh>
-                <ringGeometry args={[1, 1.2, 32]} />
-                <meshBasicMaterial color="#ea580c" transparent opacity={0.8} />
-              </mesh>
-            </group>
-          ))}
-        </group>
-
-        {/* HUD del Minijuego */}
-        <Html position={[0, 3.5, LAYER_Z.MAIN]} center>
-          <div ref={hudRef} style={{
-            display: 'none',
-            padding: 'clamp(5px, 0.8vw, 10px) clamp(8px, 1.2vw, 16px)',
-            background: 'rgba(255,255,255,0.9)',
-            borderRadius: '8px',
-            border: '2px solid #ea580c',
-            fontWeight: 'bold',
-            color: '#ea580c',
-            whiteSpace: 'nowrap',
-            fontSize: 'clamp(10px, 1.2vw, 14px)',
-            maxWidth: 'clamp(160px, 30vw, 280px)',
-            textAlign: 'center',
-            backdropFilter: 'blur(8px)',
-            boxShadow: '0 4px 12px rgba(234,88,12,0.2)'
-          }}>
-            🦎 Salamanquesas: {geckosFound} / 3
-          </div>
-        </Html>
 
         {/* ── REI (LA SALAMANQUESA) + Globo de Diálogo (MAIN) ── */}
         <group ref={reiGroupRef} position={[xPosRei, yPosRei, LAYER_Z.MAIN]}>
@@ -904,24 +821,6 @@ function EscenaLasVegas({ xOffset }) {
                 </p>
               </div>
 
-              {/* Scroll 18 (Texto 14) - Minijuego */}
-              <div ref={dialogue14Ref} style={{ display: 'none' }}>
-                <p className="scene__dialog-text">
-                  Este es un entierro masivo. Ayúdame a encontrar a mis ancestros. ¡Están escondidas tres salamanquesas, rodéalas en un círculo!
-                </p>
-                <div className="scene__dialog-minigame-container">
-                  {geckosFound === 3 && (
-                    <p className="scene__dialog-minigame-success">
-                      ¡Excelente! Has encontrado a los tres ancestros. Puedes continuar tu viaje.
-                    </p>
-                  )}
-                  {geckosFound < 3 && (
-                    <p className="scene__dialog-minigame-hint">
-                      Haz clic en los esqueletos escondidos...
-                    </p>
-                  )}
-                </div>
-              </div>
 
               {/* Scroll 19 (Texto 15) - Transición */}
               <div ref={dialogue15Ref} style={{ display: 'none' }}>

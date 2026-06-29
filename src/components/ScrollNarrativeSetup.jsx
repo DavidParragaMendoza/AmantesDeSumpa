@@ -73,7 +73,7 @@ export function useScrollNarrative() {
 
     // ── 1. DURACIONES DE LA LÍNEA DE TIEMPO ───────────────────
     const introDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 8.0  // Fases de diálogo en el Museo
-    const lasVegasDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 22.0 // Fases de diálogo en Las Vegas (22 scrolls extra, incluyendo transición)
+    const lasVegasDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 21.0 // Fases de diálogo en Las Vegas (21 scrolls extra, incluyendo transición)
     const valdiviaDuration = 12.0 // Fases de diálogo en Valdivia (12 scrolls extra)
     const chorreraDuration = 16.0 // Fases de diálogo en Chorrera (16 scrolls extra)
     const guangalaDuration = 11.0 // Fases de diálogo en Guangala (11 scrolls extra)
@@ -537,23 +537,9 @@ export function useScrollNarrative() {
           onUpdate: () => invalidate(),
         })
 
-        // Scroll 18: Minijuego Salamanquesas (Texto 14: Ayudame a encontrar...)
+        // Scroll 18: El fondo de transición se desliza hacia adentro, pero Rei y la máquina siguen ocultos
         timelineRef.current.to(gsapTarget.lasVegas, {
           dialogueStep: 18,
-          maquinaScale: 0,
-          maquinaOpacity: 0,
-          reiMountedOpacity: 0,
-          reiOpacity: 1,
-          reiScale: 1,
-          reiPositionX: xPosRei,
-          duration: 1,
-          ease: 'power2.inOut',
-          onUpdate: () => invalidate(),
-        })
-
-        // Scroll 19: El fondo de transición se desliza hacia adentro, pero Rei y la máquina siguen ocultos
-        timelineRef.current.to(gsapTarget.lasVegas, {
-          dialogueStep: 19,
           fondoTransicionX: 0,
           reiOpacity: 0,
           reiScale: 0,
@@ -565,9 +551,9 @@ export function useScrollNarrative() {
           onUpdate: () => invalidate(),
         })
 
-        // Scroll 20: Rei aparece de pie con su diálogo
+        // Scroll 19: Rei aparece de pie con su diálogo
         timelineRef.current.to(gsapTarget.lasVegas, {
-          dialogueStep: 20,
+          dialogueStep: 19,
           reiPositionX: -worldWidth * 0.2, // Rei a la izquierda de la máquina
           reiOpacity: 1,
           reiScale: 1,
@@ -579,9 +565,9 @@ export function useScrollNarrative() {
           onUpdate: () => invalidate(),
         })
 
-        // Scroll 21: La máquina del tiempo aparece (Rei sigue de pie y el diálogo puede mantenerse)
+        // Scroll 20: La máquina del tiempo aparece (Rei sigue de pie y el diálogo puede mantenerse)
         timelineRef.current.to(gsapTarget.lasVegas, {
-          dialogueStep: 21,
+          dialogueStep: 20,
           reiPositionX: -worldWidth * 0.2, // Rei a la izquierda de la máquina
           reiOpacity: 1,
           reiScale: 1,
@@ -593,9 +579,9 @@ export function useScrollNarrative() {
           onUpdate: () => invalidate(),
         })
 
-        // Scroll 22: Rei se sube a la máquina del tiempo (se muestra el sprite montado, se ocultan el Rei individual y la máquina sola)
+        // Scroll 21: Rei se sube a la máquina del tiempo (se muestra el sprite montado, se ocultan el Rei individual y la máquina sola)
         timelineRef.current.to(gsapTarget.lasVegas, {
-          dialogueStep: 22,
+          dialogueStep: 21,
           reiPositionX: 0, // Rei se desplaza al centro (donde está la máquina)
           reiOpacity: 0, // Ocultar globo de diálogo al montarse
           maquinaOpacity: 0, // Ocultar la máquina sola (el sprite montado incluye la máquina)
@@ -1290,25 +1276,6 @@ export function useScrollNarrative() {
       }
     })
 
-    // ── LÓGICA DE BLOQUEO DE SCROLL (MINIJUEGO) ─────────────────
-    // Bloquear exactamente al final del último tween de Las Vegas (cuando la cámara llegó a i=1 y ya pasaron todos sus dialogos extra)
-    const maxProgressLasVegas = (introDuration + 1 + 18) / totalDuration
-
-    const handleScroll = () => {
-      if (OMITIR_HASTA_LAS_VEGAS) return // No bloquear scroll en desarrollo si omitimos las primeras escenas
-      const st = ScrollTrigger.getAll()[0]
-      if (!st) return
-
-      // Si el minijuego no se ha completado y tratamos de pasar del paso 18
-      if (!gsapTarget.lasVegas.minigameCompleted && st.progress > maxProgressLasVegas) {
-        const maxScroll = st.start + (st.end - st.start) * maxProgressLasVegas
-        if (window.scrollY > maxScroll) {
-          window.scrollTo(0, maxScroll)
-        }
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: false })
 
     // ── 7. PUNTOS DE SNAP ───────────────────────────────────────
     const snapPoints = []
@@ -1471,7 +1438,7 @@ export function useScrollNarrative() {
       cancelAnimationFrame(initialFrameId)
       timelineRef.current?.kill()
       ScrollTrigger.getAll().forEach(st => st.kill())
-      window.removeEventListener('scroll', handleScroll)
+
       // Resetear el efecto warp y el estado de transición al desmontar
       gsapTarget.transition.intensity = 0
       useMuseoStore.getState().setEnTransicion(false)
