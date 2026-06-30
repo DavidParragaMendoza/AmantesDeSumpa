@@ -15,15 +15,15 @@
   /* Panel oscuro para garantizar contraste de las letras en cualquier fondo */
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(20px);
-  padding: 16px 24px;
-  border-radius: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
   border: 1px solid rgba(201, 168, 76, 0.15);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .hud__era-year {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1.1rem, 2.8vw, 1.8rem);
   font-weight: 900;
   color: #FACC15; /* Un dorado mucho más brillante y claro */
   letter-spacing: 0.05em;
@@ -33,7 +33,7 @@
 
 .hud__era-title {
   font-family: var(--font-body);
-  font-size: clamp(0.7rem, 1.5vw, 0.95rem);
+  font-size: clamp(0.65rem, 1.2vw, 0.8rem);
   font-weight: 600; /* Más grueso para mayor legibilidad */
   color: #FFFFFF; /* Blanco puro para máximo contraste */
   letter-spacing: 0.15em;
@@ -265,51 +265,128 @@
   text-align: center;
 }
 
+/* ── Posicionamiento lateral adaptativo de globos de diálogo (evita solapamiento con el HUD) ── */
+.scene__dialog-box--left {
+  transform: translateX(30%);
+}
+
+.scene__dialog-box--left .scene__dialog-arrow {
+  left: 20%;
+}
+
+.scene__dialog-box--right {
+  transform: translateX(-30%);
+}
+
+.scene__dialog-box--right .scene__dialog-arrow {
+  left: 80%;
+}
+
+/* ── Letrero de Bienvenida Responsivo ── */
+.scene__welcome-sign {
+  background-color: rgba(255, 255, 255, 0.92);
+  padding: clamp(18px, 2.5vw, 32px) clamp(20px, 3vw, 40px);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  width: clamp(280px, 45vw, 480px);
+  font-family: var(--font-body);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transform-origin: center;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.scene__welcome-paragraph {
+  margin: 0 0 10px 0;
+  font-size: clamp(12px, 1.4vw, 15px);
+  color: #374151;
+  font-weight: 500;
+}
+
+.scene__welcome-paragraph:last-of-type {
+  margin-bottom: 12px;
+}
+
+.scene__welcome-divider {
+  height: 1px;
+  background-color: #ea580c;
+  opacity: 0.2;
+  margin: 12px 0;
+}
+
+.scene__welcome-highlight {
+  margin: 0;
+  color: #ea580c;
+  font-size: clamp(13px, 1.5vw, 16px);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
 /* ── Responsive General (Landscape & Portrait) ────────────── */
 @media (max-width: 900px) {
   /* Era Indicator más compacto */
   .hud__era {
-    top: 0.75rem;
-    left: 0.75rem;
+    top: 0.65rem;
+    left: 0.65rem;
     padding: 8px 14px;
     border-radius: 10px;
     gap: 2px;
   }
 
   .hud__era-year {
-    font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+    font-size: clamp(1.0rem, 3.2vw, 1.4rem);
   }
 
   .hud__era-title {
-    font-size: clamp(0.6rem, 1.2vw, 0.75rem);
-    letter-spacing: 0.1em;
+    font-size: clamp(0.55rem, 1.1vw, 0.7rem);
+    letter-spacing: 0.08em;
   }
 
   /* Globos de diálogo de Rei: más compactos */
   .scene__dialog-box {
-    width: clamp(180px, 45vw, 290px);
-    padding: 10px 12px;
+    width: clamp(200px, 55vw, 300px);
+    padding: 10px 14px;
     border-radius: 10px;
   }
 
   .scene__dialog-title {
-    font-size: clamp(11px, 1.4vw, 14px);
+    font-size: clamp(13px, 3vw, 16px);
     margin-bottom: 4px;
   }
 
   .scene__dialog-text {
-    font-size: clamp(9.5px, 1.1vw, 12px);
-    line-height: 1.35;
+    font-size: clamp(11.5px, 2.5vw, 13.5px);
+    line-height: 1.4;
+  }
+  
+  /* Letrero de Bienvenida Responsivo */
+  .scene__welcome-sign {
+    width: clamp(260px, 60vw, 400px);
+    padding: 14px 18px;
+    border-radius: 12px;
+  }
+  .scene__welcome-paragraph {
+    font-size: clamp(10.5px, 1.3vw, 13px);
+    margin-bottom: 8px;
+  }
+  .scene__welcome-divider {
+    margin: 8px 0;
+  }
+  .scene__welcome-highlight {
+    font-size: clamp(11.5px, 1.4vw, 14px);
   }
 }
 
 /* ── Responsive: Landscape Móvil Específico ──────────────── */
-@media (max-width: 900px) and (orientation: landscape) {
+@media (max-width: 900px) and (orientation: landscape), (max-height: 480px) and (orientation: landscape) {
   /* Top Controls Panel más pequeño */
   .hud__top-controls {
-    top: 0.75rem;
-    right: 0.75rem;
-    gap: 0.5rem;
+    top: 0.5rem;
+    right: 0.5rem;
+    gap: 0.4rem;
   }
 
   .hud__audio-btn,
@@ -327,9 +404,9 @@
 
   /* Progress Bar más cerca del borde inferior */
   .hud__progress {
-    bottom: 0.75rem;
-    padding: 0.35rem 0.75rem;
-    gap: 0.35rem;
+    bottom: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    gap: 0.3rem;
   }
 
   .hud__progress-dot {
@@ -339,58 +416,75 @@
 
   /* Dialog de Rei (HUD): más compacto y no se superpone con progress */
   .hud__rei-dialog {
-    bottom: calc(2.5rem + var(--space-sm));
-    left: 0.75rem;
+    bottom: calc(2.2rem + var(--space-sm));
+    left: 0.5rem;
     max-width: min(280px, 70vw);
   }
 
   .hud__rei-bubble {
-    padding: 0.65rem 1rem;
-    border-radius: 12px;
+    padding: 0.5rem 0.85rem;
+    border-radius: 10px;
   }
 
   .hud__rei-bubble p {
-    font-size: 0.8rem;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
+
+  /* Optimización de altura para los globos de diálogo de R3F en landscape móvil */
+  .scene__dialog-box {
+    width: clamp(260px, 48vw, 350px);
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+
+  .scene__dialog-title {
+    font-size: clamp(11.5px, 2.5vh, 14px);
+    margin-bottom: 2px;
+  }
+
+  .scene__dialog-text {
+    font-size: clamp(10.5px, 2.2vh, 12.5px);
+    line-height: 1.35;
   }
 }
 
 /* ── Pantallas muy pequeñas (Móviles Portrait o Altura Baja) ── */
 @media (max-width: 480px), (max-height: 400px) {
   .hud__era {
-    top: 0.5rem;
-    left: 0.5rem;
-    padding: 6px 10px;
-    border-radius: 8px;
+    top: 0.4rem;
+    left: 0.4rem;
+    padding: 5px 8px;
+    border-radius: 6px;
     gap: 1px;
-    max-width: 130px;
+    max-width: 120px;
   }
 
   .hud__era-year {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 
   .hud__era-title {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     letter-spacing: 0.05em;
   }
 
   .scene__dialog-box {
-    width: clamp(150px, 62vw, 220px);
-    padding: 8px 10px;
+    width: clamp(240px, 80vw, 300px);
+    padding: 10px 14px;
     border-radius: 8px;
     border-width: 1px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
 
   .scene__dialog-title {
-    font-size: 10.5px;
+    font-size: 13px;
     margin-bottom: 3px;
   }
 
   .scene__dialog-text {
-    font-size: 8.5px;
-    line-height: 1.25;
+    font-size: 12px;
+    line-height: 1.35;
   }
 
   .scene__dialog-arrow {
@@ -402,5 +496,37 @@
   /* Si está en portrait móvil extremo, ocultar el diálogo del HUD */
   .hud__rei-dialog {
     display: none;
+  }
+
+  /* Desplazamiento sutil pero seguro de los globos en pantallas muy pequeñas */
+  .scene__dialog-box--left {
+    transform: translateX(20%);
+  }
+  .scene__dialog-box--left .scene__dialog-arrow {
+    left: 30%;
+  }
+  .scene__dialog-box--right {
+    transform: translateX(-20%);
+  }
+  .scene__dialog-box--right .scene__dialog-arrow {
+    left: 70%;
+  }
+
+  /* Letrero de bienvenida adaptado a pantallas muy pequeñas */
+  .scene__welcome-sign {
+    width: clamp(240px, 85vw, 340px);
+    padding: 10px 14px;
+    border-radius: 10px;
+  }
+  .scene__welcome-paragraph {
+    font-size: 10.5px;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .scene__welcome-divider {
+    margin: 6px 0;
+  }
+  .scene__welcome-highlight {
+    font-size: 12px;
   }
 }

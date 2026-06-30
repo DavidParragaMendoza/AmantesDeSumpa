@@ -325,31 +325,18 @@ function EscenaIntroduccion({ xOffset }) {
 
         {/* ── LETRERO DE BIENVENIDA (Fase 1) ── */}
         <Html position={[0, 0, LAYER_Z.MAIN]} center zIndexRange={[100, 0]}>
-          <div ref={signRef} style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.92)',
-            padding: 'clamp(14px, 2.5vw, 35px) clamp(16px, 3vw, 45px)',
-            borderRadius: '16px',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
-            textAlign: 'center',
-            width: 'clamp(240px, 42vw, 500px)',
-            fontFamily: '"Outfit", "Inter", system-ui, sans-serif',
-            backdropFilter: 'blur(12px)',
-            border: '1px solid rgba(255,255,255,0.6)',
-            transformOrigin: 'center',
-            color: '#1f2937',
-            lineHeight: '1.5'
-          }}>
-            <p style={{ margin: '0 0 10px 0', fontSize: 'clamp(11px, 1.4vw, 15px)', color: '#374151', fontWeight: '500' }}>
+          <div ref={signRef} className="scene__welcome-sign">
+            <p className="scene__welcome-paragraph">
               Lo que observamos en nuestro entorno es el reflejo de lo que fuimos, somos y queremos llegar a ser.
             </p>
-            <p style={{ margin: '0 0 10px 0', fontSize: 'clamp(10px, 1.3vw, 14px)', color: '#4b5563' }}>
+            <p className="scene__welcome-paragraph">
               Nos hemos reunido un grupo de personas que soñamos en un futuro mejor junto a ti, para entregarte un cuento lleno de magia y color.
             </p>
-            <p style={{ margin: '0 0 12px 0', fontSize: 'clamp(10px, 1.3vw, 14px)', color: '#4b5563' }}>
+            <p className="scene__welcome-paragraph">
               Es un viaje que emprenderás por la historia de nuestras primeras culturas, que son parte de tu identidad.
             </p>
-            <div style={{ height: '1px', backgroundColor: '#ea580c', opacity: '0.2', margin: '10px 0' }} />
-            <p style={{ margin: 0, color: '#ea580c', fontSize: 'clamp(12px, 1.5vw, 16px)', fontWeight: '700', letterSpacing: '0.5px' }}>
+            <div className="scene__welcome-divider" />
+            <p className="scene__welcome-highlight">
               ¡Disfrútalo y comparte tus ideas!
             </p>
           </div>
@@ -421,7 +408,7 @@ function EscenaIntroduccion({ xOffset }) {
           </group>
 
           <Html position={[0, 3.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
 
               {/* Diálogo Fase 2 - Texto 1 */}
               <div ref={dialogue1Ref}>
@@ -719,7 +706,7 @@ function EscenaLasVegas({ xOffset }) {
           </group>
 
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
 
               {/* Scroll 2 (Texto 1) */}
               <div ref={dialogue1Ref}>
@@ -1051,7 +1038,7 @@ function EscenaValdivia({ xOffset }) {
 
         {/* Globo de Diálogo de la primera parte flotando sobre Rei (izquierda) */}
         <Html position={[reiX + 0.2, reiY + 2.3, LAYER_Z.MAIN]} center zIndexRange={[100, 0]}>
-          <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+          <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
 
             {/* Scroll 2 (Texto 1) */}
             <div ref={dialogue1Ref}>
@@ -1090,7 +1077,7 @@ function EscenaValdivia({ xOffset }) {
 
         {/* Globo de Diálogo de la segunda parte flotando sobre Rei 4 (derecha) */}
         <Html position={[rei4X, rei4Y + 2.5, LAYER_Z.MAIN]} center zIndexRange={[100, 0]}>
-          <div ref={dialogBoxRightRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+          <div ref={dialogBoxRightRef} className="scene__dialog-box scene__dialog-box--right" style={{ opacity: 0, display: 'none' }}>
 
             {/* Scroll 7 (Texto 1 del Fondo 2) */}
             <div ref={dialogueRight1Ref}>
@@ -1120,7 +1107,7 @@ function EscenaValdivia({ xOffset }) {
           </group>
 
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
               <div ref={dialogueMaquinaRef}>
                 <p className="scene__dialog-text">
                   Ahora vamos a trasladarnos 900 a.C. a 200 a.C.
@@ -1337,7 +1324,7 @@ function EscenaChorrera({ xOffset }) {
         {/* Globo de Diálogo flotando sobre los Reis (derecha) */}
         <group position={[-worldWidth * -0.30, -1.3, LAYER_Z.MAIN]}>
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--right" style={{ opacity: 0, display: 'none' }}>
 
               {/* Scroll 1 */}
               <div ref={dialogue1Ref}>
@@ -1411,7 +1398,7 @@ function EscenaChorrera({ xOffset }) {
           </group>
 
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
               <div ref={dialogueMaquina15Ref} style={{ display: 'none' }}>
                 <p className="scene__dialog-text">
                   Hasta aquí hemos recorrido las sociedades cazadoras recolectoras, Período Precerámico, y las sociedades agricultoras alfareras, denominado Período Formativo.
@@ -1600,7 +1587,7 @@ function EscenaGuangala({ xOffset }) {
         {/* Globo de Diálogo flotando sobre los Reis (izquierda) */}
         <group position={[-worldWidth * 0.30, -2.5, LAYER_Z.MAIN]}>
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
 
               {/* Scroll 2 */}
               <div ref={dialogue2Ref} style={{ display: 'none' }}>
@@ -1653,7 +1640,7 @@ function EscenaGuangala({ xOffset }) {
           </group>
 
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
               <div ref={dialogueMaquina9Ref} style={{ display: 'none' }}>
                 <p className="scene__dialog-text">
                   Hemos recorrido la cultura Guangala con sus asombrosos desarrollos en cerámica y metalurgia.
@@ -1892,7 +1879,7 @@ function EscenaManteno({ xOffset }) {
         {/* Globo de Diálogo flotando sobre los Reis (izquierda) */}
         <group position={[-worldWidth * 0.30, -2.5, LAYER_Z.MAIN]}>
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+            <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
 
               {/* Scroll 2 */}
               <div ref={dialogue2Ref} style={{ display: 'none' }}>
@@ -1994,8 +1981,8 @@ function EscenaManteno({ xOffset }) {
           </group>
 
           {/* Globo para Rei parado (X = 7) */}
-          <Html position={[7, 0.8, 0]} center zIndexRange={[100, 0]}>
-            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
+          <Html position={[7, 0, 0]} center zIndexRange={[100, 0]}>
+            <div ref={dialogBoxMaquinaRef} className="scene__dialog-box scene__dialog-box--right" style={{ opacity: 0, display: 'none' }}>
               <div ref={dialogueMaquina17Ref} style={{ display: 'none' }}>
                 <p className="scene__dialog-text">
                   ¡Y esto ha sido todo por nuestro viaje! Muchísimas gracias por acompañarme.
@@ -2006,7 +1993,7 @@ function EscenaManteno({ xOffset }) {
           </Html>
 
           {/* Globo para Rei montado (X = 0) */}
-          <Html position={[0, 0.8, 0]} center zIndexRange={[100, 0]}>
+          <Html position={[0, 0, 0]} center zIndexRange={[100, 0]}>
             <div ref={dialogBoxMaquinaMountedRef} className="scene__dialog-box" style={{ opacity: 0, display: 'none' }}>
               <div ref={dialogueMaquina19Ref} style={{ display: 'none' }}>
                 <p className="scene__dialog-text">

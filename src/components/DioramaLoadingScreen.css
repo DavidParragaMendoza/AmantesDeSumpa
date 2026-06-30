@@ -207,3 +207,89 @@
     transform: translateY(0);
   }
 }
+
+/* ── Responsividad de la Pantalla de Carga ── */
+@media (max-width: 768px), (max-height: 500px) {
+  .diorama-loader__portal-container {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 1rem;
+  }
+
+  .ring-outer {
+    width: 80px;
+    height: 80px;
+  }
+
+  .ring-middle {
+    width: 60px;
+    height: 60px;
+  }
+
+  .ring-inner {
+    width: 40px;
+    height: 40px;
+  }
+
+  .diorama-loader__portal-core {
+    font-size: 1.3rem;
+  }
+
+  .diorama-loader__title {
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .diorama-loader__subtitle {
+    font-size: clamp(0.75rem, 2vw, 0.85rem);
+    margin-bottom: 1rem;
+  }
+
+  .diorama-loader__card {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    min-height: 80px;
+    border-radius: 10px;
+  }
+
+  .diorama-loader__card-tag {
+    font-size: 0.65rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .diorama-loader__card-text {
+    font-size: clamp(0.8rem, 1.6vw, 0.9rem);
+    line-height: 1.4;
+  }
+
+  .diorama-loader__progress-container {
+    max-width: 280px;
+    gap: 0.35rem;
+  }
+
+  .diorama-loader__percentage {
+    font-size: 0.9rem;
+  }
+}
+
+/* Ajuste específico para pantallas ultra cortas (e.g. móviles horizontales muy pequeños) */
+@media (max-height: 360px) {
+  .diorama-loader__portal-container {
+    display: none; /* Ocultar el portal 3D animado para ahorrar valioso espacio vertical */
+  }
+
+  .diorama-loader__title {
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+  }
+
+  .diorama-loader__subtitle {
+    display: none; /* Ocultar subtítulo secundario */
+  }
+
+  .diorama-loader__card {
+    margin-bottom: 1rem;
+    min-height: 60px;
+    padding: 6px 10px;
+  }
+}

@@ -21,6 +21,7 @@ const PAINT_TEMPLATES = [
     src: '/assets/PintarRei.webp',
     reference: '/assets/Rei.webp',
     isGrayscale: false,
+    description: 'Colorea a Rei, el intrépido lagarto explorador y guía del museo Amantes de Sumpa.',
     defaultAspect: 1600 / 872
   },
   {
@@ -30,13 +31,55 @@ const PAINT_TEMPLATES = [
     src: '/assets/maquinaDelTiempo.webp',
     reference: '/assets/maquinaDelTiempo.webp',
     isGrayscale: true,
+    description: 'Una ilustración de la enigmática máquina que nos transporta a través del tiempo y las eras.',
     defaultAspect: 1600 / 872
+  },
+  {
+    id: 'figurina',
+    name: 'Figurina Valdivia',
+    thumb: '🗿',
+    src: '/assets/FigurinaValdivia.webp',
+    reference: '/assets/FigurinaValdivia.webp',
+    isGrayscale: true,
+    description: 'El ícono principal de la fertilidad, la prosperidad y el poder femenino de la cultura Valdivia.',
+    defaultAspect: 1.0
+  },
+  {
+    id: 'horticultura',
+    name: 'La Horticultura',
+    thumb: '🌱',
+    src: '/assets/Horticultura.webp',
+    reference: '/assets/Horticultura.webp',
+    isGrayscale: true,
+    description: 'Una escena de los primeros aborígenes sembrando plantas como maíz, zapallo o mate en la península de Santa Elena.',
+    defaultAspect: 1.5
+  },
+  {
+    id: 'vasijas',
+    name: 'Vasijas Ceremoniales',
+    thumb: '🏺',
+    src: '/assets/VasijasCeremoniales.webp',
+    reference: '/assets/VasijasCeremoniales.webp',
+    isGrayscale: true,
+    description: 'Vasija ceremonial zoomorfa (con forma de animal), característica de la excelente alfarería de la cultura Chorrera.',
+    defaultAspect: 1.2
+  },
+  {
+    id: 'silla',
+    name: 'Silla en U',
+    thumb: '🪑',
+    src: '/assets/SillaEnU.webp',
+    reference: '/assets/SillaEnU.webp',
+    isGrayscale: true,
+    description: 'Asiento de poder tallado en piedra de la cultura Manteño-Guancavilca, utilizado por jefes y sacerdotes.',
+    defaultAspect: 1.0
   }
 ]
 
 export function PaintingCanvas() {
   const setModo = useMuseoStore(s => s.setModo)
   const canvasRef = useRef(null)
+  const colorInputRef = useRef(null)
   const [color, setColor] = useState(PRECOLOMBIAN_PALETTE[0].value)
   const [brushSize, setBrushSize] = useState(12)
   const [tool, setTool] = useState('brush') // 'brush', 'eraser'
@@ -247,9 +290,7 @@ export function PaintingCanvas() {
                   <div className="paint-template-card-text">
                     <h3 className="paint-template-card-name">{t.name}</h3>
                     <p className="paint-template-card-desc">
-                      {t.id === 'rei'
-                        ? 'Colorea a Rei, el intrépido lagarto explorador y guía del museo Amantes de Sumpa.'
-                        : 'Una ilustración de la enigmática máquina que nos transporta a través del tiempo y las eras.'}
+                      {t.description}
                     </p>
                   </div>
                 </div>
@@ -409,20 +450,45 @@ export function PaintingCanvas() {
         {/* Panel de colores (derecha) */}
         <aside className="paint-color-panel">
           <h3 className="panel-section-title">Paleta</h3>
-          <div className="color-grid">
-            {PRECOLOMBIAN_PALETTE.map((c, i) => (
-              <button
-                key={i}
-                className={`color-swatch ${color === c.value && tool === 'brush' ? 'active' : ''}`}
-                style={{ backgroundColor: c.value }}
-                onClick={() => {
-                  setColor(c.value)
-                  setTool('brush') // Cambiar automáticamente a pincel
-                }}
-                title={`${c.name}: ${c.description}`}
+          
+          <div className="custom-color-area">
+            <button 
+              className="color-wheel-btn"
+              onClick={() => colorInputRef.current?.click()}
+              title="Seleccionar color personalizado"
+            >
+              <div 
+                className="color-wheel-inner"
+                style={{ backgroundColor: color }}
               />
-            ))}
+            </button>
+            <input 
+              ref={colorInputRef}
+              type="color"
+              value={color}
+              onChange={(e) => {
+                setColor(e.target.value)
+                setTool('brush')
+              }}
+              style={{ display: 'none' }}
+            />
+            <input 
+              type="text" 
+              className="color-hex-input"
+              value={color.toUpperCase()}
+              onChange={(e) => {
+                const val = e.target.value
+                if (val.startsWith('#') && val.length <= 7) {
+                  setColor(val)
+                } else if (!val.startsWith('#') && val.length <= 6) {
+                  setColor('#' + val)
+                }
+              }}
+              placeholder="#FFFFFF"
+            />
           </div>
+
+         
         </aside>
       </div>
     </div>

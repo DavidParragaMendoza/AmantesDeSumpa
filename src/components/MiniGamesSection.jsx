@@ -31,21 +31,101 @@ const GAMES = [
     description: 'Ayuda a Rei a encontrar las tres osamentas ancestrales de la cultura Las Vegas escondidas en el entierro masivo.',
     playable: true
   },
-  {
-    id: 'rompecabezas',
-    name: 'Rompecabezas Ancestral',
-    icon: '🧩',
-    image: '/assets/museo.webp',
-    description: 'Reconstruye vasijas y piezas ceremoniales de la cultura Valdivia ordenando sus fragmentos.',
-    playable: false
-  },
+ 
   {
     id: 'trivia',
     name: 'Trivia de las Eras',
     icon: '❓',
     image: '/assets/maquinaDelTiempo.webp',
     description: 'Demuestra cuánto has aprendido sobre los ritos funerarios y modos de vida de las culturas precolombinas.',
-    playable: false
+    playable: true
+  }
+]
+
+const TRIVIA_QUESTIONS = [
+  {
+    era: 'Cultura Las Vegas',
+    title: 'Los Primeros Habitantes',
+    question: 'En la Cultura Las Vegas, se descubrió un entierro muy famoso donde un hombre y una mujer fueron sepultados juntos, abrazados, y con grandes piedras colocadas sobre ellos. ¿Cómo se conoce a este hallazgo?',
+    options: [
+      { key: 'A', text: 'Los Navegantes del Guayas.' },
+      { key: 'B', text: 'Los Amantes de Sumpa.' },
+      { key: 'C', text: 'Los Chamanes de la Costa.' }
+    ],
+    correctAnswer: 'B',
+    explanation: 'Son los "Amantes de Sumpa". Es un entierro directo (primario) de un hombre y una mujer jóvenes. Fueron acomodados cuidadosamente y se colocaron grandes piedras sobre ellos en lugares específicos, una vez enterrados.'
+  },
+  {
+    era: 'Cultura Las Vegas',
+    title: 'El Color de la Protección',
+    question: 'A veces, los habitantes de Las Vegas desenterraban a sus muertos mucho tiempo después, tomaban los huesos sueltos y los armaban en forma de un "paquete". ¿Qué color de pintura les ponían a estos huesos y por qué?',
+    options: [
+      { key: 'A', text: 'Color rojo, como símbolo de vida, sangre y protección espiritual.' },
+      { key: 'B', text: 'Color azul, para representar el agua del mar y los ríos.' },
+      { key: 'C', text: 'No los pintaban, los envolvían en hojas de maíz.' }
+    ],
+    correctAnswer: 'A',
+    explanation: 'Esta es la tradición de los huesos rojos. Se aplicaba en los "entierros secundarios", donde se usaba pigmento de color rojo ocre sobre los huesos desarticulados para brindarles protección espiritual en el más allá.'
+  },
+  {
+    era: 'Cultura Valdivia y Machalilla',
+    title: 'El Inicio de las Aldeas',
+    question: 'Cuando las sociedades dejaron de ser nómadas y construyeron las primeras aldeas, sus costumbres cambiaron. ¿Dónde acostumbraban las culturas Valdivia y Machalilla a enterrar a sus muertos?',
+    options: [
+      { key: 'A', text: 'En altas pirámides de piedra.' },
+      { key: 'B', text: 'En fosas masivas alejadas de la aldea.' },
+      { key: 'C', text: 'Debajo o dentro de sus propias casas.' }
+    ],
+    correctAnswer: 'C',
+    explanation: 'Tanto los Valdivianos como la cultura Machalilla tenían la costumbre de sepultar a sus difuntos debajo de sus casas. En ocasiones, los colocaban junto a una ofrenda o dentro de vasijas de barro.'
+  },
+  {
+    era: 'Cultura Valdivia',
+    title: 'El Símbolo de la Fertilidad',
+    question: 'La Cultura Valdivia fue pionera en el trabajo del barro (cerámica). ¿Cuál es su figura más representativa, que simboliza el poder femenino, la fertilidad y la prosperidad?',
+    options: [
+      { key: 'A', text: 'El poste tallado de Guasango.' },
+      { key: 'B', text: 'La Figurina (o Venus) de Valdivia.' },
+      { key: 'C', text: 'La vasija silbato.' }
+    ],
+    correctAnswer: 'B',
+    explanation: 'Las famosas figurinas de Valdivia. Iniciaron tallándolas en piedra y luego en arcilla, y son un ícono fundamental de la mujer, la fertilidad de la tierra y la reproducción, además de usarse como promesas u ofrendas.'
+  },
+  {
+    era: 'Cultura Guangala',
+    title: 'Magia y Liderazgo',
+    question: 'En la sociedad Guangala crecieron los centros poblados. En esta época, ¿quién era el personaje principal, que tenía el poder para organizar la producción y comunicarse con los espíritus?',
+    options: [
+      { key: 'A', text: 'El Cacique Chamán.' },
+      { key: 'B', text: 'El Cazador Recolector.' },
+      { key: 'C', text: 'El Navegante Mercader.' }
+    ],
+    correctAnswer: 'A',
+    explanation: 'El Cacique Chamán. Era la figura principal de esta sociedad cacical inicial. Dirigía los rituales en los centros ceremoniales donde veneraban a deidades de la naturaleza como el felino, la serpiente, el águila y el caimán.'
+  },
+  {
+    era: 'Cultura Manteño-Guancavilca',
+    title: 'Los Señores del Mar',
+    question: 'Los Manteño-Guancavilcas fueron grandes navegantes que viajaban en inmensas balsas con velas de algodón. ¿Cuál era el principal artículo marino, considerado símbolo de lluvia y fertilidad, que intercambiaban en sus viajes?',
+    options: [
+      { key: 'A', text: 'Dientes de animales salvajes.' },
+      { key: 'B', text: 'La concha Spondylus.' },
+      { key: 'C', text: 'Vasijas de piedra.' }
+    ],
+    correctAnswer: 'B',
+    explanation: 'La concha Spondylus. Era un artículo sumamente valioso e importante, codiciado en todas partes desde Chile hasta México, que utilizaban como bien de prestigio y ofrenda mediante su Liga de Mercaderes.'
+  },
+  {
+    era: 'Cultura Manteño-Guancavilca',
+    title: 'El Viaje Final',
+    question: 'Para los Manteños, la muerte era vista como un viaje al mundo de abajo. ¿En dónde colocaban el cuerpo de sus difuntos para este viaje?',
+    options: [
+      { key: 'A', text: 'En urnas o vasijas de cerámica.' },
+      { key: 'B', text: 'Los dejaban en balsas navegando a la deriva.' },
+      { key: 'C', text: 'En cuevas subterráneas.' }
+    ],
+    correctAnswer: 'A',
+    explanation: 'Tenían la costumbre de colocar el cuerpo en vasijas, y el tamaño de la misma dependía del rango que tuvo la persona en vida. Las decoraban con líneas en zig-zag que aludían a los portales entre los mundos, y los acompañaban con pertenencias para su travesía.'
   }
 ]
 
@@ -65,6 +145,13 @@ export function MiniGamesSection() {
   const [esqueletosEncontrados, setEsqueletosEncontrados] = useState([false, false, false])
   const [intentosEsqueletos, setIntentosEsqueletos] = useState(0)
   const [showEsqueletosWin, setShowEsqueletosWin] = useState(false)
+
+  // Estado para el minijuego de Trivia
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [selectedOption, setSelectedOption] = useState(null)
+  const [score, setScore] = useState(0)
+  const [showTriviaWin, setShowTriviaWin] = useState(false)
+  const [triviaAnswered, setTriviaAnswered] = useState(false)
 
   // Inicializar y barajar el tablero
   const initializeGame = () => {
@@ -97,12 +184,23 @@ export function MiniGamesSection() {
     setShowEsqueletosWin(false)
   }
 
+  // Inicializar el minijuego de Trivia
+  const initializeTrivia = () => {
+    setCurrentQuestionIndex(0)
+    setSelectedOption(null)
+    setScore(0)
+    setShowTriviaWin(false)
+    setTriviaAnswered(false)
+  }
+
   // Barajar/Inicializar cuando cambia el juego activo
   useEffect(() => {
     if (activeGame === 'memoria') {
       initializeGame()
     } else if (activeGame === 'esqueletos') {
       initializeEsqueletos()
+    } else if (activeGame === 'trivia') {
+      initializeTrivia()
     }
   }, [activeGame])
 
@@ -362,6 +460,165 @@ export function MiniGamesSection() {
 
                   <div className="win-actions">
                     <button className="win-btn btn-win-replay" onClick={initializeEsqueletos}>
+                      Jugar de Nuevo
+                    </button>
+                    <button className="win-btn btn-win-menu" onClick={() => setActiveGame(null)}>
+                      Cambiar de Juego
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    )
+  }
+
+  if (activeGame === 'trivia') {
+    const currentQuestion = TRIVIA_QUESTIONS[currentQuestionIndex]
+
+    const handleOptionClick = (optionKey) => {
+      if (triviaAnswered) return
+      setSelectedOption(optionKey)
+      setTriviaAnswered(true)
+      if (optionKey === currentQuestion.correctAnswer) {
+        setScore(prev => prev + 1)
+      }
+    }
+
+    const handleNextQuestion = () => {
+      setSelectedOption(null)
+      setTriviaAnswered(false)
+      if (currentQuestionIndex < TRIVIA_QUESTIONS.length - 1) {
+        setCurrentQuestionIndex(prev => prev + 1)
+      } else {
+        setShowTriviaWin(true)
+      }
+    }
+
+    return (
+      <div className="games-overlay-container">
+        {/* Header */}
+        <header className="games-header">
+          <div className="games-title-area">
+            <h2>Trivia de las Eras</h2>
+            <p>Demuestra tus conocimientos sobre el Ecuador precolombino</p>
+          </div>
+          <div className="games-header-actions">
+            <button className="games-change-btn" onClick={() => setActiveGame(null)}>
+              🎮 Cambiar Juego
+            </button>
+            <button className="games-close-btn" onClick={() => setModo('landing')}>
+              Volver al Menú
+            </button>
+          </div>
+        </header>
+
+        {/* Workspace */}
+        <div className="games-workspace">
+          {/* Sidebar Estadísticas */}
+          <aside className="games-sidebar">
+            <div className="games-stats-area">
+              <div className="games-stat-card">
+                <span className="games-stat-label">Pregunta</span>
+                <span className="games-stat-value">{currentQuestionIndex + 1} / {TRIVIA_QUESTIONS.length}</span>
+              </div>
+              
+              <div className="games-stat-card" style={{ marginTop: '1rem' }}>
+                <span className="games-stat-label">Puntaje</span>
+                <span className="games-stat-value">{score} / {TRIVIA_QUESTIONS.length}</span>
+              </div>
+            </div>
+
+            <div className="games-instructions">
+              <h4>¿Cómo jugar?</h4>
+              <p>Pon a prueba lo aprendido en el recorrido:</p>
+              <ul>
+                <li>Lee con atención cada pregunta histórica.</li>
+                <li>Selecciona la opción que creas correcta (A, B o C).</li>
+                <li>Verás la respuesta y una explicación arqueológica al instante.</li>
+              </ul>
+            </div>
+
+            <button className="games-reset-btn" onClick={initializeTrivia}>
+              🔄 Reiniciar Trivia
+            </button>
+          </aside>
+
+          {/* Tablero de Trivia */}
+          <main className="trivia-board-container">
+            {!showTriviaWin ? (
+              <div className="trivia-question-card">
+                <div className="trivia-question-header">
+                  <span className="trivia-era-badge">{currentQuestion.era}</span>
+                  <h3 className="trivia-question-title">{currentQuestion.title}</h3>
+                </div>
+
+                <p className="trivia-question-text">{currentQuestion.question}</p>
+
+                <div className="trivia-options-grid">
+                  {currentQuestion.options.map((opt) => {
+                    const isSelected = selectedOption === opt.key
+                    const isCorrect = opt.key === currentQuestion.correctAnswer
+                    const showSuccess = triviaAnswered && isCorrect
+                    const showDanger = triviaAnswered && isSelected && !isCorrect
+
+                    let btnClass = ""
+                    if (showSuccess) btnClass = "correct"
+                    else if (showDanger) btnClass = "incorrect"
+                    else if (triviaAnswered) btnClass = "disabled"
+
+                    return (
+                      <button
+                        key={opt.key}
+                        className={`trivia-option-btn ${btnClass}`}
+                        onClick={() => handleOptionClick(opt.key)}
+                        disabled={triviaAnswered}
+                      >
+                        <span className="option-key">{opt.key}</span>
+                        <span className="option-text">{opt.text}</span>
+                      </button>
+                    )
+                  })}
+                </div>
+
+                {/* Explicación y botón Siguiente */}
+                {triviaAnswered && (
+                  <div className="trivia-feedback-area">
+                    <div className={`trivia-feedback-heading ${selectedOption === currentQuestion.correctAnswer ? 'success' : 'danger'}`}>
+                      {selectedOption === currentQuestion.correctAnswer ? '🎉 ¡Correcto!' : '❌ ¡Incorrecto!'}
+                    </div>
+                    <p className="trivia-explanation-text">{currentQuestion.explanation}</p>
+                    <button className="trivia-next-btn" onClick={handleNextQuestion}>
+                      {currentQuestionIndex < TRIVIA_QUESTIONS.length - 1 ? 'Siguiente Pregunta ➡️' : 'Ver Resultados 🏆'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              /* Modal de Felicitación al ganar */
+              <div className="win-popup-overlay">
+                <div className="win-popup">
+                  <div className="win-icon">🏆✨</div>
+                  <h3>¡Trivia Completada!</h3>
+                  <p>Has respondido todas las preguntas de las eras precolombinas.</p>
+                  
+                  <div className="win-stats">
+                    <div className="win-stat-item">
+                      <span className="games-stat-label">Puntaje Final</span>
+                      <span className="win-stat-num">{score} / {TRIVIA_QUESTIONS.length}</span>
+                    </div>
+                    <div className="win-stat-item">
+                      <span className="games-stat-label">Rendimiento</span>
+                      <span className="win-stat-num">
+                        {Math.round((score / TRIVIA_QUESTIONS.length) * 100)}%
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="win-actions">
+                    <button className="win-btn btn-win-replay" onClick={initializeTrivia}>
                       Jugar de Nuevo
                     </button>
                     <button className="win-btn btn-win-menu" onClick={() => setActiveGame(null)}>

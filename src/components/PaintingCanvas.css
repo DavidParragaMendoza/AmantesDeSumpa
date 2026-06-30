@@ -78,6 +78,8 @@
   flex-direction: column;
   gap: 1.5rem;
   overflow-y: auto;
+  max-height: 100%;
+  min-height: 0;
 }
 
 .panel-section-title {
@@ -92,7 +94,7 @@
 /* Template Selectors */
 .template-grid {
   display: grid;
-  grid-template-cols: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
 }
 
@@ -131,7 +133,7 @@
 /* Tool Selectors */
 .tool-grid {
   display: grid;
-  grid-template-cols: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
 }
 
@@ -186,7 +188,7 @@
 /* Color Palette */
 .color-grid {
   display: grid;
-  grid-template-cols: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.75rem;
   width: 100%;
 }
@@ -224,6 +226,64 @@
   gap: 1.25rem;
   overflow-y: auto;
   align-items: center;
+  max-height: 100%;
+  min-height: 0;
+}
+
+.custom-color-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.color-wheel-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: conic-gradient(red, yellow, lime, aqua, blue, magenta, red);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.color-wheel-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.25);
+}
+
+.color-wheel-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #111827;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: background-color 0.15s ease;
+}
+
+.color-hex-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.color-hex-input:focus {
+  outline: none;
+  border-color: var(--color-accent-gold, #c9a84c);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Canvas Area Center */
@@ -242,16 +302,16 @@
 
 .canvas-wrapper {
   position: relative;
-  /* El ancho se calcula a partir del factor de escala zoom */
-  width: calc(800px * var(--scale, 1));
-  max-width: calc(95% * var(--scale, 1));
-  aspect-ratio: 800 / 436;
+  width: calc(100% * var(--scale, 1));
+  max-width: calc(100% * var(--scale, 1));
+  max-height: calc(100% * var(--scale, 1));
   height: auto;
+  aspect-ratio: var(--aspect-ratio, 1600 / 872);
   background: white;
   border-radius: 12px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
   margin: auto;
-  transition: width 0.2s ease, max-width 0.2s ease;
+  transition: width 0.2s ease, max-width 0.2s ease, max-height 0.2s ease;
 }
 
 .drawing-canvas {
@@ -278,10 +338,10 @@
   filter: grayscale(100%) contrast(150%) brightness(105%);
 }
 
-/* Actions Panel - Colocados debajo de Grosor, lado a lado */
+/* Actions Panel - Colocados debajo de Grosor, uno arriba del otro */
 .paint-actions-panel {
-  display: grid;
-  grid-template-cols: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
   margin-top: 0.5rem;
 }
@@ -402,7 +462,7 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 950px) {
+@media (max-width: 950px) and (orientation: portrait), (max-width: 768px) {
   .paint-workspace {
     flex-direction: column;
     overflow-y: auto;
@@ -417,7 +477,7 @@
 
   .canvas-holder {
     height: auto;
-    aspect-ratio: 800 / 436;
+    aspect-ratio: var(--aspect-ratio, 1600 / 872);
     order: 1;
     flex-shrink: 0;
     padding: 1rem;
@@ -426,8 +486,9 @@
   .canvas-wrapper {
     width: calc(100% * var(--scale, 1));
     max-width: calc(500px * var(--scale, 1));
+    max-height: calc(100% * var(--scale, 1));
     height: auto;
-    aspect-ratio: 800 / 436;
+    aspect-ratio: var(--aspect-ratio, 1600 / 872);
   }
 
   .paint-color-panel {
@@ -437,8 +498,18 @@
     align-items: center;
     justify-content: center;
     padding: 1rem;
-    gap: 1rem;
+    gap: 1.5rem;
     overflow: visible;
+  }
+
+  .paint-color-panel .custom-color-area {
+    flex-direction: row;
+    width: auto;
+    gap: 0.5rem;
+  }
+
+  .paint-color-panel .color-hex-input {
+    width: 80px;
   }
 
   .paint-color-panel .panel-section-title {
@@ -447,7 +518,7 @@
   }
 
   .paint-color-panel .color-grid {
-    grid-template-cols: repeat(8, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     gap: 0.5rem;
     width: auto;
   }
@@ -544,13 +615,13 @@
   margin: 0 auto;
   padding: 3rem 2rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
 }
 
 .paint-templates-grid {
   display: grid;
-  grid-template-cols: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 3rem;
   width: 100%;
 }
@@ -724,7 +795,7 @@
     padding: 1.5rem;
   }
   .paint-templates-grid {
-    grid-template-cols: 1fr;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 }
@@ -764,11 +835,14 @@
 
   /* Panel de herramientas izquierda: más estrecho */
   .paint-tool-panel {
-    width: 170px;
+    width: 210px;
     padding: 0.75rem;
     gap: 0.75rem;
     flex-shrink: 0;
     order: 1;
+    overflow-y: auto;
+    max-height: 100%;
+    min-height: 0;
   }
 
   .panel-section-title {
@@ -835,8 +909,9 @@
   .canvas-wrapper {
     width: calc(100% * var(--scale, 1));
     max-width: calc(100% * var(--scale, 1));
-    height: 100%;
-    aspect-ratio: 800 / 436;
+    max-height: calc(100% * var(--scale, 1));
+    height: auto;
+    aspect-ratio: var(--aspect-ratio, 1600 / 872);
   }
 
   /* Panel de colores derecha: compacto vertical */
@@ -850,6 +925,17 @@
     overflow-x: hidden;
     align-items: center;
     flex-direction: column;
+  }
+
+  .paint-color-panel .color-wheel-btn {
+    width: 44px;
+    height: 44px;
+    padding: 3px;
+  }
+
+  .paint-color-panel .color-hex-input {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.35rem;
   }
 
   .paint-color-panel .panel-section-title {
@@ -893,14 +979,28 @@
 /* Pantallas muy pequeñas en landscape (< 420px de alto) */
 @media (max-height: 420px) and (orientation: landscape) {
   .paint-tool-panel {
-    width: 140px;
+    width: 180px;
     padding: 0.5rem;
     gap: 0.5rem;
+    overflow-y: auto;
+    max-height: 100%;
+    min-height: 0;
   }
 
   .paint-color-panel {
     width: 72px;
     padding: 0.35rem;
+  }
+
+  .paint-color-panel .color-wheel-btn {
+    width: 36px;
+    height: 36px;
+    padding: 2px;
+  }
+
+  .paint-color-panel .color-hex-input {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.25rem;
   }
 
   .paint-color-panel .color-swatch {
