@@ -197,7 +197,8 @@
   transform: rotateY(180deg);
 }
 
-.card-front, .card-back {
+.card-front,
+.card-back {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -252,27 +253,46 @@
 
 /* Congratulations Popup */
 .win-popup-overlay {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: rgba(11, 13, 25, 0.9);
+  background: rgba(11, 13, 25, 0.95);
   backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;
-  z-index: 100;
+  z-index: 2000;
   animation: fadeIn 0.3s ease;
 }
 
 .win-popup {
-  background: rgba(17, 24, 39, 0.9);
+  background: rgba(17, 24, 39, 0.95);
   border: 1px solid var(--color-accent-gold, #c9a84c);
   padding: 2.5rem;
   border-radius: 16px;
   text-align: center;
-  max-width: 400px;
+  max-width: 440px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
   animation: scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Custom scrollbar for popup */
+.win-popup::-webkit-scrollbar {
+  width: 6px;
+}
+
+.win-popup::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.win-popup::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.4);
+  border-radius: 3px;
+}
+
+.win-popup::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.6);
 }
 
 .win-icon {
@@ -342,18 +362,37 @@
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleUp {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Responsive Adjustments */
@@ -363,6 +402,7 @@
     overflow-y: auto;
     gap: 1.5rem;
   }
+
   .games-sidebar {
     width: 100%;
     order: 2;
@@ -371,18 +411,22 @@
     padding: 1rem;
     gap: 1rem;
   }
-  .games-sidebar > * {
+
+  .games-sidebar>* {
     flex: 1;
     min-width: 120px;
   }
+
   .games-reset-btn {
     width: 100%;
   }
+
   .games-board-container {
     height: 450px;
     order: 1;
     flex-shrink: 0;
   }
+
   .memory-grid {
     width: 380px;
     height: 380px;
@@ -693,13 +737,16 @@
     padding: 1.5rem;
     gap: 1.5rem;
   }
+
   .games-back-btn {
     width: 100%;
     justify-content: center;
   }
+
   .games-selection-container {
     padding: 1.5rem;
   }
+
   .games-templates-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -711,6 +758,7 @@
    Mantenemos el layout horizontal pero todo más compacto.
    ──────────────────────────────────────────────────────────── */
 @media (max-width: 900px) and (orientation: landscape) {
+
   /* Header compacto */
   .games-header {
     padding: 0.5rem 1rem;
@@ -721,7 +769,8 @@
   }
 
   .games-title-area p {
-    display: none; /* Ocultar subtítulo en landscape pequeño */
+    display: none;
+    /* Ocultar subtítulo en landscape pequeño */
   }
 
   .games-close-btn,
@@ -902,7 +951,8 @@
   position: relative;
   max-width: 900px;
   width: 100%;
-  aspect-ratio: 920 / 575; /* Coincide con la proporción aproximada del entierro masivo */
+  aspect-ratio: 920 / 575;
+  /* Coincide con la proporción aproximada del entierro masivo */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -954,7 +1004,8 @@
 .esqueleto-img {
   width: 100%;
   height: auto;
-  opacity: 0.12; /* Camuflado en la tierra */
+  opacity: 0.12;
+  /* Camuflado en la tierra */
   filter: brightness(0.85) contrast(0.9);
   transition: all 0.3s ease;
   pointer-events: none;
@@ -997,11 +1048,13 @@
     opacity: 0.7;
     border-color: #ea580c;
   }
+
   50% {
     transform: scale(1.08);
     opacity: 1;
     border-color: #f97316;
   }
+
   100% {
     transform: scale(0.96);
     opacity: 0.7;
@@ -1067,7 +1120,8 @@
 }
 
 /* ── Portrait stacking media query for portrait tablets and smartphones ── */
-@media (max-width: 950px) and (orientation: portrait), (max-width: 768px) {
+@media (max-width: 950px) and (orientation: portrait),
+(max-width: 768px) {
   .games-workspace {
     flex-direction: column;
     overflow-y: auto;
@@ -1285,6 +1339,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1371,4 +1426,274 @@
   }
 }
 
+/* ==========================================================
+   MAZE (LABERINTO) COMPONENT STYLES
+   ========================================================== */
 
+.maze-board-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.maze-view-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: min(560px, 74vh);
+  aspect-ratio: 1;
+  background: rgba(15, 23, 42, 0.6);
+  border: 4px solid var(--color-accent-gold, #c9a84c);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  padding: 8px;
+}
+
+.maze-grid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  gap: 1px;
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.maze-cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Paredes con gradiente tipo piedra/terracota ancestral */
+.maze-cell.maze-wall {
+  background: radial-gradient(circle, #5c301c 0%, #3a1a0e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6);
+  border-radius: 3px;
+}
+
+/* Caminos con tono arena/tierra del museo */
+.maze-cell.maze-path {
+  background-color: #272520;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Avatar de Rei la Salamanquesa */
+.maze-player-img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  transform-origin: center;
+}
+
+/* Reliquia meta en el laberinto */
+.maze-target-img {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  z-index: 5;
+  filter: drop-shadow(0 0 6px var(--color-accent-gold, #c9a84c));
+}
+
+/* Animaciones */
+.animate-pulse {
+  animation: pulse-glow 1.5s infinite ease-in-out;
+}
+
+.animate-bounce {
+  animation: float-bounce 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6)) brightness(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(201, 168, 76, 0.8)) brightness(1.25);
+  }
+}
+
+@keyframes float-bounce {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-4px) scale(1.05);
+  }
+}
+
+/* Sidebar relic detail info */
+.relic-stat-card {
+  padding: 0.75rem !important;
+}
+
+.relic-preview-sidebar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.relic-thumb {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.relic-thumb-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.relic-target-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-accent-sand, #e8d5a3);
+}
+
+.relic-target-culture {
+  font-size: 0.7rem;
+  color: var(--color-text-muted, #8a7a65);
+}
+
+/* Controles D-pad táctiles para Móviles */
+.mobile-dpad {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 1rem;
+  touch-action: none;
+}
+
+.dpad-row-mid {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.dpad-center {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 50%;
+}
+
+.dpad-btn {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, rgba(31, 41, 55, 0.9), rgba(17, 24, 39, 0.95));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--color-accent-gold, #c9a84c);
+  font-size: 1.25rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  touch-action: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease;
+}
+
+.dpad-btn:active {
+  background: var(--color-accent-gold, #c9a84c);
+  color: #111827;
+  transform: scale(0.92);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Modal Especial de Victoria */
+.relic-win-popup {
+  max-width: 440px !important;
+  padding: 1.75rem !important;
+}
+
+.win-congrats-text {
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  margin-bottom: 1rem;
+}
+
+.relic-info-card {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 12px;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.relic-win-image {
+  max-height: 100px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.relic-description {
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #e2e8f0;
+  text-align: justify;
+}
+
+/* Responsividad para móviles y tablets */
+@media (max-width: 768px) {
+  .mobile-dpad {
+    display: flex;
+  }
+
+  .maze-view-wrapper {
+    max-width: 90vw;
+    max-height: 90vw;
+  }
+}
+
+@media (max-height: 700px) and (orientation: landscape) {
+  .maze-board-container {
+    padding: 0.5rem;
+  }
+
+  .maze-view-wrapper {
+    max-width: 55vh;
+    max-height: 55vh;
+  }
+
+  .mobile-dpad {
+    display: none;
+  }
+}

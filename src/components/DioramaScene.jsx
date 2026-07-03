@@ -223,6 +223,8 @@ function EscenaIntroduccion({ xOffset }) {
   const xPos = worldWidth / 5
 
   const signRef = useRef(null)
+  const mapButtonsRef = useRef(null)
+  const setModalMapaActivo = useMuseoStore(s => s.setModalMapaActivo)
   const reiGroupRef = useRef(null)
   const dialogBoxRef = useRef(null)
   const dialogue1Ref = useRef(null)
@@ -232,12 +234,15 @@ function EscenaIntroduccion({ xOffset }) {
   const dialogue5Ref = useRef(null)
   const dialogue6Ref = useRef(null)
   const dialogue7Ref = useRef(null) // Nuevo diálogo para la subida
+  const dialogueNewARef = useRef(null) // Nuevo diálogo A (Línea de Tiempo)
+  const dialogueNewBRef = useRef(null) // Nuevo diálogo B (Diagrama Estratigráfico)
   const rei1Ref = useRef(null)
   const rei2Ref = useRef(null)
   const rei3Ref = useRef(null)
   const rei4Ref = useRef(null)
   const rei5Ref = useRef(null)
   const rei6Ref = useRef(null)
+  const rei7Ref = useRef(null) // Sprite Rei7
   const reiIndividualGroupRef = useRef(null) // Para desplazar a Rei localmente
 
   useFrame(() => {
@@ -246,6 +251,14 @@ function EscenaIntroduccion({ xOffset }) {
       signRef.current.style.opacity = gsapTarget.intro.signOpacity
       signRef.current.style.transform = `scale(${0.9 + gsapTarget.intro.signOpacity * 0.1})`
       signRef.current.style.display = gsapTarget.intro.signOpacity < 0.01 ? 'none' : 'block'
+    }
+
+    // 1.5. Botones de Mapa (Fade in/out)
+    if (mapButtonsRef.current) {
+      const mapOpacity = gsapTarget.intro.mapButtonsOpacity
+      mapButtonsRef.current.style.opacity = mapOpacity
+      mapButtonsRef.current.style.transform = `scale(${0.9 + mapOpacity * 0.1})`
+      mapButtonsRef.current.style.display = mapOpacity < 0.01 ? 'none' : 'flex'
     }
 
     // 2. Rei — posición y escala del grupo
@@ -264,8 +277,8 @@ function EscenaIntroduccion({ xOffset }) {
     // 3. Cambio de sprite de Rei según dialogueStep
     const step = gsapTarget.intro.dialogueStep
 
-    // Si ya completamos la caminata, hacemos el switch a Rei montado (step >= 6.5)
-    const isMounted = step >= 6.5
+    // Si ya completamos la caminata, hacemos el switch a Rei montado (step >= 8.5)
+    const isMounted = step >= 8.5
 
     if (reiIndividualGroupRef.current) {
       reiIndividualGroupRef.current.visible = !isMounted
@@ -284,7 +297,8 @@ function EscenaIntroduccion({ xOffset }) {
     if (rei2Ref.current) rei2Ref.current.visible = (step >= 1.5 && step < 2.5)
     if (rei3Ref.current) rei3Ref.current.visible = (step >= 2.5 && step < 3.5)
     if (rei4Ref.current) rei4Ref.current.visible = (step >= 3.5 && step < 4.5)
-    if (rei5Ref.current) rei5Ref.current.visible = (step >= 4.5 && step < 6.5) // Rei5 antes de montarse
+    if (rei5Ref.current) rei5Ref.current.visible = (step >= 4.5 && step < 5.5) || (step >= 7.5 && step < 8.5) // Rei5 antes y después de Rei7
+    if (rei7Ref.current) rei7Ref.current.visible = (step >= 5.5 && step < 7.5) // Rei7 para las nuevas escenas de diagramas
 
     // Mostrar/ocultar diálogos HTML según el paso activo
     if (dialogue1Ref.current) dialogue1Ref.current.style.display = (step >= 0.5 && step < 1.5) ? 'block' : 'none'
@@ -292,8 +306,10 @@ function EscenaIntroduccion({ xOffset }) {
     if (dialogue3Ref.current) dialogue3Ref.current.style.display = (step >= 2.5 && step < 3.5) ? 'block' : 'none'
     if (dialogue4Ref.current) dialogue4Ref.current.style.display = (step >= 3.5 && step < 4.5) ? 'block' : 'none'
     if (dialogue5Ref.current) dialogue5Ref.current.style.display = (step >= 4.5 && step < 5.5) ? 'block' : 'none'
-    if (dialogue6Ref.current) dialogue6Ref.current.style.display = (step >= 5.5 && step < 6.5) ? 'block' : 'none'
-    if (dialogue7Ref.current) dialogue7Ref.current.style.display = (step >= 6.5) ? 'block' : 'none'
+    if (dialogueNewARef.current) dialogueNewARef.current.style.display = (step >= 5.5 && step < 6.5) ? 'block' : 'none'
+    if (dialogueNewBRef.current) dialogueNewBRef.current.style.display = (step >= 6.5 && step < 7.5) ? 'block' : 'none'
+    if (dialogue6Ref.current) dialogue6Ref.current.style.display = (step >= 7.5 && step < 8.5) ? 'block' : 'none'
+    if (dialogue7Ref.current) dialogue7Ref.current.style.display = (step >= 8.5) ? 'block' : 'none'
   })
 
   return (
@@ -344,6 +360,18 @@ function EscenaIntroduccion({ xOffset }) {
           </div>
         </Html>
 
+        {/* ── BOTONES DE MAPA (Fase 2) ── */}
+        <Html position={[0, 0, LAYER_Z.MAIN]} center zIndexRange={[100, 0]}>
+          <div ref={mapButtonsRef} className="scene__map-buttons-container" style={{ display: 'none', opacity: 0 }}>
+            <button onClick={() => setModalMapaActivo('amantes')} className="scene__map-button">
+              Mapa Amantes de Sumpa
+            </button>
+            <button onClick={() => setModalMapaActivo('etnografica')} className="scene__map-button">
+              Mapa Área Etnográfica
+            </button>
+          </div>
+        </Html>
+
         {/* ── REI (LA SALAMANQUESA) + Globo de Diálogo (MAIN) ── */}
         <group ref={reiGroupRef} position={[xPos, -1.5, LAYER_Z.MAIN]}>
 
@@ -391,6 +419,17 @@ function EscenaIntroduccion({ xOffset }) {
             <group ref={rei5Ref}>
               <FlatIllustration
                 url={ASSET_URLS.rei_gecko5}
+                color="#AA8855"
+                targetHeight={5.5}
+                position={[0, 0, 0]}
+                renderOrder={2}
+              />
+            </group>
+
+            {/* NUEVO: Sprite Rei7 */}
+            <group ref={rei7Ref}>
+              <FlatIllustration
+                url={ASSET_URLS.rei_gecko7}
                 color="#AA8855"
                 targetHeight={5.5}
                 position={[0, 0, 0]}
@@ -453,14 +492,46 @@ function EscenaIntroduccion({ xOffset }) {
                 </p>
               </div>
 
-              {/* Diálogo Fase 7 - Texto 6 */}
+              {/* NUEVO: Diálogo Fase 8 (Línea de Tiempo - Nueva A) */}
+              <div ref={dialogueNewARef} style={{ display: 'none' }}>
+                <p className="scene__dialog-title">
+                  Línea de Tiempo de la Época Aborigen
+                </p>
+                <p className="scene__dialog-text">
+                  Esta imagen es un cuadro cronológico que clasifica el desarrollo de las culturas prehispánicas del Ecuador desde sus orígenes hasta la llegada de los españoles. Se organiza en cuatro grandes períodos:
+                </p>
+                <button 
+                  onClick={() => setModalMapaActivo('cronologia')} 
+                  className="scene__dialog-inline-button"
+                >
+                  Ver Cronología
+                </button>
+              </div>
+
+              {/* NUEVO: Diálogo Fase 9 (Diagrama Estratigráfico - Nueva B) */}
+              <div ref={dialogueNewBRef} style={{ display: 'none' }}>
+                <p className="scene__dialog-title">
+                  Diagrama Estratigráfico
+                </p>
+                <p className="scene__dialog-text">
+                  Esta imagen es un perfil estratigráfico, un concepto fundamental en la arqueología. Muestra cómo los restos materiales se acumulan en el suelo a lo largo del tiempo formando capas (estratos).
+                </p>
+                <button 
+                  onClick={() => setModalMapaActivo('estratigrafia')} 
+                  className="scene__dialog-inline-button"
+                >
+                  Ver Estratigrafía
+                </button>
+              </div>
+
+              {/* Diálogo Fase 10 (antiguo Texto 6) */}
               <div ref={dialogue6Ref} style={{ display: 'none' }}>
                 <p className="scene__dialog-text scene__dialog-text--medium" style={{ fontSize: 'clamp(12px, 1.4vw, 15px)' }}>
                   Hoy quiero llevarte a un viaje maravilloso del cual mis ancestros fueron partícipes. Un viaje por el tiempo y la historia en tu provincia.
                 </p>
               </div>
 
-              {/* Diálogo Fase 8 - Texto 7 */}
+              {/* Diálogo Fase 11 (antiguo Texto 7) */}
               <div ref={dialogue7Ref} style={{ display: 'none' }}>
                 <p className="scene__dialog-text scene__dialog-text--bold" style={{ color: '#ea580c' }}>
                   ¡Vamos, súbete a mi máquina del tiempo! La programaremos para que nos lleve del 8.000 a.C. al 4.500 a.C.
@@ -864,6 +935,13 @@ function EscenaValdivia({ xOffset }) {
   const reiValdiviaRef = useRef(null)
   const rei4ValdiviaRef = useRef(null)
 
+  // Limpiar el estado del botón al desmontar la escena
+  useEffect(() => {
+    return () => {
+      useMuseoStore.getState().setMostrarBotonValdivia(false)
+    }
+  }, [])
+
   // Diálogos de la primera sección
   const dialogBoxRef = useRef(null)
   const dialogue1Ref = useRef(null)
@@ -909,6 +987,12 @@ function EscenaValdivia({ xOffset }) {
     setGroupOpacity(rei4ValdiviaRef.current, gsapTarget.valdivia.rei4Opacity)
 
     const step = gsapTarget.valdivia.dialogueStep
+
+    // Mostrar el botón de la Figurina de Valdivia en el scroll de la cerámica (step >= 8.0 y step < 9.0)
+    const isCeramicaStep = step >= 8.0 && step < 9.0
+    if (useMuseoStore.getState().mostrarBotonValdivia !== isCeramicaStep) {
+      useMuseoStore.getState().setMostrarBotonValdivia(isCeramicaStep)
+    }
 
     // Visibilidad del primer globo de diálogo (se muestra desde step 2 a step 5.99)
     if (dialogBoxRef.current) {
@@ -1153,6 +1237,13 @@ function EscenaChorrera({ xOffset }) {
   const rei7GroupRef = useRef(null)
   const rei2GroupRef = useRef(null)
 
+  // Limpiar el estado del botón al desmontar la escena
+  useEffect(() => {
+    return () => {
+      useMuseoStore.getState().setMostrarBotonChorrera(false)
+    }
+  }, [])
+
   // Diálogos principales en el acantilado (a la derecha)
   const dialogBoxRef = useRef(null)
   const dialogue1Ref = useRef(null)
@@ -1193,6 +1284,12 @@ function EscenaChorrera({ xOffset }) {
     setGroupOpacity(rei2GroupRef.current, gsapTarget.chorrera.rei2Opacity * baseOpacity)
 
     const step = gsapTarget.chorrera.dialogueStep
+
+    // Mostrar el botón de la Cerámica Engoroy (step >= 4.0 y step < 5.0)
+    const isCeramicaStep = step >= 4.0 && step < 5.0
+    if (useMuseoStore.getState().mostrarBotonChorrera !== isCeramicaStep) {
+      useMuseoStore.getState().setMostrarBotonChorrera(isCeramicaStep)
+    }
 
     // Opacidad y visibilidad del diálogo principal
     if (dialogBoxRef.current) {
@@ -1447,6 +1544,13 @@ function EscenaGuangala({ xOffset }) {
   const rei1GroupRef = useRef(null)
   const rei2GroupRef = useRef(null)
 
+  // Limpiar el estado del botón al desmontar la escena
+  useEffect(() => {
+    return () => {
+      useMuseoStore.getState().setMostrarBotonGuangala(false)
+    }
+  }, [])
+
   // Diálogos principales (a la izquierda)
   const dialogBoxRef = useRef(null)
   const dialogue2Ref = useRef(null)
@@ -1482,6 +1586,12 @@ function EscenaGuangala({ xOffset }) {
     setGroupOpacity(rei2GroupRef.current, gsapTarget.guangala.rei2Opacity * baseOpacity)
 
     const step = gsapTarget.guangala.dialogueStep
+
+    // Mostrar el botón de la Foto de Recuerdo (step >= 7.0 y step < 8.0)
+    const isDeidadesStep = step >= 7.0 && step < 8.0
+    if (useMuseoStore.getState().mostrarBotonGuangala !== isDeidadesStep) {
+      useMuseoStore.getState().setMostrarBotonGuangala(isDeidadesStep)
+    }
 
     // Opacidad y visibilidad del diálogo principal
     if (dialogBoxRef.current) {
@@ -1692,7 +1802,15 @@ function EscenaManteno({ xOffset }) {
   const rei2GroupRef = useRef(null) // Rei2.webp
   const rei4GroupRef = useRef(null) // Rei4.webp
 
+  // Limpiar el estado del botón al desmontar la escena
+  useEffect(() => {
+    return () => {
+      useMuseoStore.getState().setMostrarBotonManteno(false)
+    }
+  }, [])
+
   // Diálogos principales (a la izquierda)
+  const dialogueGroupRef = useRef(null)
   const dialogBoxRef = useRef(null)
   const dialogue2Ref = useRef(null)
   const dialogue3Ref = useRef(null)
@@ -1749,6 +1867,17 @@ function EscenaManteno({ xOffset }) {
 
     const step = gsapTarget.manteno.dialogueStep
 
+    // Mostrar el botón de la Cerámica Manteño (step >= 7.0 y step < 8.0)
+    const isAgriculturaStep = step >= 7.0 && step < 8.0
+    if (useMuseoStore.getState().mostrarBotonManteno !== isAgriculturaStep) {
+      useMuseoStore.getState().setMostrarBotonManteno(isAgriculturaStep)
+    }
+
+    // Posición del grupo de diálogo y su clase CSS según el paso (izquierda o centrado)
+    if (dialogueGroupRef.current) {
+      dialogueGroupRef.current.position.x = step >= 10.0 ? 0 : -worldWidth * 0.30
+    }
+
     // Opacidad y visibilidad del diálogo principal
     if (dialogBoxRef.current) {
       const showDialog = (
@@ -1759,6 +1888,9 @@ function EscenaManteno({ xOffset }) {
 
       dialogBoxRef.current.style.opacity = baseOpacity
       dialogBoxRef.current.style.display = showDialog ? 'block' : 'none'
+      
+      // Ajustar clases para centrado o alineado a la izquierda
+      dialogBoxRef.current.className = step >= 10.0 ? "scene__dialog-box" : "scene__dialog-box scene__dialog-box--left"
     }
 
     if (dialogue2Ref.current) dialogue2Ref.current.style.display = (step >= 2.0 && step < 3.0) ? 'block' : 'none'
@@ -1848,7 +1980,6 @@ function EscenaManteno({ xOffset }) {
         <group ref={fondoTransicionFondoRef}>
           <FlatIllustration
             url={ASSET_URLS.mantenoTransicion}
-            color="#5C2D1A"
             targetHeight={11}
             placeholderAspect={worldWidth / 11}
             position={[0, 0, LAYER_Z.SKY + 0.2]}
@@ -1866,7 +1997,7 @@ function EscenaManteno({ xOffset }) {
           </group>
         </group>
 
-        {/* ── REI (A la izquierda) ── */}
+        {/* ── REI al medio) ── */}
         <group ref={rei2GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
           <FlatIllustration
             url={ASSET_URLS.rei_gecko2}
@@ -1885,7 +2016,7 @@ function EscenaManteno({ xOffset }) {
           />
         </group>
 
-        <group ref={rei1GroupRef} position={[-worldWidth * 0.30, -2.8, LAYER_Z.MAIN]}>
+        <group ref={rei1GroupRef} position={[-worldWidth * 0, -2.8, LAYER_Z.MAIN]}>
           <FlatIllustration
             url={ASSET_URLS.rei_gecko}
             targetHeight={4.0}
@@ -1895,7 +2026,7 @@ function EscenaManteno({ xOffset }) {
         </group>
 
         {/* Globo de Diálogo flotando sobre los Reis (izquierda) */}
-        <group position={[-worldWidth * 0.30, -2.5, LAYER_Z.MAIN]}>
+        <group ref={dialogueGroupRef} position={[-worldWidth * 0.30, -2.5, LAYER_Z.MAIN]}>
           <Html position={[0, 2.5, 0]} center zIndexRange={[100, 0]}>
             <div ref={dialogBoxRef} className="scene__dialog-box scene__dialog-box--left" style={{ opacity: 0, display: 'none' }}>
 

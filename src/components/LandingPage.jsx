@@ -182,8 +182,6 @@ export function LandingPage() {
 
         {/* Capa del Menú Flotante */}
         <div ref={menuRef} className="landing-menu-layer">
-
-
           <div className="landing-buttons-container">
             <button
               className="landing-btn btn-recorrido"
@@ -209,6 +207,9 @@ export function LandingPage() {
               <span className="btn-icon">🎨</span>
               <span className="btn-text">Pintar</span>
             </button>
+          </div>
+          <div className="landing-credits">
+            Desarrollado por DavidParragaMendoza
           </div>
         </div>
 

@@ -98,6 +98,26 @@ export const useMuseoStore = create(
     enTransicion: false,
     setEnTransicion: (estado) => set({ enTransicion: estado }),
 
+    /** Modal del mapa activo en el segundo scroll ('amantes' | 'etnografica' | null) */
+    modalMapaActivo: null,
+    setModalMapaActivo: (mapa) => set({ modalMapaActivo: mapa }),
+
+    /** Mostrar el botón modal de la Figurina de Valdivia en la EscenaValdivia */
+    mostrarBotonValdivia: false,
+    setMostrarBotonValdivia: (visible) => set({ mostrarBotonValdivia: visible }),
+
+    /** Mostrar el botón modal de la Cerámica Engoroy en la EscenaChorrera */
+    mostrarBotonChorrera: false,
+    setMostrarBotonChorrera: (visible) => set({ mostrarBotonChorrera: visible }),
+
+    /** Mostrar el botón modal de la Foto de Recuerdo en la EscenaGuangala */
+    mostrarBotonGuangala: false,
+    setMostrarBotonGuangala: (visible) => set({ mostrarBotonGuangala: visible }),
+
+    /** Mostrar el botón modal de la Cerámica Manteño en la EscenaManteno */
+    mostrarBotonManteno: false,
+    setMostrarBotonManteno: (visible) => set({ mostrarBotonManteno: visible }),
+
 
     // ── ESTADO DE MINIJUEGOS ──────────────────────────────────
     /**

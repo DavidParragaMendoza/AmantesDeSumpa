@@ -530,3 +530,404 @@
     font-size: 12px;
   }
 }
+
+/* ──────────────────────────────────────────────────────────────
+   NUEVOS ESTILOS PARA BOTONES DE MAPA Y MODAL EN EL 2DO SCROLL
+   ────────────────────────────────────────────────────────────── */
+
+.scene__map-buttons-container {
+  background-color: rgba(255, 255, 255, 0.92);
+  padding: clamp(20px, 3vw, 40px);
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  width: clamp(280px, 45vw, 480px);
+  font-family: var(--font-body);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transform-origin: center;
+}
+
+.scene__map-button {
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--color-accent-terra) 0%, var(--color-spondylus) 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: clamp(13px, 1.5vw, 17px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(184, 92, 56, 0.3);
+  transition: all 0.2s ease-in-out;
+  font-family: var(--font-body);
+}
+
+.scene__map-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(184, 92, 56, 0.45);
+  filter: brightness(1.1);
+}
+
+.scene__map-button:active {
+  transform: translateY(0);
+}
+
+/* Estilos de la ventana Modal */
+.map-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(10, 12, 20, 0.85); /* --color-bg-deep con opacidad */
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: var(--z-modal);
+  opacity: 0;
+  animation: fadeInModal 0.18s forwards ease-out;
+  pointer-events: auto;
+}
+
+.map-modal-content {
+  background-color: rgba(17, 24, 39, 0.96); /* Fondo oscuro premium */
+  border-radius: 24px;                      /* Bordes redondeados */
+  padding: 24px;
+  width: min(92vw, 850px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Borde sutil */
+  position: relative;
+  transform: scale(0.9);
+  animation: scaleInModal 0.18s forwards cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--color-text-primary);
+}
+
+.map-modal-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.map-modal-title {
+  margin: 0;
+  font-size: clamp(18px, 2.2vw, 24px);
+  font-weight: 800;
+  color: var(--color-text-primary); /* Texto claro */
+  font-family: var(--font-body);
+}
+
+.map-modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.map-modal-close-btn:hover {
+  color: var(--color-accent-terra);
+  transform: scale(1.1);
+}
+
+.map-modal-body {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 16px;                     /* Bordes redondeados en la imagen */
+  background-color: #05060a;               /* Fondo negro para el contenedor del mapa */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.map-modal-image {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 12px;
+  display: block;
+}
+
+.map-modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.map-modal-btn-close {
+  padding: 10px 24px;
+  background-color: #374151;
+  color: var(--color-text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: var(--font-body);
+}
+
+.map-modal-btn-close:hover {
+  background-color: var(--color-accent-terra);
+  border-color: transparent;
+  transform: translateY(-1px);
+}
+
+@keyframes fadeInModal {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleInModal {
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Ajustes responsivos para los nuevos elementos en pantallas pequeñas */
+@media (max-width: 900px) {
+  .scene__map-buttons-container {
+    width: clamp(260px, 75vw, 400px);
+    padding: 18px 20px;
+    gap: 12px;
+  }
+  .scene__map-button {
+    padding: 12px 20px;
+  }
+  .map-modal-content {
+    padding: 18px;
+    border-radius: 16px;
+  }
+  .map-modal-image {
+    max-height: 55vh;
+  }
+}
+
+/* Botón inline en bocadillo de diálogo */
+.scene__dialog-inline-button {
+  margin-top: 10px;
+  padding: 8px 18px;
+  background: linear-gradient(135deg, var(--color-accent-terra) 0%, var(--color-spondylus) 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: clamp(11.5px, 1.3vw, 13.5px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(184, 92, 56, 0.25);
+  transition: all 0.2s ease-in-out;
+  font-family: var(--font-body);
+  display: inline-block;
+}
+
+.scene__dialog-inline-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(184, 92, 56, 0.35);
+  filter: brightness(1.1);
+}
+
+.scene__dialog-inline-button:active {
+  transform: translateY(0);
+}
+
+/* Botón flotante para ver la Figurina de Valdivia (Middle-Left) */
+.hud__valdivia-button {
+  position: fixed;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, var(--color-accent-terra) 0%, var(--color-spondylus) 100%);
+  color: white;
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(11.5px, 1.2vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(184, 92, 56, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud__valdivia-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(184, 92, 56, 0.35);
+  border-color: rgba(250, 204, 21, 0.50);
+  filter: brightness(1.1);
+}
+
+.hud__valdivia-button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+/* Botón flotante para ver la Cerámica Engoroy (Middle-Left) */
+.hud__chorrera-button {
+  position: fixed;
+  left: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, var(--color-accent-terra) 0%, var(--color-spondylus) 100%);
+  color: white;
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(11.5px, 1.2vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(184, 92, 56, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud__chorrera-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(184, 92, 56, 0.35);
+  border-color: rgba(250, 204, 21, 0.50);
+  filter: brightness(1.1);
+}
+
+.hud__chorrera-button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+/* Botón flotante para ver la Foto de Recuerdo (Middle-Left) */
+.hud__guangala-button {
+  position: fixed;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, var(--color-accent-terra) 0%, var(--color-spondylus) 100%);
+  color: white;
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(11.5px, 1.2vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(184, 92, 56, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud__guangala-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(184, 92, 56, 0.35);
+  border-color: rgba(250, 204, 21, 0.50);
+  filter: brightness(1.1);
+}
+
+.hud__guangala-button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+/* Botón de descarga en el modal (estilo oro premium) */
+.map-modal-btn-download {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--color-accent-gold) 0%, #EAB308 100%);
+  color: #0c0a09;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(250, 204, 21, 0.2);
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-modal-btn-download:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.4);
+  filter: brightness(1.1);
+}
+
+.map-modal-btn-download:active {
+  transform: translateY(0);
+}
+
+/* Botón flotante para ver la Cerámica Manteño (Middle-Right) */
+.hud__manteno-button {
+  position: fixed;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 50;
+  padding: 12px 22px;
+  background: linear-gradient(135deg, var(--color-accent-terra) 0%, var(--color-spondylus) 100%);
+  color: white;
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: clamp(11.5px, 1.2vw, 13px);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), 0 0 20px rgba(184, 92, 56, 0.15);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud__manteno-button:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(184, 92, 56, 0.35);
+  border-color: rgba(250, 204, 21, 0.50);
+  filter: brightness(1.1);
+}
+
+.hud__manteno-button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+
+
+
+
+
+

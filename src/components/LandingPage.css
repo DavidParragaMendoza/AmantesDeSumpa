@@ -399,3 +399,19 @@
     height: 16px;
   }
 }
+
+/* Programmer / Author Credits */
+.landing-credits {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: var(--font-body, sans-serif);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.landing-credits:hover {
+  color: var(--color-accent-gold, #c9a84c);
+}

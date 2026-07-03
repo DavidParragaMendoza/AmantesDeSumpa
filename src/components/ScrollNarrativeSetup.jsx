@@ -72,7 +72,7 @@ export function useScrollNarrative() {
     if (viewport.width === 0 || viewport.height === 0) return
 
     // ── 1. DURACIONES DE LA LÍNEA DE TIEMPO ───────────────────
-    const introDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 9.0  // Fases de diálogo en el Museo
+    const introDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 12.0  // Fases de diálogo en el Museo
     const lasVegasDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 21.0 // Fases de diálogo en Las Vegas (21 scrolls extra, incluyendo transición)
     const valdiviaDuration = 12.0 // Fases de diálogo en Valdivia (12 scrolls extra)
     const chorreraDuration = 16.0 // Fases de diálogo en Chorrera (16 scrolls extra)
@@ -103,6 +103,7 @@ export function useScrollNarrative() {
     // Evita que HMR deje valores residuales de sesiones anteriores
     gsapTarget.intro = {
       signOpacity: 0,   // Letrero invisible al inicio (aparecerá tras el primer scroll)
+      mapButtonsOpacity: 0, // Botones de mapa invisibles al inicio
       reiOpacity: 0,   // Rei oculto al inicio
       reiScale: 0,   // Rei sin escala al inicio (para pop-in)
       reiPositionX: 0,   // Rei en posición derecha inicial
@@ -215,11 +216,27 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 2 (Texto 1 — Rei1.png):
-       * Letrero hace fade-out, Rei1 hace pop-in y se desplaza hacia la izquierda.
+       * FASE 2 (Botones del Mapa — 2do scroll):
+       * El letrero hace fade-out, y aparecen los botones del mapa. Rei queda oculto.
        */
       timelineRef.current.to(gsapTarget.intro, {
         signOpacity: 0,
+        mapButtonsOpacity: 1,
+        reiScale: 0,
+        reiOpacity: 0,
+        dialogueStep: 0,
+        duration: 1,
+        ease: 'power2.inOut',
+        onUpdate: () => invalidate(),
+      })
+
+      /**
+       * FASE 3 (Texto 1 — Rei1.png — 3er scroll):
+       * Los botones se ocultan, Rei1 hace pop-in, se desplaza hacia la izquierda,
+       * y se activa su primer diálogo.
+       */
+      timelineRef.current.to(gsapTarget.intro, {
+        mapButtonsOpacity: 0,
         reiScale: 1,
         reiOpacity: 1,
         reiPositionX: -worldWidth * 0.4,
@@ -230,7 +247,7 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 3 (Texto 2 — Rei2.png):
+       * FASE 4 (Texto 2 — Rei2.png):
        * Rei2 aparece quieto en la izquierda. Diálogo: Phyllodactylus reissii.
        */
       timelineRef.current.to(gsapTarget.intro, {
@@ -242,7 +259,7 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 4 (Texto 3 — Rei3.png):
+       * FASE 5 (Texto 3 — Rei3.png):
        * Rei3 aparece quieto en la izquierda. Diálogo: Karen Stothert.
        */
       timelineRef.current.to(gsapTarget.intro, {
@@ -254,7 +271,7 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 5 (Texto 4 — Rei4.png):
+       * FASE 6 (Texto 4 — Rei4.png):
        * Rei4 se mueve hacia la derecha. Diálogo: ¿Qué es CULTURA?
        */
       timelineRef.current.to(gsapTarget.intro, {
@@ -266,7 +283,7 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 6 (Paso de diálogo 4 a 5):
+       * FASE 7 (Paso de diálogo 4 a 5):
        * Rei5 en el centro del museo. Diálogo 5: "¿Ves que Rei tiene en sus manos globos..."
        */
       timelineRef.current.to(gsapTarget.intro, {
@@ -280,8 +297,8 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 7 (Paso de diálogo 5 a 6):
-       * Rei5 en el centro del museo. Diálogo 6: "Hoy quiero llevarte a un viaje maravilloso..."
+       * FASE 8 (NUEVO: Línea de Tiempo de la Época Aborigen - Diálogo 6):
+       * Rei7 en el centro del museo. Diálogo 6.
        */
       timelineRef.current.to(gsapTarget.intro, {
         reiPositionX: -worldWidth * 0.2,
@@ -294,10 +311,38 @@ export function useScrollNarrative() {
       })
 
       /**
-       * FASE 8 (Caminata al Estacionamiento, diálogo 6 a 7):
+       * FASE 9 (NUEVO: Diagrama Estratigráfico - Diálogo 7):
+       * Rei7 en el centro del museo. Diálogo 7.
+       */
+      timelineRef.current.to(gsapTarget.intro, {
+        reiPositionX: -worldWidth * 0.2,
+        reiLocalX: 0,
+        reiLocalY: 0,
+        dialogueStep: 7,
+        duration: 1,
+        ease: 'power2.inOut',
+        onUpdate: () => invalidate(),
+      })
+
+      /**
+       * FASE 10 (Paso de diálogo anterior a 8):
+       * Rei5 en el centro del museo. Diálogo 8: "Hoy quiero llevarte a un viaje maravilloso..."
+       */
+      timelineRef.current.to(gsapTarget.intro, {
+        reiPositionX: -worldWidth * 0.2,
+        reiLocalX: 0,
+        reiLocalY: 0,
+        dialogueStep: 8,
+        duration: 1,
+        ease: 'power2.inOut',
+        onUpdate: () => invalidate(),
+      })
+
+      /**
+       * FASE 11 (Caminata al Estacionamiento, diálogo 8 a 9):
        * La cámara se desplaza al estacionamiento contiguo en X = worldWidth.
-       * Rei se desplaza y al llegar cambia al sprite montado (Rei6.png) al cruzar 6.5.
-       * Diálogo 7: "¡Vamos, súbete a mi máquina del tiempo!..."
+       * Rei se desplaza y al llegar cambia al sprite montado (Rei6.png) al cruzar 8.5.
+       * Diálogo 9: "¡Vamos, súbete a mi máquina del tiempo!..."
        */
       timelineRef.current.to(gsapTarget.camera, {
         x: worldWidth,
@@ -309,7 +354,7 @@ export function useScrollNarrative() {
         reiPositionX: worldWidth * 0.8,
         reiLocalX: 0,
         reiLocalY: 0,
-        dialogueStep: 7,
+        dialogueStep: 9,
         duration: 1.5,
         ease: 'power2.inOut',
         onUpdate: () => invalidate(),
@@ -1298,20 +1343,26 @@ export function useScrollNarrative() {
       snapPoints.push(0)
       // Punto tras Aparición del letrero (Fase 1.5)
       snapPoints.push(1 / totalDuration)
-      // Punto tras Fase 2 (Texto 1)
+      // Punto tras Botones de Mapa (Fase 2)
       snapPoints.push(2 / totalDuration)
-      // Punto tras Fase 3 (Texto 2)
+      // Punto tras Fase 3 (Texto 1)
       snapPoints.push(3 / totalDuration)
-      // Punto tras Fase 4 (Texto 3)
+      // Punto tras Fase 4 (Texto 2)
       snapPoints.push(4 / totalDuration)
-      // Punto tras Fase 5 (Texto 4)
+      // Punto tras Fase 5 (Texto 3)
       snapPoints.push(5 / totalDuration)
-      // Punto tras Fase 6 (Texto 5)
+      // Punto tras Fase 6 (Texto 4)
       snapPoints.push(6 / totalDuration)
-      // Punto tras Fase 7 (Texto 6 en el museo)
-      snapPoints.push(7.0 / totalDuration)
-      // Punto tras Fase 8 (Texto 7 en el estacionamiento)
-      snapPoints.push(8.5 / totalDuration)
+      // Punto tras Fase 7 (Texto 5)
+      snapPoints.push(7 / totalDuration)
+      // Punto tras Fase 8 (Línea de Tiempo - Nueva A)
+      snapPoints.push(8 / totalDuration)
+      // Punto tras Fase 9 (Diagrama Estratigráfico - Nueva B)
+      snapPoints.push(9 / totalDuration)
+      // Punto tras Fase 10 (Texto 6 en el museo)
+      snapPoints.push(10.0 / totalDuration)
+      // Punto tras Fase 11 (Texto 7 en el estacionamiento)
+      snapPoints.push(11.5 / totalDuration)
       // Punto tras Pausa antes del viaje
       snapPoints.push(introDuration / totalDuration)
     } else {

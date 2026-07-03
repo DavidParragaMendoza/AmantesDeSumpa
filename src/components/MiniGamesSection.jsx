@@ -31,13 +31,20 @@ const GAMES = [
     description: 'Ayuda a Rei a encontrar las tres osamentas ancestrales de la cultura Las Vegas escondidas en el entierro masivo.',
     playable: true
   },
- 
   {
     id: 'trivia',
     name: 'Trivia de las Eras',
     icon: '❓',
     image: '/assets/maquinaDelTiempo.webp',
     description: 'Demuestra cuánto has aprendido sobre los ritos funerarios y modos de vida de las culturas precolombinas.',
+    playable: true
+  },
+  {
+    id: 'laberinto',
+    name: 'Laberinto del Tiempo',
+    icon: '🌀',
+    image: '/assets/minijuego.webp',
+    description: 'Ayuda a Rei a cruzar los pasadizos del tiempo para recuperar reliquias de culturas ancestrales.',
     playable: true
   }
 ]
@@ -129,6 +136,89 @@ const TRIVIA_QUESTIONS = [
   }
 ]
 
+// 4 reliquias emblemáticas de diferentes culturas
+const MAZE_TARGETS = [
+  {
+    id: 'vegas',
+    culture: 'Cultura Las Vegas',
+    relicName: 'Amantes de Sumpa',
+    img: '/assets/amantesSumpa.webp',
+    description: 'El entierro de los Amantes de Sumpa es el hallazgo más emblemático de esta era: una pareja sepultada junta con piedras colocadas para su protección y amor eterno.'
+  },
+  {
+    id: 'valdivia',
+    culture: 'Cultura Valdivia',
+    relicName: 'Figurina Valdivia',
+    img: '/assets/FigurinaValdivia.webp',
+    description: 'La Figurina o Venus de Valdivia representa el poder femenino, la fertilidad de la tierra y los rituales sagrados en las primeras aldeas de arcilla del continente.'
+  },
+  {
+    id: 'chorrera',
+    culture: 'Cultura Chorrera (Engoroy)',
+    relicName: 'Cerámica Engoroy',
+    img: '/assets/ceramicaEngoroy.webp',
+    description: 'La cerámica Engoroy tiene un brillo característico y sus formas modeladas reflejan la vida marina y el entorno natural de la Costa ecuatoriana.'
+  },
+  {
+    id: 'manteno',
+    culture: 'Señoríos Manteño-Guancavilcas',
+    relicName: 'Silla en U de Piedra',
+    img: '/assets/SillaEnU.webp',
+    description: 'La Silla en U tallada en piedra era el asiento de poder exclusivo de los caciques y chamanes de la Liga de Mercaderes Manteño-Guancavilca.'
+  }
+]
+
+// Generador de laberintos dinámicos usando algoritmo DFS de retroceso secuencial
+const generateMaze = (width = 13, height = 13) => {
+  // Inicializar cuadrícula con paredes (1)
+  const grid = Array(height).fill(null).map(() => Array(width).fill(1));
+  
+  const stack = [];
+  const startX = 1;
+  const startY = 1;
+  
+  grid[startY][startX] = 0; // 0 representa camino libre
+  stack.push([startX, startY]);
+  
+  while (stack.length > 0) {
+    const [cx, cy] = stack[stack.length - 1];
+    const neighbors = [];
+    
+    // Buscar vecinos a distancia de 2 celdas
+    const dirs = [
+      [0, -2], // Arriba
+      [0, 2],  // Abajo
+      [-2, 0], // Izquierda
+      [2, 0]   // Derecha
+    ];
+    
+    for (const [dx, dy] of dirs) {
+      const nx = cx + dx;
+      const ny = cy + dy;
+      if (nx > 0 && nx < width - 1 && ny > 0 && ny < height - 1 && grid[ny][nx] === 1) {
+        neighbors.push([nx, ny, dx, dy]);
+      }
+    }
+    
+    if (neighbors.length > 0) {
+      // Escoger vecino aleatorio
+      const [nx, ny, dx, dy] = neighbors[Math.floor(Math.random() * neighbors.length)];
+      // Derribar la pared intermedia
+      grid[cy + dy / 2][cx + dx / 2] = 0;
+      grid[ny][nx] = 0;
+      stack.push([nx, ny]);
+    } else {
+      stack.pop();
+    }
+  }
+  
+  // Forzar salida y entrada despejadas
+  grid[1][1] = 0;
+  grid[height - 2][width - 2] = 0;
+  
+  return grid;
+}
+
 export function MiniGamesSection() {
   const setModo = useMuseoStore(s => s.setModo)
   const audioHabilitado = useMuseoStore(s => s.audioHabilitado)
@@ -152,6 +242,13 @@ export function MiniGamesSection() {
   const [score, setScore] = useState(0)
   const [showTriviaWin, setShowTriviaWin] = useState(false)
   const [triviaAnswered, setTriviaAnswered] = useState(false)
+
+  // Estado para el minijuego del Laberinto
+  const [mazeGrid, setMazeGrid] = useState([])
+  const [reiPos, setReiPos] = useState({ x: 1, y: 1 })
+  const [relicTarget, setRelicTarget] = useState(null)
+  const [movesCount, setMovesCount] = useState(0)
+  const [showMazeWin, setShowMazeWin] = useState(false)
 
   // Inicializar y barajar el tablero
   const initializeGame = () => {
@@ -193,6 +290,19 @@ export function MiniGamesSection() {
     setTriviaAnswered(false)
   }
 
+  // Inicializar el minijuego de Laberinto
+  const initializeLaberinto = () => {
+    const grid = generateMaze(13, 13)
+    setMazeGrid(grid)
+    setReiPos({ x: 1, y: 1 })
+    
+    // Seleccionar una reliquia objetivo aleatoria
+    const randomRelic = MAZE_TARGETS[Math.floor(Math.random() * MAZE_TARGETS.length)]
+    setRelicTarget(randomRelic)
+    setMovesCount(0)
+    setShowMazeWin(false)
+  }
+
   // Barajar/Inicializar cuando cambia el juego activo
   useEffect(() => {
     if (activeGame === 'memoria') {
@@ -201,8 +311,81 @@ export function MiniGamesSection() {
       initializeEsqueletos()
     } else if (activeGame === 'trivia') {
       initializeTrivia()
+    } else if (activeGame === 'laberinto') {
+      initializeLaberinto()
     }
   }, [activeGame])
+
+  // Lógica de movimiento
+  const movePlayer = (dx, dy) => {
+    if (showMazeWin || mazeGrid.length === 0) return
+
+    const targetX = reiPos.x + dx
+    const targetY = reiPos.y + dy
+
+    // Validar límites
+    if (targetY < 0 || targetY >= mazeGrid.length || targetX < 0 || targetX >= mazeGrid[0].length) {
+      return
+    }
+
+    // Validar si es pared (1)
+    if (mazeGrid[targetY][targetX] === 1) {
+      return
+    }
+
+    // Mover jugador
+    const newPos = { x: targetX, y: targetY }
+    setReiPos(newPos)
+    setMovesCount(prev => prev + 1)
+
+    // Verificar si llegó a la meta
+    if (targetX === mazeGrid[0].length - 2 && targetY === mazeGrid.length - 2) {
+      setShowMazeWin(true)
+    }
+  }
+
+  // Escuchar teclado para el laberinto
+  useEffect(() => {
+    if (activeGame !== 'laberinto' || showMazeWin) return
+
+    const handleKeyDown = (e) => {
+      let dx = 0
+      let dy = 0
+
+      switch (e.key) {
+        case 'ArrowUp':
+        case 'w':
+        case 'W':
+          dy = -1
+          break
+        case 'ArrowDown':
+        case 's':
+        case 'S':
+          dy = 1
+          break
+        case 'ArrowLeft':
+        case 'a':
+        case 'A':
+          dx = -1
+          break
+        case 'ArrowRight':
+        case 'd':
+        case 'D':
+          dx = 1
+          break
+        default:
+          return // Ignorar otras teclas
+      }
+
+      // Prevenir scroll de la pantalla
+      e.preventDefault()
+
+      movePlayer(dx, dy)
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [activeGame, showMazeWin, mazeGrid, reiPos])
 
   // Manejar click en carta
   const handleCardClick = (index) => {
@@ -619,6 +802,154 @@ export function MiniGamesSection() {
 
                   <div className="win-actions">
                     <button className="win-btn btn-win-replay" onClick={initializeTrivia}>
+                      Jugar de Nuevo
+                    </button>
+                    <button className="win-btn btn-win-menu" onClick={() => setActiveGame(null)}>
+                      Cambiar de Juego
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      </div>
+    )
+  }
+
+  if (activeGame === 'laberinto') {
+    return (
+      <div className="games-overlay-container">
+        {/* Header */}
+        <header className="games-header">
+          <div className="games-title-area">
+            <h2>Laberinto del Tiempo</h2>
+            <p>Guía a Rei por el laberinto arqueológico hasta la reliquia</p>
+          </div>
+          <div className="games-header-actions">
+            <button className="games-change-btn" onClick={() => setActiveGame(null)}>
+              🎮 Cambiar Juego
+            </button>
+            <button className="games-close-btn" onClick={() => setModo('landing')}>
+              Volver al Menú
+            </button>
+          </div>
+        </header>
+
+        {/* Workspace */}
+        <div className="games-workspace">
+          {/* Sidebar Estadísticas */}
+          <aside className="games-sidebar">
+            <div className="games-stats-area">
+              <div className="games-stat-card">
+                <span className="games-stat-label">Movimientos</span>
+                <span className="games-stat-value">{movesCount}</span>
+              </div>
+              
+              {relicTarget && (
+                <div className="games-stat-card relic-stat-card" style={{ marginTop: '1rem' }}>
+                  <span className="games-stat-label">Objetivo</span>
+                  <div className="relic-preview-sidebar">
+                    <img src={relicTarget.img} alt={relicTarget.relicName} className="relic-thumb" />
+                    <div className="relic-thumb-info">
+                      <span className="relic-target-name">{relicTarget.relicName}</span>
+                      <span className="relic-target-culture">{relicTarget.culture}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="games-instructions">
+              <h4>¿Cómo jugar?</h4>
+              <p>Ayuda a Rei la Salamanquesa a cruzar los pasillos del tiempo:</p>
+              <ul>
+                <li>Usa las <strong>flechas del teclado</strong> o las teclas <strong>WASD</strong> para moverte.</li>
+                <li>Si estás en celular, usa los <strong>botones táctiles</strong> en pantalla.</li>
+                <li>Encuentra el camino hacia la reliquia en el otro extremo del laberinto.</li>
+              </ul>
+            </div>
+
+            <button className="games-reset-btn" onClick={initializeLaberinto}>
+              🔄 Reiniciar Laberinto
+            </button>
+          </aside>
+
+          {/* Tablero del Laberinto */}
+          <main className="maze-board-container">
+            <div className="maze-view-wrapper">
+              <div className="maze-grid" style={{
+                gridTemplateColumns: `repeat(13, 1fr)`,
+                gridTemplateRows: `repeat(13, 1fr)`
+              }}>
+                {mazeGrid.map((row, y) =>
+                  row.map((cell, x) => {
+                    const isPlayer = reiPos.x === x && reiPos.y === y
+                    const isTarget = x === 11 && y === 11
+                    
+                    let cellClass = 'maze-cell'
+                    if (cell === 1) cellClass += ' maze-wall'
+                    else cellClass += ' maze-path'
+                    
+                    return (
+                      <div
+                        key={`${x}-${y}`}
+                        className={cellClass}
+                      >
+                        {isPlayer && (
+                          <img
+                            src="/assets/Rei.webp"
+                            alt="Rei"
+                            className="maze-player-img animate-pulse"
+                          />
+                        )}
+                        {isTarget && relicTarget && !isPlayer && (
+                          <img
+                            src={relicTarget.img}
+                            alt={relicTarget.relicName}
+                            className="maze-target-img animate-bounce"
+                          />
+                        )}
+                      </div>
+                    )
+                  })
+                )}
+              </div>
+            </div>
+
+            {/* Mobile Controls (D-pad) */}
+            <div className="mobile-dpad">
+              <button className="dpad-btn dpad-up" onClick={() => movePlayer(0, -1)}>▲</button>
+              <div className="dpad-row-mid">
+                <button className="dpad-btn dpad-left" onClick={() => movePlayer(-1, 0)}>◀</button>
+                <div className="dpad-center"></div>
+                <button className="dpad-btn dpad-right" onClick={() => movePlayer(1, 0)}>▶</button>
+              </div>
+              <button className="dpad-btn dpad-down" onClick={() => movePlayer(0, 1)}>▼</button>
+            </div>
+
+            {/* Modal de Felicitación al ganar */}
+            {showMazeWin && relicTarget && (
+              <div className="win-popup-overlay">
+                <div className="win-popup relic-win-popup">
+                  <div className="win-icon">🌀✨</div>
+                  <h3>¡Reliquia Recuperada!</h3>
+                  <p className="win-congrats-text">¡Excelente! Has ayudado a Rei a encontrar la <strong>{relicTarget.relicName}</strong> de la <strong>{relicTarget.culture}</strong>.</p>
+                  
+                  <div className="relic-info-card">
+                    <img src={relicTarget.img} alt={relicTarget.relicName} className="relic-win-image" />
+                    <p className="relic-description">{relicTarget.description}</p>
+                  </div>
+
+                  <div className="win-stats">
+                    <div className="win-stat-item">
+                      <span className="games-stat-label">Movimientos</span>
+                      <span className="win-stat-num">{movesCount}</span>
+                    </div>
+                  </div>
+
+                  <div className="win-actions">
+                    <button className="win-btn btn-win-replay" onClick={initializeLaberinto}>
                       Jugar de Nuevo
                     </button>
                     <button className="win-btn btn-win-menu" onClick={() => setActiveGame(null)}>

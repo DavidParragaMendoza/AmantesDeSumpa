@@ -72,6 +72,7 @@ export const gsapTarget = {
    */
   intro: {
     signOpacity: 1,   // Letrero de bienvenida [1=visible, 0=oculto]
+    mapButtonsOpacity: 0, // Opacidad de los botones del mapa [1=visible, 0=oculto]
     reiOpacity: 0,   // Opacidad del globo de diálogo de Rei
     reiScale: 0,   // Escala de Rei (0=invisible → 1=tamaño completo)
     reiPositionX: 0,   // Desplazamiento X adicional de Rei en la escena
