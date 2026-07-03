@@ -32,9 +32,9 @@ export function LandingPage() {
           }
         })
 
-        // Animación de escala de la imagen de fondo (de 1.3 a 1.05)
+        // Animación de escala de la imagen de fondo (de 1.05 a 1.0)
         tl.to(bgRef.current, {
-          scale: 1.05,
+          scale: 1.6,
           duration: 1,
           ease: 'none'
         }, 0)
@@ -117,8 +117,8 @@ export function LandingPage() {
         {/* Contenedor de la Imagen de Fondo (Detrás del SVG de Cobertura) */}
         <div ref={bgRef} className="landing-bg-image-wrapper">
           <img
-            src="/assets/museo.webp"
-            alt="Museo Amantes de Sumpa"
+            src="/assets/PortadoCuento.webp"
+            alt="Cuento Amantes de Sumpa"
             className="landing-bg-image"
           />
         </div>

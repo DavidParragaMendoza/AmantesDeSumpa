@@ -51,7 +51,8 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  transform: scale(1.3); /* Initial scale before GSAP scroll down */
+  transform: scale(1.04);
+  /* Reduced scale to prevent cropping cover elements */
   transform-origin: 50% 50%;
 }
 
@@ -76,7 +77,8 @@
   border-radius: 20px;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   text-align: center;
-  opacity: 0; /* Animated by GSAP */
+  opacity: 0;
+  /* Animated by GSAP */
   transform: translateY(50px);
 }
 
@@ -177,7 +179,7 @@
   gap: 0.65rem;
   pointer-events: none;
   animation: bounceFade 2s infinite ease-in-out;
-  
+
   /* Fondo negro translúcido con desenfoque y borde dorado (estilo HUD) */
   background: rgba(0, 0, 0, 0.75) !important;
   backdrop-filter: blur(20px) !important;
@@ -227,14 +229,34 @@
 
 /* Animations */
 @keyframes scrollWheel {
-  0% { transform: translateY(0); opacity: 1; }
-  50% { transform: translateY(6px); opacity: 0.3; }
-  100% { transform: translateY(0); opacity: 1; }
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(6px);
+    opacity: 0.3;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes bounceFade {
-  0%, 100% { transform: translateY(0); opacity: 0.8; }
-  50% { transform: translateY(-5px); opacity: 1; }
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
 }
 
 /* Responsive Adjustments */
@@ -242,13 +264,16 @@
   .landing-menu-layer {
     padding: 1.25rem;
   }
+
   .landing-buttons-container {
     flex-direction: column;
     gap: 0.75rem;
   }
+
   .landing-btn {
     width: 100%;
   }
+
   .landing-welcome-title {
     font-size: 1.4rem;
   }
@@ -259,10 +284,12 @@
    Ajustamos el menú para que sea más compacto.
    ──────────────────────────────────────────────────────────── */
 @media (max-width: 900px) and (orientation: landscape) {
+
   /* Textos del SVG más pequeños */
   .svg-title-text {
     font-size: 60px;
   }
+
   .svg-subtitle-text {
     font-size: 22px;
   }
@@ -322,7 +349,8 @@
   position: absolute;
   top: var(--space-lg, 2rem);
   right: var(--space-lg, 2rem);
-  z-index: 120; /* Above background and overlay */
+  z-index: 120;
+  /* Above background and overlay */
 }
 
 .landing-fullscreen-btn {
@@ -360,13 +388,14 @@
     top: 0.75rem;
     right: 0.75rem;
   }
+
   .landing-fullscreen-btn {
     width: 36px;
     height: 36px;
   }
+
   .landing-fullscreen-btn svg {
     width: 16px;
     height: 16px;
   }
 }
-

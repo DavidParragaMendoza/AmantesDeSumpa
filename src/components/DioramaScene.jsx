@@ -121,6 +121,7 @@ export const ASSET_URLS = {
 
   // ── Escena 1: Las Vegas
   lasVegasFondo: '/assets/Las_Vegas.webp',
+  lasVegasManglares: '/assets/lasvegasManglares.webp',
   amantesSumpaFondo: '/assets/amantesSumpa.webp',
   huesoRojosFondo: '/assets/huesoRojos.webp',
   entierroMasivoFondo: '/assets/entierroMasivo.webp',
@@ -165,6 +166,7 @@ export const URLS_ESCENA_INTRO = [
 
 export const URLS_ESCENA_LAS_VEGAS = [
   ASSET_URLS.lasVegasFondo,
+  ASSET_URLS.lasVegasManglares,
   ASSET_URLS.amantesSumpaFondo,
   ASSET_URLS.huesoRojosFondo,
   ASSET_URLS.entierroMasivoFondo,
@@ -498,6 +500,7 @@ function EscenaLasVegas({ xOffset }) {
 
   // Refs para los fondos
   const lasVegasFondoRef = useRef(null)
+  const manglaresFondoRef = useRef(null)
   const amantesSumpaFondoRef = useRef(null)
   const huesoRojosFondoRef = useRef(null)
   const entierroMasivoFondoRef = useRef(null)
@@ -585,6 +588,9 @@ function EscenaLasVegas({ xOffset }) {
     if (dialogue15Ref.current) dialogue15Ref.current.style.display = (step >= 18.5 && step < 20.5) ? 'block' : 'none'
 
     // Animación de los nuevos fondos - se deslizan desde la izquierda
+    if (manglaresFondoRef.current) {
+      manglaresFondoRef.current.position.x = gsapTarget.lasVegas.manglaresX * worldWidth
+    }
     if (amantesSumpaFondoRef.current) {
       amantesSumpaFondoRef.current.position.x = gsapTarget.lasVegas.amantesSumpaX * worldWidth
     }
@@ -619,6 +625,18 @@ function EscenaLasVegas({ xOffset }) {
             targetHeight={11}
             placeholderAspect={worldWidth / 11}
             position={[0, 0, LAYER_Z.SKY]}
+            renderOrder={0}
+            cropToWidth={worldWidth}
+          />
+        </group>
+
+        <group ref={manglaresFondoRef}>
+          <FlatIllustration
+            url={ASSET_URLS.lasVegasManglares}
+            color="#5C2D1A"
+            targetHeight={11}
+            placeholderAspect={worldWidth / 11}
+            position={[0, 0, LAYER_Z.SKY + 0.05]}
             renderOrder={0}
             cropToWidth={worldWidth}
           />

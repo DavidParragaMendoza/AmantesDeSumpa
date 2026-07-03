@@ -72,7 +72,7 @@ export function useScrollNarrative() {
     if (viewport.width === 0 || viewport.height === 0) return
 
     // ── 1. DURACIONES DE LA LÍNEA DE TIEMPO ───────────────────
-    const introDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 8.0  // Fases de diálogo en el Museo
+    const introDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 9.0  // Fases de diálogo en el Museo
     const lasVegasDuration = OMITIR_HASTA_LAS_VEGAS ? 0.0 : 21.0 // Fases de diálogo en Las Vegas (21 scrolls extra, incluyendo transición)
     const valdiviaDuration = 12.0 // Fases de diálogo en Valdivia (12 scrolls extra)
     const chorreraDuration = 16.0 // Fases de diálogo en Chorrera (16 scrolls extra)
@@ -102,7 +102,7 @@ export function useScrollNarrative() {
     // ── 5. RESET DEL DUMMY TARGET ─────────────────────────────
     // Evita que HMR deje valores residuales de sesiones anteriores
     gsapTarget.intro = {
-      signOpacity: OMITIR_HASTA_LAS_VEGAS ? 0 : 1,   // Letrero visible al inicio
+      signOpacity: 0,   // Letrero invisible al inicio (aparecerá tras el primer scroll)
       reiOpacity: 0,   // Rei oculto al inicio
       reiScale: 0,   // Rei sin escala al inicio (para pop-in)
       reiPositionX: 0,   // Rei en posición derecha inicial
@@ -122,6 +122,7 @@ export function useScrollNarrative() {
       reiOpacity: 0,
       reiScale: 0,
       dialogueStep: 0,
+      manglaresX: OMITIR_HASTA_LAS_VEGAS ? 0 : -1,
       amantesSumpaX: OMITIR_HASTA_LAS_VEGAS ? 0 : -1,
       huesoRojosX: OMITIR_HASTA_LAS_VEGAS ? 0 : -1,
       entierroMasivoX: OMITIR_HASTA_LAS_VEGAS ? 0 : -1,
@@ -200,8 +201,19 @@ export function useScrollNarrative() {
     // paused: true → ScrollTrigger controla el progreso manualmente.
     timelineRef.current = gsap.timeline({ paused: true })
 
-    // ====== INTRO (Fases 2 a 7) — cada fase dura 1 unidad de tiempo ======
+    // ====== INTRO — cada fase dura 1 unidad de tiempo ======
     if (!OMITIR_HASTA_LAS_VEGAS) {
+      /**
+       * FASE 1.5 (Aparición del letrero con el primer scroll):
+       * El letrero hace fade-in (signOpacity de 0 a 1).
+       */
+      timelineRef.current.to(gsapTarget.intro, {
+        signOpacity: 1,
+        duration: 1,
+        ease: 'power2.inOut',
+        onUpdate: () => invalidate(),
+      })
+
       /**
        * FASE 2 (Texto 1 — Rei1.png):
        * Letrero hace fade-out, Rei1 hace pop-in y se desplaza hacia la izquierda.
@@ -437,6 +449,7 @@ export function useScrollNarrative() {
         // Scroll 7: Manglares (Rei)
         timelineRef.current.to(gsapTarget.lasVegas, {
           dialogueStep: 7,
+          manglaresX: 0,
           duration: 1,
           ease: 'power2.inOut',
           onUpdate: () => invalidate(),
@@ -1281,22 +1294,24 @@ export function useScrollNarrative() {
     const snapPoints = []
 
     if (!OMITIR_HASTA_LAS_VEGAS) {
-      // Punto 0: inicio absoluto (letrero visible)
+      // Punto 0: inicio absoluto (letrero invisible)
       snapPoints.push(0)
-      // Punto tras Fase 2 (Texto 1)
+      // Punto tras Aparición del letrero (Fase 1.5)
       snapPoints.push(1 / totalDuration)
-      // Punto tras Fase 3 (Texto 2)
+      // Punto tras Fase 2 (Texto 1)
       snapPoints.push(2 / totalDuration)
-      // Punto tras Fase 4 (Texto 3)
+      // Punto tras Fase 3 (Texto 2)
       snapPoints.push(3 / totalDuration)
-      // Punto tras Fase 5 (Texto 4)
+      // Punto tras Fase 4 (Texto 3)
       snapPoints.push(4 / totalDuration)
-      // Punto tras Fase 6 (Texto 5)
+      // Punto tras Fase 5 (Texto 4)
       snapPoints.push(5 / totalDuration)
+      // Punto tras Fase 6 (Texto 5)
+      snapPoints.push(6 / totalDuration)
       // Punto tras Fase 7 (Texto 6 en el museo)
-      snapPoints.push(6.0 / totalDuration)
+      snapPoints.push(7.0 / totalDuration)
       // Punto tras Fase 8 (Texto 7 en el estacionamiento)
-      snapPoints.push(7.5 / totalDuration)
+      snapPoints.push(8.5 / totalDuration)
       // Punto tras Pausa antes del viaje
       snapPoints.push(introDuration / totalDuration)
     } else {

@@ -104,6 +104,7 @@ export const gsapTarget = {
     reiOpacity: 0,   // Opacidad del globo de diálogo
     reiScale: 0,   // Escala de Rei
     dialogueStep: 0,   // 0=inactivo, 1=Texto 1, 2=Texto 2
+    manglaresX: -1, // Posición X normalizada del fondo de manglares (-1 a 0)
     amantesSumpaX: -1, // Posición X normalizada de la imagen final (-1 a 0)
     huesoRojosX: -1, // Posición X normalizada del tercer fondo (-1 a 0)
     entierroMasivoX: -1, // Posición X normalizada del cuarto fondo (-1 a 0)
